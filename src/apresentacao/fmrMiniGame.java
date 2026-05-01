@@ -104,7 +104,10 @@ public class fmrMiniGame extends JDialog {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                EstiloBase.pintarLiquidGlass(g2, getWidth(), getHeight(), 36, 0.56f);
+                g2.setColor(new Color(8, 8, 12, 220));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 36, 36);
+                g2.setColor(new Color(255, 255, 255, 16));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 36, 36);
                 g2.setColor(new Color(255, 255, 255, 10));
                 for (int x = 28; x < getWidth(); x += 28) {
                     g2.drawLine(x, 0, x, getHeight());

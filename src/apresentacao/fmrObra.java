@@ -145,8 +145,10 @@ public class fmrObra extends JDialog {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                EstiloBase.pintarLiquidGlass(g2, getWidth(), getHeight(), 28, 0.46f);
+                g2.setColor(new Color(255, 255, 255, 10));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+                g2.setColor(new Color(255, 255, 255, 18));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
                 g2.dispose();
             }
         };
@@ -193,7 +195,8 @@ public class fmrObra extends JDialog {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                EstiloBase.pintarLiquidGlass(g2, getWidth(), getHeight(), 28, 0.58f);
+                g2.setColor(EstiloBase.COR_PRETO_60);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
 
                 GradientPaint fundo = new GradientPaint(
                         0, 0, new Color(255, 98, 36, 54),

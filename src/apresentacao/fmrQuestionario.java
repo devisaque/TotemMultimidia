@@ -102,8 +102,10 @@ public class fmrQuestionario extends JDialog {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                EstiloBase.pintarLiquidGlass(g2, getWidth(), getHeight(), 28, 0.46f);
+                g2.setColor(new Color(255, 255, 255, 10));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+                g2.setColor(new Color(255, 255, 255, 16));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
                 g2.dispose();
             }
         };
@@ -165,8 +167,11 @@ public class fmrQuestionario extends JDialog {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 boolean selecionado = Boolean.TRUE.equals(getClientProperty("selecionado"));
-                EstiloBase.pintarLiquidGlass(g2, getWidth(), getHeight(), 28,
-                        selecionado ? 0.68f : getModel().isRollover() ? 0.56f : 0.42f);
+                Color fundo = selecionado ? new Color(255, 115, 54, 52)
+                        : getModel().isRollover() ? new Color(255, 255, 255, 16)
+                        : new Color(255, 255, 255, 10);
+                g2.setColor(fundo);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
                 GradientPaint borda = new GradientPaint(
                         0, 0, selecionado ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA,
                         getWidth(), getHeight(), selecionado ? EstiloBase.COR_DESTAQUE_2 : EstiloBase.COR_CARD_GLOW

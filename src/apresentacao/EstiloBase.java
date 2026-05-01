@@ -22,10 +22,8 @@ public final class EstiloBase {
     public static final Color COR_FUNDO_PAINEL = new Color(12, 12, 18);
     public static final Color COR_PRETO_60 = new Color(0, 0, 0, 153);
     public static final Color COR_CARD = COR_PRETO_60;
-    public static final Color COR_GLASS_BASE = new Color(8, 8, 12, 138);
-    public static final Color COR_GLASS_CLARO = new Color(255, 255, 255, 26);
-    public static final Color COR_CARD_BORDA = new Color(255, 255, 255, 44);
-    public static final Color COR_CARD_GLOW = new Color(255, 98, 36, 112);
+    public static final Color COR_CARD_BORDA = new Color(255, 255, 255, 30);
+    public static final Color COR_CARD_GLOW = new Color(255, 98, 36, 96);
     public static final Color COR_DESTAQUE = new Color(255, 98, 36);
     public static final Color COR_DESTAQUE_HOVER = new Color(255, 126, 70);
     public static final Color COR_DESTAQUE_2 = new Color(255, 195, 5);
@@ -84,25 +82,25 @@ public final class EstiloBase {
                 float alpha = isEnabled() ? 1f : 0.4f;
                 g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
 
-                int margem = getModel().isPressed() ? 3 : 1;
-                int h = getHeight() - margem - 1;
+                int sombra = getModel().isPressed() ? 2 : 6;
+                g2.setColor(new Color(0, 0, 0, 90));
+                g2.fillRoundRect(0, sombra, getWidth(), getHeight() - sombra, 30, 30);
 
                 Color inicio = getModel().isPressed() ? COR_DESTAQUE.darker()
                         : getModel().isRollover() ? COR_DESTAQUE_HOVER : COR_DESTAQUE;
                 Color fim = getModel().isPressed() ? COR_DESTAQUE_2.darker() : COR_DESTAQUE_2;
                 GradientPaint gp = new GradientPaint(0, 0, inicio, getWidth(), getHeight(), fim);
                 g2.setPaint(gp);
-                g2.fill(new RoundRectangle2D.Float(0, margem, getWidth(), h, 30, 30));
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight() - sombra, 30, 30));
 
-                g2.setPaint(new GradientPaint(0, margem, new Color(255, 255, 255, 90),
-                        getWidth(), h, new Color(255, 255, 255, 20)));
-                g2.drawRoundRect(1, margem + 1, getWidth() - 3, h - 3, 30, 30);
+                g2.setColor(new Color(255, 255, 255, 55));
+                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - sombra - 3, 30, 30);
 
                 g2.setColor(COR_TEXTO_PRIMARIO);
                 g2.setFont(getFont());
                 FontMetrics fm = g2.getFontMetrics();
                 int tx = (getWidth() - fm.stringWidth(getText())) / 2;
-                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                int ty = ((getHeight() - sombra) + fm.getAscent() - fm.getDescent()) / 2;
                 g2.drawString(getText(), tx, ty);
                 g2.dispose();
             }
@@ -127,7 +125,9 @@ public final class EstiloBase {
                 g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
 
                 boolean hover = getModel().isRollover() || getModel().isPressed();
-                pintarLiquidGlass(g2, 0, 0, getWidth(), getHeight(), 28, hover ? 0.72f : 0.58f);
+                Color fundo = hover ? new Color(255, 255, 255, 20) : new Color(255, 255, 255, 10);
+                g2.setColor(fundo);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
 
                 GradientPaint borda = new GradientPaint(
                         0, 0, hover ? COR_DESTAQUE : COR_CARD_BORDA,
@@ -161,7 +161,10 @@ public final class EstiloBase {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 ativarQualidade(g2);
-                pintarLiquidGlass(g2, 0, 0, getWidth(), getHeight(), 22, 0.48f);
+                g2.setColor(new Color(10, 10, 16));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 22, 22);
+                g2.setColor(new Color(255, 255, 255, 12));
+                g2.fillRoundRect(1, 1, getWidth() - 2, getHeight() / 2, 20, 20);
                 super.paintComponent(g);
                 g2.dispose();
             }
@@ -195,7 +198,16 @@ public final class EstiloBase {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 ativarQualidade(g2);
-                pintarLiquidGlass(g2, 0, 0, getWidth(), getHeight(), 30, 0.72f);
+
+                g2.setColor(COR_CARD);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+
+                g2.setPaint(new GradientPaint(0, 0, COR_CARD_BORDA, getWidth(), getHeight(), COR_CARD_GLOW));
+                g2.setStroke(new BasicStroke(1.4f));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
+
+                g2.setColor(new Color(255, 255, 255, 16));
+                g2.drawRoundRect(10, 10, getWidth() - 21, getHeight() - 21, 22, 22);
                 g2.dispose();
             }
         };
@@ -222,7 +234,10 @@ public final class EstiloBase {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 ativarQualidade(g2);
-                pintarLiquidGlass(g2, 0, 0, getWidth(), getHeight(), 18, 0.46f);
+                g2.setColor(new Color(255, 255, 255, 12));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
+                g2.setColor(new Color(255, 255, 255, 30));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 18, 18);
                 g2.dispose();
                 super.paintComponent(g);
             }
@@ -280,26 +295,24 @@ public final class EstiloBase {
     public static void mostrarDialogoInformativo(Window owner, String marcador, String titulo, String mensagem, String textoBotao) {
         JDialog dialogo = new JDialog(owner, titulo, Dialog.ModalityType.APPLICATION_MODAL);
         dialogo.setUndecorated(true);
-        dialogo.setBackground(new Color(0, 0, 0, 0));
-        dialogo.setSize(620, 390);
+        dialogo.setSize(560, 360);
         dialogo.setLocationRelativeTo(owner);
 
-        JPanel fundo = new JPanel(null);
-        fundo.setOpaque(false);
+        JPanel fundo = criarPainelFundo(808L);
         fundo.setLayout(null);
 
         JPanel card = criarCard();
         card.setLayout(null);
-        card.setBounds(30, 30, 560, 330);
+        card.setBounds(24, 24, 512, 312);
         fundo.add(card);
 
         JLabel lblMarcador = criarTag(marcador);
-        lblMarcador.setBounds(30, 28, 132, 32);
+        lblMarcador.setBounds(28, 24, 120, 32);
         card.add(lblMarcador);
 
         JLabel lblTitulo = criarLabel(titulo, FONTE_SECAO.deriveFont(30f), COR_TEXTO_PRIMARIO);
         lblTitulo.setHorizontalAlignment(SwingConstants.LEFT);
-        lblTitulo.setBounds(30, 76, 500, 42);
+        lblTitulo.setBounds(28, 70, 456, 40);
         card.add(lblTitulo);
 
         JTextArea corpo = new JTextArea(mensagem);
@@ -309,16 +322,15 @@ public final class EstiloBase {
         corpo.setOpaque(false);
         corpo.setForeground(COR_TEXTO_SECUNDARIO);
         corpo.setFont(FONTE_CORPO);
-        corpo.setBounds(30, 132, 500, 110);
+        corpo.setBounds(28, 124, 456, 108);
         card.add(corpo);
 
         JButton btnFechar = criarBotaoPrimario(textoBotao);
-        btnFechar.setBounds(180, 256, 200, 58);
+        btnFechar.setBounds(156, 242, 200, 58);
         btnFechar.addActionListener(e -> dialogo.dispose());
         card.add(btnFechar);
 
         dialogo.setContentPane(fundo);
-        dialogo.getRootPane().setOpaque(false);
         dialogo.setVisible(true);
     }
 
@@ -423,63 +435,6 @@ public final class EstiloBase {
         );
         g2.setPaint(paint);
         g2.fillRect(0, 0, largura, altura);
-    }
-
-    public static void pintarLiquidGlass(Graphics2D g2, int largura, int altura, int raio, float intensidade) {
-        pintarLiquidGlass(g2, 0, 0, largura, altura, raio, intensidade);
-    }
-
-    private static void pintarLiquidGlass(Graphics2D g2, int x, int y, int largura, int altura, int raio, float intensidade) {
-        Shape forma = new RoundRectangle2D.Float(x, y, largura - 1, altura - 1, raio, raio);
-        Shape recorteAntigo = g2.getClip();
-        Composite composicaoAntiga = g2.getComposite();
-
-        g2.setClip(forma);
-
-        g2.setComposite(AlphaComposite.SrcOver.derive(intensidade));
-        GradientPaint base = new GradientPaint(
-                x, y, new Color(255, 255, 255, 34),
-                x + largura, y + altura, new Color(0, 0, 0, 170)
-        );
-        g2.setPaint(base);
-        g2.fill(forma);
-
-        g2.setComposite(AlphaComposite.SrcOver.derive(0.92f));
-        g2.setColor(new Color(0, 0, 0, 108));
-        g2.fill(forma);
-
-        RadialGradientPaint brilhoSuperior = new RadialGradientPaint(
-                new Point(x + Math.max(1, largura / 4), y),
-                Math.max(largura, altura) * 0.86f,
-                new float[]{0f, 0.55f, 1f},
-                new Color[]{new Color(255, 255, 255, 58), new Color(255, 255, 255, 10), new Color(255, 255, 255, 0)}
-        );
-        g2.setPaint(brilhoSuperior);
-        g2.fill(forma);
-
-        RadialGradientPaint brilhoQuente = new RadialGradientPaint(
-                new Point(x + largura, y + altura),
-                Math.max(largura, altura) * 0.74f,
-                new float[]{0f, 0.6f, 1f},
-                new Color[]{new Color(COR_ACENTO.getRed(), COR_ACENTO.getGreen(), COR_ACENTO.getBlue(), 38),
-                        new Color(COR_DESTAQUE.getRed(), COR_DESTAQUE.getGreen(), COR_DESTAQUE.getBlue(), 16),
-                        new Color(COR_DESTAQUE.getRed(), COR_DESTAQUE.getGreen(), COR_DESTAQUE.getBlue(), 0)}
-        );
-        g2.setPaint(brilhoQuente);
-        g2.fill(forma);
-
-        g2.setClip(recorteAntigo);
-        g2.setComposite(composicaoAntiga);
-
-        g2.setPaint(new GradientPaint(x, y, new Color(255, 255, 255, 72),
-                x + largura, y + altura, COR_CARD_GLOW));
-        g2.setStroke(new BasicStroke(1.35f));
-        g2.draw(forma);
-
-        g2.setColor(new Color(255, 255, 255, 18));
-        g2.setStroke(new BasicStroke(1f));
-        g2.draw(new RoundRectangle2D.Float(x + 10, y + 10, largura - 21, altura - 21,
-                Math.max(8, raio - 8), Math.max(8, raio - 8)));
     }
 
     private static void ativarQualidade(Graphics2D g2) {
