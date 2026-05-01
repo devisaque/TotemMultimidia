@@ -1,15 +1,27 @@
 package apresentacao;
 
 import modelo.Controle;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
 
 /**
- * Tela de exibição de uma obra (rover/missão marciana).
- * Exibe número, título, imagem placeholder, descrição e opção de modelo 3D.
- * Progresso visual com barra de obras no topo.
+ * Tela de obra com composicao editorial:
+ * arte em destaque na esquerda e descricao na direita.
  */
 public class fmrObra extends JDialog {
+
+    private static final String[] ANOS = {
+            "1965", "1976", "1997", "2004", "2004",
+            "2008", "2011", "2018", "2021", "2021"
+    };
+
+    private static final String[] CODIGOS = {
+            "MR-04", "VK-01", "SJ-01", "SP-01", "OP-02",
+            "PX-08", "CU-11", "IN-18", "PV-21", "IG-21"
+    };
 
     private final Controle controle;
     private final int indice;
@@ -17,204 +29,287 @@ public class fmrObra extends JDialog {
     public fmrObra(JFrame pai, Controle controle, int indice) {
         super(pai, true);
         this.controle = controle;
-        this.indice   = indice;
+        this.indice = indice;
         EstiloBase.configurarDialogFullscreen(this);
         construirInterface();
     }
 
     private void construirInterface() {
-        JPanel fundo = criarFundo();
+        JPanel fundo = EstiloBase.criarPainelFundo(220L + (indice * 31L));
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
-        int cx = tela.width / 2;
 
-        // ── Barra de progresso ────────────────────────────────────────────
-        JPanel barraProgress = criarBarraProgresso(tela.width);
-        barraProgress.setBounds(0, 0, tela.width, 44);
+        int margem = Math.max(42, tela.width / 34);
+        int topo = 38;
+        int gap = 34;
+        int conteudoY = 124;
+        int conteudoH = tela.height - conteudoY - 86;
+        int arteW = Math.min(560, (int) (tela.width * 0.34));
+        int painelW = tela.width - (margem * 2) - arteW - gap;
+        int arteH = conteudoH;
+
+        JLabel lblColecao = EstiloBase.criarTag("Colecao Marte");
+        lblColecao.setBounds(margem, topo, 150, 34);
+        fundo.add(lblColecao);
+
+        JLabel lblEtapa = EstiloBase.criarLabel(
+                String.format("OBRA %02d  DE  %02d", indice + 1, controle.getTotalObras()),
+                EstiloBase.FONTE_LABEL.deriveFont(13f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        lblEtapa.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblEtapa.setBounds(tela.width - margem - 180, topo + 2, 180, 28);
+        fundo.add(lblEtapa);
+
+        JPanel barraProgress = criarBarraProgresso(tela.width - (margem * 2));
+        barraProgress.setBounds(margem, topo + 46, tela.width - (margem * 2), 18);
         fundo.add(barraProgress);
 
-        // ── Número da obra ────────────────────────────────────────────────
-        JLabel lblNumero = new JLabel("OBRA " + (indice + 1) + " DE 10", SwingConstants.CENTER);
-        lblNumero.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblNumero.setForeground(EstiloBase.COR_ACENTO);
-        lblNumero.setBounds(0, 54, tela.width, 26);
-        fundo.add(lblNumero);
+        JPanel cardArte = EstiloBase.criarCard();
+        cardArte.setLayout(null);
+        cardArte.setBounds(margem, conteudoY, arteW, arteH);
+        fundo.add(cardArte);
 
-        // ── Título da obra ────────────────────────────────────────────────
-        JLabel lblTitulo = EstiloBase.criarLabel(
-                controle.getTituloObra(indice),
-                EstiloBase.FONTE_SECAO, EstiloBase.COR_DESTAQUE
+        JPanel painelArte = criarPainelArte();
+        painelArte.setBounds(20, 20, arteW - 40, arteH - 132);
+        cardArte.add(painelArte);
+
+        JLabel lblCodigo = EstiloBase.criarTag(CODIGOS[indice]);
+        lblCodigo.setBounds(24, arteH - 98, 92, 32);
+        cardArte.add(lblCodigo);
+
+        JLabel lblAno = EstiloBase.criarLabel(
+                ANOS[indice],
+                EstiloBase.fontePoppins(34f),
+                EstiloBase.COR_TEXTO_PRIMARIO
         );
-        lblTitulo.setBounds(0, 86, tela.width, 50);
-        fundo.add(lblTitulo);
+        lblAno.setHorizontalAlignment(SwingConstants.LEFT);
+        lblAno.setBounds(24, arteH - 66, 130, 30);
+        cardArte.add(lblAno);
 
-        // ── Layout principal: imagem + texto ──────────────────────────────
-        int cardY = 148;
-        int cardH = tela.height - cardY - 120;
+        JLabel lblLegenda = EstiloBase.criarLabel(
+                "Painel visual conceitual da missao",
+                EstiloBase.FONTE_PEQUENA,
+                EstiloBase.COR_TEXTO_FRACO
+        );
+        lblLegenda.setHorizontalAlignment(SwingConstants.LEFT);
+        lblLegenda.setBounds(24, arteH - 38, arteW - 48, 18);
+        cardArte.add(lblLegenda);
 
-        // Painel imagem (placeholder estilizado)
-        JPanel painelImagem = criarPlaceholderImagem(indice);
-        painelImagem.setBounds(cx - 580, cardY, 420, cardH);
-        fundo.add(painelImagem);
+        JPanel cardInfo = EstiloBase.criarCard();
+        cardInfo.setLayout(null);
+        cardInfo.setBounds(margem + arteW + gap, conteudoY, painelW, conteudoH);
+        fundo.add(cardInfo);
 
-        // Card de descrição
-        JPanel cardDesc = EstiloBase.criarCard();
-        cardDesc.setLayout(new BorderLayout(0, 0));
-        cardDesc.setBounds(cx - 130, cardY, 700, cardH);
-        fundo.add(cardDesc);
+        JLabel lblTema = EstiloBase.criarTag("Narrativa da obra");
+        lblTema.setBounds(30, 26, 160, 34);
+        cardInfo.add(lblTema);
+
+        JLabel lblTitulo = new JLabel("<html><div style='width:" + (painelW - 70) + "px'>"
+                + controle.getTituloObra(indice) + "</div></html>");
+        lblTitulo.setFont(EstiloBase.fontePoppins(38f));
+        lblTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+        lblTitulo.setBounds(30, 72, painelW - 60, 110);
+        cardInfo.add(lblTitulo);
+
+        JLabel lblSub = new JLabel("<html><div style='width:" + (painelW - 70) + "px'>"
+                + "A exposicao apresenta marcos da exploracao marciana em uma leitura mais imersiva, com "
+                + "tipografia forte, contraste alto e foco no conteudo.</div></html>");
+        lblSub.setFont(EstiloBase.FONTE_CORPO.deriveFont(18f));
+        lblSub.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        lblSub.setBounds(30, 182, painelW - 60, 68);
+        cardInfo.add(lblSub);
+
+        JLabel lblChipAno = EstiloBase.criarTag("ANO " + ANOS[indice]);
+        lblChipAno.setBounds(30, 258, 110, 32);
+        cardInfo.add(lblChipAno);
+
+        JLabel lblChipTipo = EstiloBase.criarTag(controle.deveExibirModelo3D(indice) ? "COM EXPERIENCIA 3D" : "TEXTO CURATORIAL");
+        lblChipTipo.setBounds(150, 258, 176, 32);
+        cardInfo.add(lblChipTipo);
 
         JTextArea txtDesc = new JTextArea(controle.getDescricaoObra(indice));
-        txtDesc.setFont(EstiloBase.FONTE_CORPO);
-        txtDesc.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
-        txtDesc.setBackground(EstiloBase.COR_CARD);
+        txtDesc.setFont(EstiloBase.fonteInter(19f));
+        txtDesc.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        txtDesc.setBackground(new Color(0, 0, 0, 0));
         txtDesc.setLineWrap(true);
         txtDesc.setWrapStyleWord(true);
         txtDesc.setEditable(false);
-        txtDesc.setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
         txtDesc.setOpaque(false);
-        cardDesc.add(new JScrollPane(txtDesc) {{
-            setOpaque(false);
-            getViewport().setOpaque(false);
-            setBorder(null);
-        }}, BorderLayout.CENTER);
+        txtDesc.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        // ── Botão Modelo 3D (a partir da obra 3, índice 2) ────────────────
+        JScrollPane scroll = EstiloBase.criarScrollPane(txtDesc);
+        scroll.setBounds(30, 314, painelW - 60, Math.max(220, conteudoH - 470));
+        cardInfo.add(scroll);
+
+        JPanel faixaAcao = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(new Color(255, 255, 255, 10));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+                g2.setColor(new Color(255, 255, 255, 18));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
+                g2.dispose();
+            }
+        };
+        faixaAcao.setOpaque(false);
+        faixaAcao.setBounds(30, conteudoH - 148, painelW - 60, 102);
+        cardInfo.add(faixaAcao);
+
+        JLabel lblNota = EstiloBase.criarLabel(
+                "Continue navegando pela linha do tempo das missoes para descobrir novas camadas da exploracao de Marte.",
+                EstiloBase.FONTE_PEQUENA.deriveFont(15f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        lblNota.setHorizontalAlignment(SwingConstants.LEFT);
+        lblNota.setBounds(22, 16, faixaAcao.getWidth() - 44, 22);
+        faixaAcao.add(lblNota);
+
         if (controle.deveExibirModelo3D(indice)) {
-            JButton btn3D = EstiloBase.criarBotaoSecundario("🌐  Ver Modelo 3D do Rover");
-            btn3D.setPreferredSize(new Dimension(280, 52));
-            btn3D.setBounds(cx + 390, cardY + 20, 290, 52);
+            JButton btn3D = EstiloBase.criarBotaoSecundario("Explorar modelo 3D");
+            btn3D.setBounds(22, 44, 230, 44);
             btn3D.addActionListener(e -> abrirModelo3D());
-            fundo.add(btn3D);
+            faixaAcao.add(btn3D);
         }
 
-        // ── Botão Próximo ─────────────────────────────────────────────────
-        JButton btnProximo = EstiloBase.criarBotaoPrimario("PRÓXIMO  →");
-        int bw = 300, bh = 70;
-        btnProximo.setBounds(cx - bw / 2, tela.height - 110, bw, bh);
+        JButton btnProximo = EstiloBase.criarBotaoPrimario(indice == controle.getTotalObras() - 1
+                ? "Ir para o questionario"
+                : "Proxima obra");
+        btnProximo.setBounds(faixaAcao.getWidth() - 250, 40, 228, 48);
         btnProximo.addActionListener(e -> {
             dispose();
             controle.proximaEtapaAposObra(indice);
         });
-        fundo.add(btnProximo);
+        faixaAcao.add(btnProximo);
 
         setContentPane(fundo);
     }
 
-    /** Placeholder visual estilizado que simula uma imagem do rover. */
-    private JPanel criarPlaceholderImagem(int idx) {
-        Color[] cores = {
-                new Color(180, 80, 30),  new Color(60, 120, 200), new Color(200, 140, 30),
-                new Color(80, 180, 100), new Color(200, 60, 80),  new Color(60, 160, 180),
-                new Color(140, 80, 200), new Color(200, 120, 60), new Color(80, 200, 160),
-                new Color(220, 180, 40)
-        };
-        String[] emojis = {"🛸","🚀","🤖","🔭","🛰️","🌋","🔬","📡","🚜","🚁"};
+    private JPanel criarPainelArte() {
+        String[] palavras = controle.getTituloObra(indice).split(" ");
+        String destaque = palavras.length > 0 ? palavras[0].toUpperCase() : "MARTE";
 
-        JPanel p = new JPanel(new BorderLayout()) {
+        JPanel painel = new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                // Fundo com cor temática
-                Color c = cores[idx % cores.length];
-                g2.setColor(new Color(c.getRed()/4, c.getGreen()/4, c.getBlue()/4));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                // Grade tipo sensor
-                g2.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 25));
-                for (int x = 0; x < getWidth(); x += 30)
+                g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                g2.setColor(new Color(10, 10, 14));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+
+                GradientPaint fundo = new GradientPaint(
+                        0, 0, new Color(18, 11, 13),
+                        getWidth(), getHeight(), new Color(10, 10, 14)
+                );
+                g2.setPaint(fundo);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+
+                float raioPlaneta = Math.min(getWidth(), getHeight()) * 0.29f;
+                float orbita = Math.min(getWidth(), getHeight()) * 0.37f;
+                float centroX = (float) (getWidth() * 0.55);
+                float centroY = (float) (getHeight() * 0.42);
+
+                desenharOrb(g2, centroX, centroY, raioPlaneta, EstiloBase.COR_DESTAQUE, EstiloBase.COR_DESTAQUE_2);
+                desenharOrb(g2, getWidth() * 0.18f, getHeight() * 0.74f, raioPlaneta * 0.35f, EstiloBase.COR_ACENTO, EstiloBase.COR_DESTAQUE);
+
+                g2.setStroke(new BasicStroke(1.25f));
+                g2.setColor(new Color(255, 255, 255, 28));
+                g2.draw(new Ellipse2D.Float(centroX - orbita, centroY - (orbita * 0.55f), orbita * 2, orbita * 1.10f));
+                g2.draw(new Ellipse2D.Float(centroX - (orbita * 0.78f), centroY - (orbita * 0.36f), orbita * 1.56f, orbita * 0.72f));
+
+                g2.setColor(new Color(255, 255, 255, 12));
+                for (int x = 24; x < getWidth(); x += 26) {
                     g2.drawLine(x, 0, x, getHeight());
-                for (int y = 0; y < getHeight(); y += 30)
+                }
+                for (int y = 24; y < getHeight(); y += 26) {
                     g2.drawLine(0, y, getWidth(), y);
-                // Borda
-                g2.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 120));
-                g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);
+                }
+
+                g2.setColor(new Color(255, 255, 255, 22));
+                g2.draw(new RoundRectangle2D.Float(16, 16, getWidth() - 32, getHeight() - 32, 20, 20));
                 g2.dispose();
             }
         };
-        p.setOpaque(false);
+        painel.setOpaque(false);
 
-        JLabel lblEmoji = new JLabel(emojis[idx % emojis.length], SwingConstants.CENTER);
-        lblEmoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 100));
-        p.add(lblEmoji, BorderLayout.CENTER);
+        JLabel lblPalavra = new JLabel(destaque);
+        lblPalavra.setFont(EstiloBase.fontePoppins(42f));
+        lblPalavra.setForeground(new Color(255, 255, 255, 196));
+        lblPalavra.setBounds(26, 26, 260, 48);
+        painel.add(lblPalavra);
 
-        JLabel lblLegenda = new JLabel(
-                "[ Imagem: " + controle.getTituloObra(idx) + " ]", SwingConstants.CENTER
-        );
-        lblLegenda.setFont(EstiloBase.FONTE_PEQUENA);
-        lblLegenda.setForeground(EstiloBase.COR_TEXTO_FRACO);
-        lblLegenda.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
-        p.add(lblLegenda, BorderLayout.SOUTH);
+        JLabel lblCodigo = new JLabel("MUSEU INTERATIVO");
+        lblCodigo.setFont(EstiloBase.FONTE_LABEL.deriveFont(12f));
+        lblCodigo.setForeground(EstiloBase.COR_TEXTO_FRACO);
+        lblCodigo.setBounds(28, 74, 200, 20);
+        painel.add(lblCodigo);
 
-        return p;
+        JLabel lblRodape = new JLabel("Mars archive " + CODIGOS[indice]);
+        lblRodape.setFont(EstiloBase.FONTE_PEQUENA);
+        lblRodape.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        lblRodape.setBounds(26, painel.getHeight() - 40, 200, 18);
+        painel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                lblRodape.setBounds(26, painel.getHeight() - 40, 240, 18);
+            }
+        });
+        painel.add(lblRodape);
+
+        return painel;
     }
 
-    /** Abre simulação de modelo 3D (placeholder NASA). */
     private void abrirModelo3D() {
-        JDialog dlg = new JDialog(this, "Modelo 3D — " + controle.getTituloObra(indice), true);
-        dlg.setSize(600, 400);
-        dlg.setLocationRelativeTo(this);
-        dlg.setLayout(new BorderLayout());
-        dlg.getContentPane().setBackground(EstiloBase.COR_FUNDO_PAINEL);
-
-        JLabel msg = new JLabel(
-                "<html><div style='text-align:center; color:#60B4DC; padding:40px;'>"
-                        + "<b style='font-size:18px;'>🌐 Modelo 3D do Rover</b><br><br>"
-                        + "Integração com NASA 3D Resources<br>"
-                        + "<span style='color:#808080; font-size:13px;'>https://nasa3d.arc.nasa.gov/models</span><br><br>"
-                        + "<span style='color:#FF7820;'>[Placeholder — conexão com visualizador 3D]</span>"
-                        + "</div></html>", SwingConstants.CENTER
+        EstiloBase.mostrarDialogoInformativo(
+                this,
+                "3D",
+                "Visualizacao do rover",
+                "A integracao real com um visualizador 3D ainda e um placeholder, mas a interface ja foi reposicionada "
+                        + "para receber essa experiencia sem quebrar o fluxo principal do totem.",
+                "Fechar"
         );
-        msg.setFont(EstiloBase.FONTE_CORPO);
-        dlg.add(msg, BorderLayout.CENTER);
-
-        JButton btnFechar = EstiloBase.criarBotaoPrimario("Fechar");
-        btnFechar.addActionListener(e -> dlg.dispose());
-        JPanel p = new JPanel();
-        p.setBackground(EstiloBase.COR_FUNDO_PAINEL);
-        p.add(btnFechar);
-        dlg.add(p, BorderLayout.SOUTH);
-        dlg.setVisible(true);
     }
 
     private JPanel criarBarraProgresso(int largura) {
-        JPanel p = new JPanel(null) {
+        return new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setColor(new Color(15, 25, 55));
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                // Marcadores de obras
-                int total = 10;
-                int passo = largura / (total + 2);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int total = controle.getTotalObras();
+                int gap = 8;
+                int segW = (largura - ((total - 1) * gap)) / total;
                 for (int i = 0; i < total; i++) {
-                    int x = passo + i * passo;
-                    Color c = i <= indice ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA;
-                    g2.setColor(c);
-                    g2.fillRoundRect(x, 12, passo - 6, 20, 8, 8);
+                    int x = i * (segW + gap);
+                    g2.setColor(new Color(255, 255, 255, 18));
+                    g2.fillRoundRect(x, 4, segW, 10, 10, 10);
+                    if (i <= indice) {
+                        GradientPaint gp = new GradientPaint(
+                                x, 0, EstiloBase.COR_DESTAQUE,
+                                x + segW, 14, EstiloBase.COR_DESTAQUE_2
+                        );
+                        g2.setPaint(gp);
+                        g2.fillRoundRect(x, 4, segW, 10, 10, 10);
+                    }
                 }
                 g2.dispose();
             }
         };
-        p.setOpaque(false);
-        return p;
     }
 
-    private JPanel criarFundo() {
-        JPanel p = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                GradientPaint gp = new GradientPaint(
-                        0, 0, new Color(5, 8, 20),
-                        getWidth(), getHeight(), new Color(8, 18, 45)
-                );
-                g2.setPaint(gp);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                EstiloBase.desenharEstrelas(g2, getWidth(), getHeight(), indice * 13L + 5L);
-                g2.dispose();
-            }
-        };
-        p.setOpaque(false);
-        return p;
+    private void desenharOrb(Graphics2D g2, float x, float y, float raio, Color interna, Color externa) {
+        RadialGradientPaint paint = new RadialGradientPaint(
+                new Point((int) x, (int) y),
+                raio,
+                new float[]{0f, 0.55f, 1f},
+                new Color[]{
+                        new Color(interna.getRed(), interna.getGreen(), interna.getBlue(), 240),
+                        new Color(externa.getRed(), externa.getGreen(), externa.getBlue(), 180),
+                        new Color(externa.getRed(), externa.getGreen(), externa.getBlue(), 12)
+                }
+        );
+        g2.setPaint(paint);
+        g2.fill(new Ellipse2D.Float(x - raio, y - raio, raio * 2, raio * 2));
     }
 }

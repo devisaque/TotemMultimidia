@@ -1,34 +1,35 @@
 package apresentacao;
 
 import modelo.Controle;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 /**
- * Mini-game interativo simples.
- * O visitante deve tocar nos meteoritos que aparecem na tela antes que
- * o tempo acabe. Exibido entre as obras conforme o fluxo.
+ * Mini-game com palco visual renovado.
  */
 public class fmrMiniGame extends JDialog {
 
     private final Controle controle;
-    private final int posicao; // qual dos 3 mini-games (0,1,2)
+    private final int posicao;
 
     private static final String[] TITULOS = {
-            "DESVIO DE METEORITOS!",
-            "COLETA DE AMOSTRAS!",
-            "RECARGA DE ENERGIA!"
+            "Desvio de meteoritos",
+            "Coleta de amostras",
+            "Recarga de energia"
     };
-    private static final String[] DESCRICOES = {
-            "Toque nos meteoritos antes que atinjam o rover!",
-            "Toque nas amostras de rocha marciana para coletá-las!",
-            "Toque nos painéis solares para recarregar o rover!"
-    };
-    private static final String[] EMOJIS_ALVO = {"☄️", "🪨", "⚡"};
 
-    // Estado do jogo
+    private static final String[] DESCRICOES = {
+            "Toque nos meteoritos antes que atinjam o rover.",
+            "Toque nas amostras para coletar dados da superficie marciana.",
+            "Toque nos paineis solares para alimentar a missao."
+    };
+
+    private static final String[] EMOJIS_ALVO = {"☄", "⬢", "✦"};
+
     private int pontos = 0;
     private int tentativas = 0;
     private static final int TOTAL_ALVOS = 8;
@@ -36,72 +37,98 @@ public class fmrMiniGame extends JDialog {
     private JLabel[] alvos;
     private JLabel lblPontos;
     private JPanel painelJogo;
-    private Random rng = new Random();
+    private final Random rng = new Random();
 
     public fmrMiniGame(JFrame pai, Controle controle, int posicao) {
         super(pai, true);
         this.controle = controle;
-        this.posicao  = posicao;
+        this.posicao = posicao;
         EstiloBase.configurarDialogFullscreen(this);
         construirInterface();
     }
 
     private void construirInterface() {
-        JPanel fundo = criarFundo();
+        JPanel fundo = EstiloBase.criarPainelFundo(99L + posicao);
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         int cx = tela.width / 2;
 
-        // Cabeçalho
-        JLabel lblTag = new JLabel("⚡ MINI-GAME", SwingConstants.CENTER);
-        lblTag.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblTag.setForeground(EstiloBase.COR_ACENTO);
-        lblTag.setBounds(0, 30, tela.width, 28);
+        JLabel lblTag = EstiloBase.criarTag("Interacao");
+        lblTag.setBounds(cx - 72, 40, 144, 34);
         fundo.add(lblTag);
 
         JLabel lblTitulo = EstiloBase.criarLabel(
-                TITULOS[posicao % 3], EstiloBase.FONTE_SECAO, EstiloBase.COR_DESTAQUE
+                TITULOS[posicao % 3],
+                EstiloBase.fontePoppins(42f),
+                EstiloBase.COR_TEXTO_PRIMARIO
         );
-        lblTitulo.setBounds(0, 64, tela.width, 50);
+        lblTitulo.setBounds(0, 92, tela.width, 52);
         fundo.add(lblTitulo);
 
         JLabel lblDesc = EstiloBase.criarLabel(
-                DESCRICOES[posicao % 3], EstiloBase.FONTE_CORPO, EstiloBase.COR_TEXTO_SECUNDARIO
+                DESCRICOES[posicao % 3],
+                EstiloBase.fonteInter(20f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
         );
-        lblDesc.setBounds(0, 116, tela.width, 36);
+        lblDesc.setBounds(0, 148, tela.width, 36);
         fundo.add(lblDesc);
 
-        // Placar
-        lblPontos = new JLabel("Toques: 0 / " + TOTAL_ALVOS, SwingConstants.CENTER);
-        lblPontos.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblPontos.setForeground(EstiloBase.COR_ACENTO);
-        lblPontos.setBounds(cx - 200, 160, 400, 40);
-        fundo.add(lblPontos);
+        JPanel cardPlacar = EstiloBase.criarCard();
+        cardPlacar.setLayout(null);
+        cardPlacar.setBounds(cx - 220, 208, 440, 92);
+        fundo.add(cardPlacar);
 
-        // Painel do jogo
+        JLabel lblMeta = EstiloBase.criarTag("Meta " + TOTAL_ALVOS + " toques");
+        lblMeta.setBounds(20, 18, 136, 30);
+        cardPlacar.add(lblMeta);
+
+        lblPontos = EstiloBase.criarLabel(
+                "Toques 0 / " + TOTAL_ALVOS,
+                EstiloBase.fontePoppins(28f),
+                EstiloBase.COR_TEXTO_PRIMARIO
+        );
+        lblPontos.setHorizontalAlignment(SwingConstants.LEFT);
+        lblPontos.setBounds(20, 48, 240, 28);
+        cardPlacar.add(lblPontos);
+
+        JLabel lblStatus = EstiloBase.criarLabel(
+                "Campo preparado para toque rapido",
+                EstiloBase.FONTE_PEQUENA.deriveFont(14f),
+                EstiloBase.COR_TEXTO_FRACO
+        );
+        lblStatus.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblStatus.setBounds(178, 18, 240, 18);
+        cardPlacar.add(lblStatus);
+
         painelJogo = new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setColor(new Color(8, 14, 35));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                g2.setColor(new Color(30, 50, 100));
-                g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(8, 8, 12, 220));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 36, 36);
+                g2.setColor(new Color(255, 255, 255, 16));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 36, 36);
+                g2.setColor(new Color(255, 255, 255, 10));
+                for (int x = 28; x < getWidth(); x += 28) {
+                    g2.drawLine(x, 0, x, getHeight());
+                }
+                for (int y = 28; y < getHeight(); y += 28) {
+                    g2.drawLine(0, y, getWidth(), y);
+                }
                 g2.dispose();
             }
         };
         painelJogo.setOpaque(false);
-        int jw = tela.width - 200, jh = tela.height - 350;
-        painelJogo.setBounds(100, 210, jw, jh);
+        int jw = tela.width - 180;
+        int jh = tela.height - 430;
+        painelJogo.setBounds(90, 332, jw, jh);
         fundo.add(painelJogo);
 
-        // Criar alvos (ocultos inicialmente)
         alvos = new JLabel[4];
         for (int i = 0; i < alvos.length; i++) {
-            JLabel alvo = new JLabel(EMOJIS_ALVO[posicao % 3], SwingConstants.CENTER);
-            alvo.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 56));
+            JLabel alvo = criarAlvo();
             alvo.setVisible(false);
-            alvo.setSize(80, 80);
+            alvo.setSize(94, 94);
             final int idx = i;
             alvo.addMouseListener(new MouseAdapter() {
                 @Override
@@ -113,21 +140,40 @@ public class fmrMiniGame extends JDialog {
             painelJogo.add(alvo);
         }
 
-        // Botão pular
-        JButton btnPular = EstiloBase.criarBotaoSecundario("Pular Mini-Game →");
-        btnPular.setBounds(cx - 160, tela.height - 100, 320, 60);
+        JButton btnPular = EstiloBase.criarBotaoSecundario("Pular interacao");
+        btnPular.setBounds(cx - 130, tela.height - 76, 260, 44);
         btnPular.addActionListener(e -> encerrarJogo());
         fundo.add(btnPular);
 
         setContentPane(fundo);
-
-        // Inicia o jogo após exibição
         SwingUtilities.invokeLater(this::iniciarJogo);
     }
 
+    private JLabel criarAlvo() {
+        return new JLabel(EMOJIS_ALVO[posicao % 3], SwingConstants.CENTER) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                GradientPaint gp = new GradientPaint(0, 0, EstiloBase.COR_DESTAQUE, getWidth(), getHeight(), EstiloBase.COR_ACENTO);
+                g2.setPaint(gp);
+                g2.fillOval(0, 0, getWidth(), getHeight());
+                g2.setColor(new Color(255, 255, 255, 50));
+                g2.fillOval(8, 8, getWidth() - 16, (getHeight() / 2) - 4);
+                g2.setColor(new Color(255, 255, 255, 85));
+                g2.drawOval(1, 1, getWidth() - 3, getHeight() - 3);
+                g2.dispose();
+                setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+                setFont(EstiloBase.fontePoppins(32f));
+                super.paintComponent(g);
+            }
+        };
+    }
+
     private void iniciarJogo() {
-        timerAlvos = new Timer(1200, e -> exibirProximoAlvo());
+        timerAlvos = new Timer(1150, e -> exibirProximoAlvo());
         timerAlvos.start();
+        exibirProximoAlvo();
     }
 
     private void exibirProximoAlvo() {
@@ -135,60 +181,47 @@ public class fmrMiniGame extends JDialog {
             encerrarJogo();
             return;
         }
-        // Oculta todos
-        for (JLabel a : alvos) a.setVisible(false);
 
-        // Mostra 1-2 alvos em posições aleatórias
-        int qtd = 1 + rng.nextInt(2);
-        int jw = painelJogo.getWidth() - 80;
-        int jh = painelJogo.getHeight() - 80;
-        for (int i = 0; i < qtd && i < alvos.length; i++) {
-            alvos[i].setLocation(20 + rng.nextInt(Math.max(1, jw)), 10 + rng.nextInt(Math.max(1, jh)));
+        for (JLabel alvo : alvos) {
+            alvo.setVisible(false);
+        }
+
+        int quantidade = 1 + rng.nextInt(2);
+        int limiteX = painelJogo.getWidth() - 110;
+        int limiteY = painelJogo.getHeight() - 110;
+
+        for (int i = 0; i < quantidade && i < alvos.length; i++) {
+            alvos[i].setLocation(24 + rng.nextInt(Math.max(1, limiteX)), 24 + rng.nextInt(Math.max(1, limiteY)));
             alvos[i].setVisible(true);
         }
+
         tentativas++;
     }
 
     private void registrarToque(int idx) {
-        if (!alvos[idx].isVisible()) return;
+        if (!alvos[idx].isVisible()) {
+            return;
+        }
+
         alvos[idx].setVisible(false);
         pontos++;
-        lblPontos.setText("Toques: " + pontos + " / " + TOTAL_ALVOS);
-        if (pontos >= TOTAL_ALVOS) encerrarJogo();
+        lblPontos.setText("Toques " + pontos + " / " + TOTAL_ALVOS);
+
+        if (pontos >= TOTAL_ALVOS) {
+            encerrarJogo();
+        }
     }
 
     private void encerrarJogo() {
-        if (timerAlvos != null) timerAlvos.stop();
+        if (timerAlvos != null) {
+            timerAlvos.stop();
+        }
 
-        // Exibe resultado
-        String msg = pontos >= TOTAL_ALVOS
-                ? "🏆 Excelente! Você acertou todos os alvos!"
-                : "✅ Mini-game concluído! Você acertou " + pontos + " de " + TOTAL_ALVOS + ".";
-
-        JOptionPane.showMessageDialog(
-                this, msg, "Resultado do Mini-Game",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+        String mensagem = pontos >= TOTAL_ALVOS
+                ? "Desempenho maximo. Todos os alvos foram ativados com sucesso."
+                : "Interacao concluida com " + pontos + " de " + TOTAL_ALVOS + " alvos acionados.";
+        EstiloBase.mostrarDialogoInformativo(this, "Mini-game", "Interacao concluida", mensagem, "Continuar");
         dispose();
         controle.aposMinigame(controle.getObraAtual());
-    }
-
-    private JPanel criarFundo() {
-        JPanel p = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                GradientPaint gp = new GradientPaint(
-                        0, 0, new Color(5, 8, 20),
-                        getWidth(), getHeight(), new Color(20, 10, 50)
-                );
-                g2.setPaint(gp);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                EstiloBase.desenharEstrelas(g2, getWidth(), getHeight(), 99L + posicao);
-                g2.dispose();
-            }
-        };
-        p.setOpaque(false);
-        return p;
     }
 }

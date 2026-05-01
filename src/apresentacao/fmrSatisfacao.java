@@ -1,13 +1,14 @@
 package apresentacao;
 
 import modelo.Controle;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
- * Tela de pesquisa de satisfação — avaliação de 0 a 5 estrelas.
- * Exibe agradecimento personalizado e encerra a sessão.
+ * Tela final de satisfacao em sintonia com o novo visual.
  */
 public class fmrSatisfacao extends JDialog {
 
@@ -18,12 +19,12 @@ public class fmrSatisfacao extends JDialog {
     private JButton btnEnviar;
 
     private static final String[] MENSAGENS = {
-            "😔 Que pena! Ajude-nos a melhorar.",
-            "😐 Obrigado pelo seu retorno.",
-            "🙂 Bom! Sempre podemos melhorar.",
-            "😊 Ótimo! Ficamos felizes.",
-            "😄 Muito bom! Volte sempre.",
-            "🚀 Incrível! Você adorou a visita!"
+            "Sem avaliacao registrada.",
+            "Que pena. Seu retorno ajuda a melhorar o percurso.",
+            "Obrigado pelo retorno. Vamos evoluir a experiencia.",
+            "Boa avaliacao. Estamos no caminho certo.",
+            "Otimo. Ficamos felizes com a visita.",
+            "Excelente. A experiencia marcou voce."
     };
 
     public fmrSatisfacao(JFrame pai, Controle controle) {
@@ -34,92 +35,102 @@ public class fmrSatisfacao extends JDialog {
     }
 
     private void construirInterface() {
-        JPanel fundo = criarFundo();
+        JPanel fundo = EstiloBase.criarPainelFundo(33L);
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         int cx = tela.width / 2;
 
-        // Ícone
-        JLabel lblIcone = new JLabel("🌟", SwingConstants.CENTER);
-        lblIcone.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 90));
-        lblIcone.setBounds(cx - 80, 60, 160, 110);
-        fundo.add(lblIcone);
+        JLabel lblTag = EstiloBase.criarTag("Encerramento da visita");
+        lblTag.setBounds(cx - 108, 52, 216, 34);
+        fundo.add(lblTag);
 
-        // Título
-        JLabel lblTitulo = EstiloBase.criarLabel(
-                "Como foi sua visita?", EstiloBase.FONTE_TITULO, EstiloBase.COR_DESTAQUE
-        );
-        lblTitulo.setBounds(0, 180, tela.width, 60);
+        JLabel lblTitulo = new JLabel("<html><div style='text-align:center;width:900px'>Como foi a sua experiencia no totem?</div></html>");
+        lblTitulo.setFont(EstiloBase.fontePoppins(54f));
+        lblTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+        lblTitulo.setBounds(cx - 450, 110, 900, 120);
         fundo.add(lblTitulo);
 
-        // Nome do visitante
         JLabel lblNome = EstiloBase.criarLabel(
-                "Obrigado, " + controle.getNomeVisitante() + "! Avalie sua experiência:",
-                EstiloBase.FONTE_SUBTITULO, EstiloBase.COR_TEXTO_SECUNDARIO
+                "Obrigado, " + controle.getNomeVisitante() + ". Sua opiniao fecha a jornada e ajuda a melhorar o acervo digital.",
+                EstiloBase.fonteInter(22f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
         );
-        lblNome.setBounds(0, 250, tela.width, 40);
+        lblNome.setBounds(0, 240, tela.width, 34);
         fundo.add(lblNome);
 
-        // Estrelas
-        JPanel painelEstrelas = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        JPanel card = EstiloBase.criarCard();
+        card.setLayout(null);
+        card.setBounds(cx - 420, 314, 840, 320);
+        fundo.add(card);
+
+        JLabel lblCardTag = EstiloBase.criarTag("Avalie de 0 a 5");
+        lblCardTag.setBounds(30, 28, 132, 32);
+        card.add(lblCardTag);
+
+        JPanel painelEstrelas = new JPanel(new FlowLayout(FlowLayout.CENTER, 18, 0));
         painelEstrelas.setOpaque(false);
-        painelEstrelas.setBounds(cx - 340, 310, 680, 100);
-        fundo.add(painelEstrelas);
+        painelEstrelas.setBounds(44, 92, 752, 96);
+        card.add(painelEstrelas);
 
         estrelas = new JLabel[6];
         for (int i = 0; i <= 5; i++) {
             final int nota = i;
-            JLabel estrela = new JLabel(i == 0 ? "✕" : "★", SwingConstants.CENTER);
-            estrela.setFont(new Font("Segoe UI", Font.BOLD, i == 0 ? 48 : 64));
+            JLabel estrela = new JLabel(i == 0 ? "0" : "★", SwingConstants.CENTER);
+            estrela.setFont(i == 0 ? EstiloBase.fontePoppins(36f) : EstiloBase.fontePoppins(58f));
             estrela.setForeground(EstiloBase.COR_TEXTO_FRACO);
             estrela.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            estrela.setPreferredSize(new Dimension(90, 90));
+            estrela.setPreferredSize(new Dimension(92, 92));
             estrela.setToolTipText(i == 0 ? "Sem nota" : nota + " estrela(s)");
 
             estrela.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseClicked(MouseEvent e) { selecionarNota(nota); }
+                public void mouseClicked(MouseEvent e) {
+                    selecionarNota(nota);
+                }
+
                 @Override
-                public void mouseEntered(MouseEvent e) { destacarAte(nota); }
+                public void mouseEntered(MouseEvent e) {
+                    destacarAte(nota);
+                }
+
                 @Override
-                public void mouseExited(MouseEvent e)  { atualizarEstrelas(notaSelecionada); }
+                public void mouseExited(MouseEvent e) {
+                    atualizarEstrelas(notaSelecionada);
+                }
             });
+
             estrelas[i] = estrela;
             painelEstrelas.add(estrela);
         }
 
-        // Rótulo da nota
-        lblNota = new JLabel("Toque para avaliar", SwingConstants.CENTER);
-        lblNota.setFont(new Font("Segoe UI", Font.ITALIC, 20));
-        lblNota.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
-        lblNota.setBounds(0, 420, tela.width, 40);
-        fundo.add(lblNota);
+        lblNota = EstiloBase.criarLabel(
+                "Toque em um valor para avaliar a experiencia",
+                EstiloBase.fonteInter(19f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        lblNota.setBounds(30, 200, 780, 26);
+        card.add(lblNota);
 
-        // Resultado do questionário
         int pontos = controle.calcularPontuacao();
-        JLabel lblQuiz = new JLabel(
-                "📋 Questionário: " + pontos + " de " + controle.getTotalPerguntas() + " acertos",
-                SwingConstants.CENTER
+        JLabel lblQuiz = EstiloBase.criarLabel(
+                "Desempenho no questionario: " + pontos + " de " + controle.getTotalPerguntas() + " acertos",
+                EstiloBase.FONTE_PEQUENA.deriveFont(15f),
+                EstiloBase.COR_TEXTO_FRACO
         );
-        lblQuiz.setFont(EstiloBase.FONTE_CORPO);
-        lblQuiz.setForeground(EstiloBase.COR_ACENTO);
-        lblQuiz.setBounds(0, 470, tela.width, 36);
-        fundo.add(lblQuiz);
+        lblQuiz.setBounds(30, 234, 780, 20);
+        card.add(lblQuiz);
 
-        // Botão Enviar
-        btnEnviar = EstiloBase.criarBotaoPrimario("ENVIAR AVALIAÇÃO  ✓");
+        btnEnviar = EstiloBase.criarBotaoPrimario("Encerrar visita");
         btnEnviar.setEnabled(false);
-        btnEnviar.setBounds(cx - 200, 530, 400, 74);
+        btnEnviar.setBounds(304, 262, 232, 42);
         btnEnviar.addActionListener(e -> enviarAvaliacao());
-        fundo.add(btnEnviar);
+        card.add(btnEnviar);
 
-        // Rodapé
-        JLabel lblRodape = new JLabel(
-                "Sua opinião nos ajuda a melhorar o museu para futuros visitantes.",
-                SwingConstants.CENTER
+        JLabel lblRodape = EstiloBase.criarLabel(
+                "Sua resposta fica apenas nesta sessao e orienta melhorias futuras da instalacao.",
+                EstiloBase.FONTE_PEQUENA.deriveFont(14f),
+                EstiloBase.COR_TEXTO_FRACO
         );
-        lblRodape.setFont(EstiloBase.FONTE_PEQUENA);
-        lblRodape.setForeground(EstiloBase.COR_TEXTO_FRACO);
-        lblRodape.setBounds(0, tela.height - 50, tela.width, 28);
+        lblRodape.setBounds(0, tela.height - 52, tela.width, 20);
         fundo.add(lblRodape);
 
         setContentPane(fundo);
@@ -128,50 +139,35 @@ public class fmrSatisfacao extends JDialog {
     private void selecionarNota(int nota) {
         notaSelecionada = nota;
         atualizarEstrelas(nota);
-        lblNota.setText(nota == 0 ? "Sem avaliação" : MENSAGENS[nota]);
-        lblNota.setForeground(nota >= 4 ? EstiloBase.COR_SUCESSO :
-                nota >= 2 ? EstiloBase.COR_ACENTO  : EstiloBase.COR_ERRO);
+        lblNota.setText(MENSAGENS[nota]);
+        lblNota.setForeground(nota >= 4 ? EstiloBase.COR_SUCESSO
+                : nota >= 2 ? EstiloBase.COR_TEXTO_SECUNDARIO : EstiloBase.COR_ERRO);
         btnEnviar.setEnabled(true);
     }
 
     private void destacarAte(int nota) {
         for (int i = 0; i <= 5; i++) {
             estrelas[i].setForeground(i <= nota && nota > 0
-                    ? new Color(255, 200, 50)
-                    : EstiloBase.COR_TEXTO_FRACO
-            );
+                    ? EstiloBase.COR_DESTAQUE_2
+                    : i == 0 && nota == 0
+                    ? EstiloBase.COR_DESTAQUE
+                    : EstiloBase.COR_TEXTO_FRACO);
         }
     }
 
     private void atualizarEstrelas(int nota) {
         for (int i = 0; i <= 5; i++) {
-            Color c = (nota >= 0 && i <= nota && nota > 0)
-                    ? new Color(255, 180, 30) : EstiloBase.COR_TEXTO_FRACO;
-            estrelas[i].setForeground(c);
+            boolean ativo = nota >= 0 && i <= nota;
+            if (i == 0 && nota == 0) {
+                estrelas[i].setForeground(EstiloBase.COR_DESTAQUE);
+            } else {
+                estrelas[i].setForeground(ativo && nota > 0 ? EstiloBase.COR_DESTAQUE_2 : EstiloBase.COR_TEXTO_FRACO);
+            }
         }
     }
 
     private void enviarAvaliacao() {
         dispose();
         controle.finalizarVisita(notaSelecionada);
-    }
-
-    private JPanel criarFundo() {
-        JPanel p = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                GradientPaint gp = new GradientPaint(
-                        0, 0, new Color(5, 8, 20),
-                        getWidth(), getHeight(), new Color(20, 5, 40)
-                );
-                g2.setPaint(gp);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                EstiloBase.desenharEstrelas(g2, getWidth(), getHeight(), 33L);
-                g2.dispose();
-            }
-        };
-        p.setOpaque(false);
-        return p;
     }
 }

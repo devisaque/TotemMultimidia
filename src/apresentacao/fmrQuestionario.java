@@ -1,20 +1,19 @@
 package apresentacao;
 
 import modelo.Controle;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Tela do questionário — 5 perguntas de múltipla escolha.
- * Exibe uma pergunta por vez com botões de opção touch-friendly.
- * Calcula e exibe o resultado ao final.
+ * Tela do questionario com leitura ampla e feedback contextual.
  */
 public class fmrQuestionario extends JDialog {
 
     private final Controle controle;
     private int perguntaAtual = 0;
 
-    // Componentes dinâmicos
+    private JPanel barraProgresso;
     private JLabel lblNumero;
     private JLabel lblPergunta;
     private JPanel painelOpcoes;
@@ -32,146 +31,184 @@ public class fmrQuestionario extends JDialog {
     }
 
     private void construirInterface() {
-        JPanel fundo = criarFundo();
+        JPanel fundo = EstiloBase.criarPainelFundo(55L);
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         int cx = tela.width / 2;
 
-        // Cabeçalho
-        JLabel lblTag = new JLabel("📋 QUESTIONÁRIO", SwingConstants.CENTER);
-        lblTag.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblTag.setForeground(EstiloBase.COR_ACENTO);
-        lblTag.setBounds(0, 30, tela.width, 28);
+        JLabel lblTag = EstiloBase.criarTag("Questionario final");
+        lblTag.setBounds(cx - 88, 40, 176, 34);
         fundo.add(lblTag);
 
-        lblNumero = new JLabel("PERGUNTA 1 DE 5", SwingConstants.CENTER);
-        lblNumero.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblNumero.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
-        lblNumero.setBounds(0, 64, tela.width, 32);
+        lblNumero = EstiloBase.criarLabel(
+                "PERGUNTA 1 DE 5",
+                EstiloBase.FONTE_LABEL.deriveFont(14f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        lblNumero.setBounds(0, 92, tela.width, 24);
         fundo.add(lblNumero);
 
-        // Card da pergunta
+        barraProgresso = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int total = controle.getTotalPerguntas();
+                int gap = 10;
+                int segW = (getWidth() - ((total - 1) * gap)) / total;
+                for (int i = 0; i < total; i++) {
+                    int x = i * (segW + gap);
+                    g2.setColor(new Color(255, 255, 255, 18));
+                    g2.fillRoundRect(x, 3, segW, 10, 10, 10);
+                    if (i <= perguntaAtual) {
+                        GradientPaint gp = new GradientPaint(x, 0, EstiloBase.COR_DESTAQUE,
+                                x + segW, 12, EstiloBase.COR_DESTAQUE_2);
+                        g2.setPaint(gp);
+                        g2.fillRoundRect(x, 3, segW, 10, 10, 10);
+                    }
+                }
+                g2.dispose();
+            }
+        };
+        barraProgresso.setOpaque(false);
+        barraProgresso.setBounds(cx - 260, 124, 520, 16);
+        fundo.add(barraProgresso);
+
         JPanel cardPergunta = EstiloBase.criarCard();
         cardPergunta.setLayout(new BorderLayout());
-        int cw = 900;
-        cardPergunta.setBounds(cx - cw / 2, 106, cw, 100);
+        int cw = Math.min(980, tela.width - 240);
+        cardPergunta.setBounds(cx - cw / 2, 176, cw, 138);
 
         lblPergunta = new JLabel("", SwingConstants.CENTER);
-        lblPergunta.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblPergunta.setFont(EstiloBase.fontePoppins(30f));
         lblPergunta.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
-        lblPergunta.setBorder(BorderFactory.createEmptyBorder(16, 24, 16, 24));
+        lblPergunta.setBorder(BorderFactory.createEmptyBorder(20, 28, 20, 28));
         cardPergunta.add(lblPergunta, BorderLayout.CENTER);
         fundo.add(cardPergunta);
 
-        // Painel de opções
-        painelOpcoes = new JPanel(new GridLayout(2, 2, 16, 16));
+        painelOpcoes = new JPanel(new GridLayout(2, 2, 18, 18));
         painelOpcoes.setOpaque(false);
-        painelOpcoes.setBounds(cx - cw / 2, 226, cw, 280);
+        painelOpcoes.setBounds(cx - cw / 2, 344, cw, 318);
         fundo.add(painelOpcoes);
 
-        // Feedback
-        lblFeedback = new JLabel("", SwingConstants.CENTER);
-        lblFeedback.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblFeedback.setBounds(0, 520, tela.width, 40);
-        fundo.add(lblFeedback);
+        JPanel faixaFeedback = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(new Color(255, 255, 255, 10));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+                g2.setColor(new Color(255, 255, 255, 16));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
+                g2.dispose();
+            }
+        };
+        faixaFeedback.setOpaque(false);
+        faixaFeedback.setBounds(cx - 300, 694, 600, 88);
+        fundo.add(faixaFeedback);
 
-        // Botão Confirmar
-        btnConfirmar = EstiloBase.criarBotaoPrimario("CONFIRMAR →");
-        btnConfirmar.setBounds(cx - 180, 580, 360, 70);
+        lblFeedback = EstiloBase.criarLabel(
+                "Escolha uma alternativa para continuar",
+                EstiloBase.FONTE_CORPO,
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        lblFeedback.setBounds(20, 16, 560, 24);
+        faixaFeedback.add(lblFeedback);
+
+        btnConfirmar = EstiloBase.criarBotaoPrimario("Confirmar resposta");
+        btnConfirmar.setBounds(170, 38, 260, 40);
         btnConfirmar.setEnabled(false);
         btnConfirmar.addActionListener(e -> confirmarResposta());
-        fundo.add(btnConfirmar);
+        faixaFeedback.add(btnConfirmar);
 
         setContentPane(fundo);
     }
 
     private void carregarPergunta(int idx) {
-        perguntaAtual  = idx;
+        perguntaAtual = idx;
         opcaoSelecionada = -1;
         btnConfirmar.setEnabled(false);
-        lblFeedback.setText("");
+        lblFeedback.setText("Escolha uma alternativa para continuar");
+        lblFeedback.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        barraProgresso.repaint();
 
         lblNumero.setText("PERGUNTA " + (idx + 1) + " DE " + controle.getTotalPerguntas());
-        lblPergunta.setText("<html><div style='text-align:center;'>" + controle.getPergunta(idx) + "</div></html>");
+        lblPergunta.setText("<html><div style='text-align:center;width:880px'>" + controle.getPergunta(idx) + "</div></html>");
 
         painelOpcoes.removeAll();
-        botoesOpcao = new JButton[controle.getOpcoesPergunta(idx).length];
         String[] opcoes = controle.getOpcoesPergunta(idx);
+        botoesOpcao = new JButton[opcoes.length];
+
         char letra = 'A';
         for (int i = 0; i < opcoes.length; i++) {
-            final int opcIdx = i;
-            String label = letra + ")  " + opcoes[i];
-            JButton btn = criarBotaoOpcao(label);
-            btn.addActionListener(e -> selecionarOpcao(opcIdx));
-            botoesOpcao[i] = btn;
-            painelOpcoes.add(btn);
+            int indiceOpcao = i;
+            JButton botao = criarBotaoOpcao(letra + ". " + opcoes[i], idx);
+            botao.addActionListener(e -> selecionarOpcao(indiceOpcao));
+            botoesOpcao[i] = botao;
+            painelOpcoes.add(botao);
             letra++;
         }
+
         painelOpcoes.revalidate();
         painelOpcoes.repaint();
     }
 
-    private JButton criarBotaoOpcao(String texto) {
-        JButton btn = new JButton(texto) {
-            boolean selecionado = false;
-
+    private JButton criarBotaoOpcao(String texto, int indicePergunta) {
+        JButton btn = new JButton("<html><div style='width:360px'>" + texto + "</div></html>") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                Color bg = selecionado ? new Color(255, 120, 30, 60) :
-                        getModel().isRollover() ? new Color(30, 50, 100) :
-                        EstiloBase.COR_CARD;
-                g2.setColor(bg);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 14, 14);
-                Color borda = selecionado ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA;
-                g2.setColor(borda);
-                g2.setStroke(new BasicStroke(selecionado ? 2.5f : 1.5f));
-                g2.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 14, 14);
-                g2.setColor(selecionado ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_TEXTO_PRIMARIO);
-                g2.setFont(EstiloBase.FONTE_CORPO);
-                FontMetrics fm = g2.getFontMetrics();
-                int tx = 24;
-                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
-                g2.drawString(getText(), tx, ty);
+                boolean selecionado = Boolean.TRUE.equals(getClientProperty("selecionado"));
+                Color fundo = selecionado ? new Color(255, 115, 54, 52)
+                        : getModel().isRollover() ? new Color(255, 255, 255, 16)
+                        : new Color(255, 255, 255, 10);
+                g2.setColor(fundo);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+                GradientPaint borda = new GradientPaint(
+                        0, 0, selecionado ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA,
+                        getWidth(), getHeight(), selecionado ? EstiloBase.COR_DESTAQUE_2 : EstiloBase.COR_CARD_GLOW
+                );
+                g2.setPaint(borda);
+                g2.setStroke(new BasicStroke(selecionado ? 2f : 1.2f));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
                 g2.dispose();
-            }
 
-            public void setSelecionado(boolean s) { this.selecionado = s; repaint(); }
+                setForeground(selecionado ? EstiloBase.COR_TEXTO_PRIMARIO : EstiloBase.COR_TEXTO_SECUNDARIO);
+                super.paintComponent(g);
+            }
         };
-        btn.setBorderPainted(false);
+        btn.setFont(EstiloBase.fonteInter(indicePergunta == 4 ? 16f : 17f));
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setBorder(BorderFactory.createEmptyBorder(18, 22, 18, 22));
         btn.setContentAreaFilled(false);
+        btn.setOpaque(false);
         btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
     }
 
-    @SuppressWarnings("unchecked")
     private void selecionarOpcao(int idx) {
         opcaoSelecionada = idx;
-        // Desmarca todos
-        for (JButton b : botoesOpcao) {
-            try {
-                b.getClass().getMethod("setSelecionado", boolean.class).invoke(b, false);
-            } catch (Exception ignored) {}
+        for (int i = 0; i < botoesOpcao.length; i++) {
+            botoesOpcao[i].putClientProperty("selecionado", i == idx);
+            botoesOpcao[i].repaint();
         }
-        // Marca o selecionado
-        try {
-            botoesOpcao[idx].getClass().getMethod("setSelecionado", boolean.class)
-                    .invoke(botoesOpcao[idx], true);
-        } catch (Exception ignored) {}
+        lblFeedback.setText("Opcao selecionada. Toque em confirmar para registrar.");
+        lblFeedback.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
         btnConfirmar.setEnabled(true);
     }
 
     private void confirmarResposta() {
-        if (opcaoSelecionada < 0) return;
-        controle.registrarResposta(perguntaAtual, opcaoSelecionada);
+        if (opcaoSelecionada < 0) {
+            return;
+        }
 
+        controle.registrarResposta(perguntaAtual, opcaoSelecionada);
         boolean correto = controle.getGabaritos()[perguntaAtual] == opcaoSelecionada;
-        lblFeedback.setText(correto ? "✅  Resposta correta!" : "❌  Resposta incorreta. Não desanime!");
+        lblFeedback.setText(correto ? "Resposta correta. Excelente." : "Resposta registrada. Vamos para a proxima.");
         lblFeedback.setForeground(correto ? EstiloBase.COR_SUCESSO : EstiloBase.COR_ERRO);
 
-        // Aguarda 1s e avança
-        Timer t = new Timer(1200, e -> {
+        Timer temporizador = new Timer(1200, e -> {
             int proxima = perguntaAtual + 1;
             if (proxima < controle.getTotalPerguntas()) {
                 carregarPergunta(proxima);
@@ -179,38 +216,21 @@ public class fmrQuestionario extends JDialog {
                 exibirResultado();
             }
         });
-        t.setRepeats(false);
-        t.start();
+        temporizador.setRepeats(false);
+        temporizador.start();
     }
 
     private void exibirResultado() {
         int pontos = controle.calcularPontuacao();
-        int total  = controle.getTotalPerguntas();
-        String msg = "🏆 Você acertou " + pontos + " de " + total + " perguntas!\n\n";
-        msg += pontos == total ? "Incrível! Você é um verdadeiro especialista em Marte!" :
-                pontos >= 3    ? "Muito bem! Você aprendeu bastante sobre a exploração marciana." :
-                "Continue explorando — Marte tem muito mais a revelar!";
-        JOptionPane.showMessageDialog(this, msg, "Resultado do Questionário", JOptionPane.INFORMATION_MESSAGE);
+        int total = controle.getTotalPerguntas();
+        String mensagem = "Voce acertou " + pontos + " de " + total + " perguntas.\n\n"
+                + (pontos == total
+                ? "Leitura impecavel da exposicao. O visitante terminou o percurso com dominio total do tema."
+                : pontos >= 3
+                ? "Otimo desempenho. O percurso conseguiu transmitir os principais marcos da exploracao marciana."
+                : "A jornada terminou com descobertas importantes. Vale revisitar as obras e continuar explorando.");
+        EstiloBase.mostrarDialogoInformativo(this, "Resultado", "Questionario concluido", mensagem, "Continuar");
         dispose();
         controle.aposQuestionario();
-    }
-
-    private JPanel criarFundo() {
-        JPanel p = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                GradientPaint gp = new GradientPaint(
-                        0, 0, new Color(5, 8, 20),
-                        getWidth(), getHeight(), new Color(10, 25, 55)
-                );
-                g2.setPaint(gp);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                EstiloBase.desenharEstrelas(g2, getWidth(), getHeight(), 55L);
-                g2.dispose();
-            }
-        };
-        p.setOpaque(false);
-        return p;
     }
 }

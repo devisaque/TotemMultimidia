@@ -1,22 +1,19 @@
 package apresentacao;
 
 import modelo.Controle;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
 
 /**
- * Tela inicial do totem — splash screen com título, subtítulo e botão Iniciar.
- * Otimizada para touchscreen; usa animação de pulso no botão.
+ * Tela inicial do totem com visual de abertura da exposicao.
  */
 public class fmrInicio extends JDialog {
 
     private final Controle controle;
     private float alphaAnima = 0f;
     private Timer timerEntrada;
-    private Timer timerPulso;
-    private float pulso = 1.0f;
-    private boolean pulsoSubindo = false;
 
     public fmrInicio(JFrame pai, Controle controle) {
         super(pai, true);
@@ -27,102 +24,160 @@ public class fmrInicio extends JDialog {
     }
 
     private void construirInterface() {
-        JPanel painel = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                // Fundo degradê espacial
-                GradientPaint gp = new GradientPaint(
-                        0, 0, new Color(5, 8, 20),
-                        0, getHeight(), new Color(15, 5, 40)
-                );
-                g2.setPaint(gp);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                // Campo estelar
-                EstiloBase.desenharEstrelas(g2, getWidth(), getHeight(), 42L);
-                // Planeta Marte decorativo
-                int cx = getWidth() - 220, cy = 180, r = 140;
-                RadialGradientPaint marte = new RadialGradientPaint(
-                        new Point(cx - 30, cy - 30), r,
-                        new float[]{0f, 0.5f, 1f},
-                        new Color[]{new Color(220, 100, 60), new Color(180, 60, 30), new Color(80, 20, 10)}
-                );
-                g2.setPaint(marte);
-                g2.fillOval(cx - r, cy - r, r * 2, r * 2);
-                g2.setColor(new Color(0, 0, 0, 80));
-                g2.fillOval(cx - r + 40, cy - r + 20, r * 2, r * 2);
-                g2.dispose();
-            }
-        };
-        painel.setOpaque(false);
+        JPanel painel = EstiloBase.criarPainelFundo(42L);
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
 
-        // ── Logo / Ícone ──────────────────────────────────────────────────
-        JLabel lblIcone = new JLabel("🤖", SwingConstants.CENTER);
-        lblIcone.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 96));
-        lblIcone.setBounds(tela.width / 2 - 80, 80, 160, 120);
-        painel.add(lblIcone);
+        int margem = Math.max(54, tela.width / 28);
+        int colunaEsquerda = (int) (tela.width * 0.53);
+        int cardDireitaX = colunaEsquerda + 18;
+        int cardDireitaW = tela.width - cardDireitaX - margem;
 
-        // ── Título ────────────────────────────────────────────────────────
-        JLabel lblTitulo = new JLabel(
-                "<html><div style='text-align:center;'>"
-                        + "<span style='color:#FF7820;'>ROBÔS EXPLORADORES</span>"
-                        + "</div></html>", SwingConstants.CENTER
-        );
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 56));
-        lblTitulo.setForeground(EstiloBase.COR_DESTAQUE);
-        lblTitulo.setBounds(0, 210, tela.width, 80);
+        JLabel lblTag = EstiloBase.criarTag("Museu multimidia");
+        lblTag.setBounds(margem, 54, 150, 34);
+        painel.add(lblTag);
+
+        JLabel lblTitulo = new JLabel("<html><div style='width:" + (colunaEsquerda - margem) + "px'>"
+                + "ROBOS<br>EXPLORADORES</div></html>");
+        lblTitulo.setFont(EstiloBase.fontePoppins(76f));
+        lblTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+        lblTitulo.setBounds(margem, 118, colunaEsquerda - margem, 210);
         painel.add(lblTitulo);
 
-        // ── Subtítulo ─────────────────────────────────────────────────────
-        JLabel lblSub = new JLabel(
-                "Uma jornada pela conquista de Marte", SwingConstants.CENTER
-        );
-        lblSub.setFont(EstiloBase.FONTE_SUBTITULO);
-        lblSub.setForeground(EstiloBase.COR_ACENTO);
-        lblSub.setBounds(0, 305, tela.width, 40);
+        JLabel lblSub = new JLabel("<html><div style='width:" + (colunaEsquerda - margem - 20) + "px'>"
+                + "Uma experiencia imersiva sobre as missoes que transformaram nossa visao de Marte. "
+                + "Toque para iniciar a jornada, conhecer as obras e interagir com o acervo digital.</div></html>");
+        lblSub.setFont(EstiloBase.fonteInter(23f));
+        lblSub.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        lblSub.setBounds(margem, 338, colunaEsquerda - margem - 20, 108);
         painel.add(lblSub);
 
-        // ── Linha decorativa ──────────────────────────────────────────────
-        JSeparator sep = new JSeparator();
-        sep.setForeground(new Color(40, 70, 140));
-        sep.setBounds(tela.width / 2 - 300, 370, 600, 2);
-        painel.add(sep);
-
-        // ── Botão Iniciar ─────────────────────────────────────────────────
-        JButton btnIniciar = EstiloBase.criarBotaoPrimario("  TOQUE PARA INICIAR  ");
-        btnIniciar.setPreferredSize(new Dimension(420, 80));
-        btnIniciar.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        int bx = tela.width / 2 - 210;
-        btnIniciar.setBounds(bx, 430, 420, 80);
+        JButton btnIniciar = EstiloBase.criarBotaoPrimario("Iniciar experiencia");
+        btnIniciar.setBounds(margem, 470, 290, 64);
         btnIniciar.addActionListener(e -> {
             dispose();
             controle.exibirCadastro();
         });
         painel.add(btnIniciar);
 
-        // ── Rodapé ────────────────────────────────────────────────────────
-        JLabel lblRodape = new JLabel(
-                "Museu de Ciência e Tecnologia  •  Toque na tela para começar",
-                SwingConstants.CENTER
+        JLabel lblLinha = EstiloBase.criarLabel(
+                "10 obras  •  3 momentos interativos  •  1 questionario final",
+                EstiloBase.FONTE_PEQUENA.deriveFont(15f),
+                EstiloBase.COR_TEXTO_FRACO
         );
-        lblRodape.setFont(EstiloBase.FONTE_PEQUENA);
-        lblRodape.setForeground(EstiloBase.COR_TEXTO_FRACO);
-        lblRodape.setBounds(0, tela.height - 60, tela.width, 30);
+        lblLinha.setHorizontalAlignment(SwingConstants.LEFT);
+        lblLinha.setBounds(margem, 556, colunaEsquerda - margem, 24);
+        painel.add(lblLinha);
+
+        JPanel cardResumo = EstiloBase.criarCard();
+        cardResumo.setLayout(null);
+        cardResumo.setBounds(cardDireitaX, 86, cardDireitaW, tela.height - 172);
+        painel.add(cardResumo);
+
+        JPanel poster = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(12, 12, 18));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 32, 32);
+
+                GradientPaint gp = new GradientPaint(0, 0, new Color(18, 11, 13), getWidth(), getHeight(), new Color(12, 12, 18));
+                g2.setPaint(gp);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 32, 32);
+
+                RadialGradientPaint planeta = new RadialGradientPaint(
+                        new Point((int) (getWidth() * 0.65), (int) (getHeight() * 0.34)),
+                        Math.min(getWidth(), getHeight()) * 0.28f,
+                        new float[]{0f, 0.55f, 1f},
+                        new Color[]{
+                                new Color(255, 115, 54, 240),
+                                new Color(255, 191, 58, 190),
+                                new Color(255, 191, 58, 0)
+                        }
+                );
+                g2.setPaint(planeta);
+                g2.fill(new Ellipse2D.Float((float) (getWidth() * 0.39), (float) (getHeight() * 0.08), getWidth() * 0.52f, getWidth() * 0.52f));
+
+                g2.setColor(new Color(255, 255, 255, 16));
+                for (int x = 24; x < getWidth(); x += 24) {
+                    g2.drawLine(x, 0, x, getHeight());
+                }
+                for (int y = 24; y < getHeight(); y += 24) {
+                    g2.drawLine(0, y, getWidth(), y);
+                }
+
+                g2.setColor(new Color(255, 255, 255, 24));
+                g2.drawOval((int) (getWidth() * 0.16), (int) (getHeight() * 0.16), (int) (getWidth() * 0.72), (int) (getHeight() * 0.28));
+                g2.drawOval((int) (getWidth() * 0.26), (int) (getHeight() * 0.42), (int) (getWidth() * 0.48), (int) (getHeight() * 0.18));
+                g2.dispose();
+            }
+        };
+        poster.setOpaque(false);
+        poster.setBounds(24, 24, cardDireitaW - 48, (int) ((tela.height - 172) * 0.56));
+        cardResumo.add(poster);
+
+        JLabel lblResumoTag = EstiloBase.criarTag("Exposicao em destaque");
+        lblResumoTag.setBounds(34, 34, 170, 32);
+        poster.add(lblResumoTag);
+
+        JLabel lblResumoTitulo = new JLabel("<html><div style='width:" + (poster.getWidth() - 70) + "px'>MARTE COMO PALCO DA CURIOSIDADE HUMANA</div></html>");
+        lblResumoTitulo.setFont(EstiloBase.fontePoppins(32f));
+        lblResumoTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+        lblResumoTitulo.setBounds(34, 86, poster.getWidth() - 70, 96);
+        poster.add(lblResumoTitulo);
+
+        JLabel lblResumoTexto = new JLabel("<html><div style='width:" + (poster.getWidth() - 70) + "px'>"
+                + "Descubra as sondas, rovers e experimentos que redefiniram a exploracao planetaria.</div></html>");
+        lblResumoTexto.setFont(EstiloBase.fonteInter(18f));
+        lblResumoTexto.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        lblResumoTexto.setBounds(34, poster.getHeight() - 96, poster.getWidth() - 70, 56);
+        poster.add(lblResumoTexto);
+
+        adicionarCartaoInfo(cardResumo, 24, poster.getY() + poster.getHeight() + 22, cardDireitaW - 48, 90,
+                "Fluxo pensado para toque",
+                "Grandes areas clicaveis, leitura forte e navegacao simples para totens.");
+        adicionarCartaoInfo(cardResumo, 24, poster.getY() + poster.getHeight() + 124, cardDireitaW - 48, 90,
+                "Narrativa continua",
+                "Arte, descricao, interacoes e quiz final com o mesmo acabamento visual.");
+
+        JLabel lblRodape = EstiloBase.criarLabel(
+                "Use a tela inteira para navegar. Este modo foi redesenhado para parecer uma instalacao de museu, nao um formulario corporativo.",
+                EstiloBase.FONTE_PEQUENA.deriveFont(14f),
+                EstiloBase.COR_TEXTO_FRACO
+        );
+        lblRodape.setHorizontalAlignment(SwingConstants.LEFT);
+        lblRodape.setBounds(margem, tela.height - 56, tela.width - (margem * 2), 20);
         painel.add(lblRodape);
 
-        // Animação de pulso no botão
-        timerPulso = new Timer(40, e -> {
-            pulso += pulsoSubindo ? 0.008f : -0.008f;
-            if (pulso >= 1.06f) pulsoSubindo = false;
-            if (pulso <= 0.94f) pulsoSubindo = true;
-            int delta = (int) ((pulso - 1.0f) * 20);
-            btnIniciar.setBounds(bx - delta / 2, 430 - delta / 2, 420 + delta, 80 + delta);
-            painel.repaint();
-        });
-        timerPulso.start();
-
         setContentPane(painel);
+    }
+
+    private void adicionarCartaoInfo(JPanel pai, int x, int y, int w, int h, String titulo, String texto) {
+        JPanel bloco = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(new Color(255, 255, 255, 9));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 24, 24);
+                g2.setColor(new Color(255, 255, 255, 18));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 24, 24);
+                g2.dispose();
+            }
+        };
+        bloco.setOpaque(false);
+        bloco.setBounds(x, y, w, h);
+        pai.add(bloco);
+
+        JLabel lblTitulo = EstiloBase.criarLabel(titulo, EstiloBase.FONTE_LABEL.deriveFont(16f), EstiloBase.COR_TEXTO_PRIMARIO);
+        lblTitulo.setHorizontalAlignment(SwingConstants.LEFT);
+        lblTitulo.setBounds(20, 16, w - 40, 20);
+        bloco.add(lblTitulo);
+
+        JLabel lblTexto = new JLabel("<html><div style='width:" + (w - 40) + "px'>" + texto + "</div></html>");
+        lblTexto.setFont(EstiloBase.FONTE_PEQUENA.deriveFont(15f));
+        lblTexto.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        lblTexto.setBounds(20, 42, w - 40, 34);
+        bloco.add(lblTexto);
     }
 
     private void iniciarAnimacaoEntrada() {
@@ -131,15 +186,18 @@ public class fmrInicio extends JDialog {
         timerEntrada.addActionListener(e -> {
             alphaAnima = Math.min(1f, alphaAnima + 0.04f);
             setOpacity(alphaAnima);
-            if (alphaAnima >= 1f) timerEntrada.stop();
+            if (alphaAnima >= 1f) {
+                timerEntrada.stop();
+            }
         });
         timerEntrada.start();
     }
 
     @Override
     public void dispose() {
-        if (timerEntrada != null) timerEntrada.stop();
-        if (timerPulso  != null) timerPulso.stop();
+        if (timerEntrada != null) {
+            timerEntrada.stop();
+        }
         super.dispose();
     }
 }

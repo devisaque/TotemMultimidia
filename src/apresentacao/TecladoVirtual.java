@@ -2,47 +2,24 @@ package apresentacao;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 /**
- * Teclado virtual próprio para uso em touchscreen.
- *
- * Características:
- *  - Estende JDialog: pode ser exibido com setVisible(true)
- *  - Recebe qualquer JDialog como janela pai e um JTextField como alvo
- *  - Suporta letras (maiúsculas/minúsculas), números e backspace
- *  - Botão Shift para alternar maiúsculas/minúsculas
- *  - Botão Limpar (CLR) para apagar tudo
- *  - Botão OK confirma a entrada e fecha o teclado
- *  - Design escuro consistente com o restante do sistema
+ * Teclado virtual interno para uso em touchscreen.
  */
 public class TecladoVirtual extends JDialog {
 
-    // ── Campo que receberá o texto digitado ───────────────────────────────
     private final JTextField campoAlvo;
-
-    // ── Estado ────────────────────────────────────────────────────────────
     private boolean maiusculas = true;
 
-    // ── Layout do teclado QWERTY ──────────────────────────────────────────
     private static final String[][] LINHAS = {
-            {"1","2","3","4","5","6","7","8","9","0"},
-            {"Q","W","E","R","T","Y","U","I","O","P"},
-            {"A","S","D","F","G","H","J","K","L","Ç"},
-            {"Z","X","C","V","B","N","M",",",".","'"}
+            {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"},
+            {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"},
+            {"A", "S", "D", "F", "G", "H", "J", "K", "L", "Ç"},
+            {"Z", "X", "C", "V", "B", "N", "M", ",", ".", "'"}
     };
 
-    // Painel que contém os botões de letras (para atualizar ao Shift)
     private JPanel painelTeclas;
 
-    // =========================================================================
-    // CONSTRUTOR
-    // =========================================================================
-
-    /**
-     * @param pai       JDialog que originou a chamada (ex: fmrCadastroVisitante)
-     * @param campoAlvo JTextField onde o texto será inserido
-     */
     public TecladoVirtual(JDialog pai, JTextField campoAlvo) {
         super(pai, "Teclado Virtual", true);
         this.campoAlvo = campoAlvo;
@@ -50,78 +27,69 @@ public class TecladoVirtual extends JDialog {
         construirInterface();
     }
 
-    // =========================================================================
-    // CONFIGURAÇÃO DA JANELA
-    // =========================================================================
-
     private void configurarJanela() {
         setUndecorated(true);
-        setSize(900, 440);
+        setSize(940, 470);
         setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setBackground(new Color(8, 14, 38));
+        setBackground(EstiloBase.COR_FUNDO);
     }
 
-    // =========================================================================
-    // INTERFACE
-    // =========================================================================
-
     private void construirInterface() {
-        JPanel fundo = new JPanel(new BorderLayout(0, 8)) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setColor(new Color(8, 14, 38));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                g2.setColor(new Color(40, 70, 140));
-                g2.setStroke(new BasicStroke(2f));
-                g2.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);
-                g2.dispose();
-            }
-        };
-        fundo.setOpaque(false);
-        fundo.setBorder(BorderFactory.createEmptyBorder(14, 14, 14, 14));
+        JPanel fundo = EstiloBase.criarPainelFundo(915L);
+        fundo.setLayout(new BorderLayout(0, 14));
+        fundo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // ── Preview do texto ─────────────────────────────────────────────
+        JPanel card = EstiloBase.criarCard();
+        card.setLayout(new BorderLayout(0, 14));
+        card.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
+        fundo.add(card, BorderLayout.CENTER);
+
+        JPanel topo = new JPanel(new BorderLayout(0, 12));
+        topo.setOpaque(false);
+
+        JLabel lblTitulo = EstiloBase.criarLabel("Teclado virtual", EstiloBase.fontePoppins(24f), EstiloBase.COR_TEXTO_PRIMARIO);
+        lblTitulo.setHorizontalAlignment(SwingConstants.LEFT);
+        topo.add(lblTitulo, BorderLayout.NORTH);
+
         JLabel lblPreview = new JLabel(" ", SwingConstants.LEFT);
-        lblPreview.setFont(new Font("Segoe UI", Font.PLAIN, 22));
+        lblPreview.setFont(EstiloBase.fonteInter(22f));
         lblPreview.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
         lblPreview.setOpaque(true);
-        lblPreview.setBackground(new Color(5, 8, 20));
+        lblPreview.setBackground(new Color(10, 10, 16));
         lblPreview.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(EstiloBase.COR_CARD_BORDA, 1, true),
-                BorderFactory.createEmptyBorder(8, 14, 8, 14)
+                BorderFactory.createLineBorder(new Color(255, 255, 255, 22), 1, true),
+                BorderFactory.createEmptyBorder(12, 16, 12, 16)
         ));
-        // Sincroniza preview com o campo alvo
         lblPreview.setText(campoAlvo.getText().isBlank() ? " " : campoAlvo.getText());
-        fundo.add(lblPreview, BorderLayout.NORTH);
+        topo.add(lblPreview, BorderLayout.CENTER);
 
-        // ── Painel de teclas ─────────────────────────────────────────────
-        painelTeclas = new JPanel(new GridLayout(4, 10, 6, 6));
+        card.add(topo, BorderLayout.NORTH);
+
+        painelTeclas = new JPanel(new GridLayout(4, 10, 8, 8));
         painelTeclas.setOpaque(false);
         construirTeclas(painelTeclas, lblPreview);
-        fundo.add(painelTeclas, BorderLayout.CENTER);
+        card.add(painelTeclas, BorderLayout.CENTER);
 
-        // ── Barra inferior: Shift | Espaço | ⌫ | CLR | OK ───────────────
-        JPanel barraInferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
+        JPanel barraInferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         barraInferior.setOpaque(false);
 
-        JButton btnShift = criarTeclaEspecial("⇧ Shift", 110, 56);
+        JButton btnShift = criarTeclaEspecial("Shift", 118, 58);
         btnShift.addActionListener(e -> {
             maiusculas = !maiusculas;
-            btnShift.setText(maiusculas ? "⇧ Shift" : "⇩ shift");
+            btnShift.setText(maiusculas ? "Shift" : "shift");
             construirTeclas(painelTeclas, lblPreview);
             painelTeclas.revalidate();
             painelTeclas.repaint();
         });
 
-        JButton btnEspaco = criarTeclaEspecial("ESPAÇO", 300, 56);
+        JButton btnEspaco = criarTeclaEspecial("Espaco", 300, 58);
         btnEspaco.addActionListener(e -> {
             campoAlvo.setText(campoAlvo.getText() + " ");
             lblPreview.setText(campoAlvo.getText());
         });
 
-        JButton btnBackspace = criarTeclaEspecial("⌫", 80, 56);
+        JButton btnBackspace = criarTeclaEspecial("Apagar", 104, 58);
         btnBackspace.addActionListener(e -> {
             String atual = campoAlvo.getText();
             if (!atual.isEmpty()) {
@@ -130,14 +98,14 @@ public class TecladoVirtual extends JDialog {
             }
         });
 
-        JButton btnLimpar = criarTeclaEspecial("CLR", 80, 56);
+        JButton btnLimpar = criarTeclaEspecial("Limpar", 104, 58);
         btnLimpar.addActionListener(e -> {
             campoAlvo.setText("");
             lblPreview.setText(" ");
         });
 
-        JButton btnOK = criarTeclaEspecial("✓ OK", 110, 56);
-        btnOK.setForeground(EstiloBase.COR_SUCESSO);
+        JButton btnOK = EstiloBase.criarBotaoPrimario("Confirmar");
+        btnOK.setPreferredSize(new Dimension(156, 58));
         btnOK.addActionListener(e -> dispose());
 
         barraInferior.add(btnShift);
@@ -146,20 +114,16 @@ public class TecladoVirtual extends JDialog {
         barraInferior.add(btnLimpar);
         barraInferior.add(btnOK);
 
-        fundo.add(barraInferior, BorderLayout.SOUTH);
+        card.add(barraInferior, BorderLayout.SOUTH);
         setContentPane(fundo);
     }
 
-    /**
-     * Popula o painel de teclas com base no estado maiusculas/minúsculas.
-     * É chamado novamente ao pressionar Shift para atualizar os rótulos.
-     */
     private void construirTeclas(JPanel painel, JLabel preview) {
         painel.removeAll();
         for (String[] linha : LINHAS) {
             for (String tecla : linha) {
                 String label = maiusculas ? tecla : tecla.toLowerCase();
-                JButton btn  = criarTeclaLetra(label);
+                JButton btn = criarTeclaLetra(label);
                 btn.addActionListener(e -> {
                     campoAlvo.setText(campoAlvo.getText() + label);
                     preview.setText(campoAlvo.getText());
@@ -169,45 +133,39 @@ public class TecladoVirtual extends JDialog {
         }
     }
 
-    // =========================================================================
-    // FÁBRICA DE BOTÕES
-    // =========================================================================
-
-    /** Botão de letra/número com estilo escuro e hover azulado. */
     private JButton criarTeclaLetra(String texto) {
         JButton btn = new JButton(texto) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-                Color bg = getModel().isPressed()  ? new Color(60, 90, 180) :
-                        getModel().isRollover() ? new Color(30, 50, 120) :
-                        new Color(18, 28, 65);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Color bg = getModel().isPressed() ? new Color(255, 115, 54, 180)
+                        : getModel().isRollover() ? new Color(255, 255, 255, 16)
+                        : new Color(255, 255, 255, 10);
                 g2.setColor(bg);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-                g2.setColor(new Color(40, 70, 140));
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
-                g2.setColor(EstiloBase.COR_TEXTO_PRIMARIO);
-                g2.setFont(new Font("Segoe UI", Font.BOLD, 16));
-                FontMetrics fm = g2.getFontMetrics();
-                int tx = (getWidth()  - fm.stringWidth(getText())) / 2;
-                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
-                g2.drawString(getText(), tx, ty);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                GradientPaint borda = new GradientPaint(0, 0, EstiloBase.COR_CARD_BORDA,
+                        getWidth(), getHeight(), EstiloBase.COR_CARD_GLOW);
+                g2.setPaint(borda);
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
                 g2.dispose();
+
+                setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+                setFont(EstiloBase.fontePoppins(18f));
+                super.paintComponent(g);
             }
         };
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
         btn.setFocusPainted(false);
+        btn.setOpaque(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.setPreferredSize(new Dimension(78, 52));
+        btn.setPreferredSize(new Dimension(78, 54));
         return btn;
     }
 
-    /** Botão especial (Shift, Espaço, ⌫, CLR, OK) com largura customizável. */
     private JButton criarTeclaEspecial(String texto, int largura, int altura) {
-        JButton btn = criarTeclaLetra(texto);
+        JButton btn = EstiloBase.criarBotaoSecundario(texto);
         btn.setPreferredSize(new Dimension(largura, altura));
         return btn;
     }

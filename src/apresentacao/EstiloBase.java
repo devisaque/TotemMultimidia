@@ -1,57 +1,51 @@
 package apresentacao;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Random;
 
 /**
- * Classe utilitária com estilos, cores, fontes e componentes visuais compartilhados.
- * Garante identidade visual consistente em todas as telas do sistema.
- * Todos os membros são estáticos — não deve ser instanciada.
+ * Fundacao visual compartilhada de toda a interface.
+ * Centraliza paleta, tipografia, componentes e dialogos auxiliares.
  */
 public final class EstiloBase {
 
-    private EstiloBase() { /* utilitária — não instanciar */ }
+    private static final Font BASE_POPPINS = carregarFonte("/fonts/Poppins-SemiBold.ttf", "Segoe UI");
+    private static final Font BASE_INTER = carregarFonte("/fonts/Inter-Regular.ttf", "Segoe UI");
 
-    // =========================================================================
-    // PALETA DE CORES
-    // =========================================================================
+    public static final Color COR_FUNDO = new Color(6, 6, 10);
+    public static final Color COR_FUNDO_PAINEL = new Color(12, 12, 18);
+    public static final Color COR_CARD = new Color(20, 20, 28, 216);
+    public static final Color COR_CARD_BORDA = new Color(255, 255, 255, 30);
+    public static final Color COR_CARD_GLOW = new Color(255, 146, 71, 92);
+    public static final Color COR_DESTAQUE = new Color(255, 115, 54);
+    public static final Color COR_DESTAQUE_HOVER = new Color(255, 149, 86);
+    public static final Color COR_DESTAQUE_2 = new Color(255, 191, 58);
+    public static final Color COR_ACENTO = new Color(255, 87, 147);
+    public static final Color COR_ACENTO_FRIO = new Color(255, 220, 203);
+    public static final Color COR_TEXTO_PRIMARIO = new Color(247, 243, 239);
+    public static final Color COR_TEXTO_SECUNDARIO = new Color(198, 191, 188);
+    public static final Color COR_TEXTO_FRACO = new Color(138, 132, 130);
+    public static final Color COR_SUCESSO = new Color(132, 211, 147);
+    public static final Color COR_ERRO = new Color(255, 107, 107);
 
-    public static final Color COR_FUNDO            = new Color(5,   8,  20);
-    public static final Color COR_FUNDO_PAINEL     = new Color(10,  16,  38);
-    public static final Color COR_CARD             = new Color(18,  28,  60);
-    public static final Color COR_CARD_BORDA       = new Color(40,  70, 140);
-    public static final Color COR_DESTAQUE         = new Color(255, 120,  30);
-    public static final Color COR_DESTAQUE_HOVER   = new Color(255, 160,  70);
-    public static final Color COR_ACENTO           = new Color( 60, 180, 220);
-    public static final Color COR_ACENTO2          = new Color(180,  60, 255);
-    public static final Color COR_TEXTO_PRIMARIO   = new Color(220, 230, 255);
-    public static final Color COR_TEXTO_SECUNDARIO = new Color(140, 160, 200);
-    public static final Color COR_TEXTO_FRACO      = new Color( 80, 100, 150);
-    public static final Color COR_SUCESSO          = new Color( 60, 200, 100);
-    public static final Color COR_ERRO             = new Color(220,  60,  80);
+    public static final Font FONTE_TITULO = fontePoppins(48f);
+    public static final Font FONTE_SUBTITULO = fonteInter(22f);
+    public static final Font FONTE_SECAO = fontePoppins(28f);
+    public static final Font FONTE_CORPO = fonteInter(18f);
+    public static final Font FONTE_LABEL = fontePoppins(15f);
+    public static final Font FONTE_BOTAO = fontePoppins(19f);
+    public static final Font FONTE_PEQUENA = fonteInter(14f);
 
-    // =========================================================================
-    // FONTES
-    // =========================================================================
+    private EstiloBase() {
+    }
 
-    public static final Font FONTE_TITULO    = new Font("Segoe UI", Font.BOLD,  42);
-    public static final Font FONTE_SUBTITULO = new Font("Segoe UI", Font.PLAIN, 22);
-    public static final Font FONTE_SECAO     = new Font("Segoe UI", Font.BOLD,  26);
-    public static final Font FONTE_CORPO     = new Font("Segoe UI", Font.PLAIN, 18);
-    public static final Font FONTE_LABEL     = new Font("Segoe UI", Font.BOLD,  16);
-    public static final Font FONTE_BOTAO     = new Font("Segoe UI", Font.BOLD,  20);
-    public static final Font FONTE_PEQUENA   = new Font("Segoe UI", Font.PLAIN, 14);
-
-    // =========================================================================
-    // CONFIGURAÇÃO DE DIALOG FULLSCREEN
-    // =========================================================================
-
-    /**
-     * Configura um JDialog para modo fullscreen adaptado a touchscreen.
-     * Remove decorações nativas e ocupa toda a tela.
-     *
-     * @param dialog JDialog a ser configurado
-     */
     public static void configurarDialogFullscreen(JDialog dialog) {
         dialog.setUndecorated(true);
         dialog.setBackground(COR_FUNDO);
@@ -61,18 +55,6 @@ public final class EstiloBase {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
-    // =========================================================================
-    // FÁBRICA DE COMPONENTES
-    // =========================================================================
-
-    /**
-     * Cria um JLabel centralizado com fonte e cor definidas.
-     *
-     * @param texto  Texto do label
-     * @param fonte  Fonte a aplicar
-     * @param cor    Cor do texto
-     * @return JLabel configurado
-     */
     public static JLabel criarLabel(String texto, Font fonte, Color cor) {
         JLabel label = new JLabel(texto, SwingConstants.CENTER);
         label.setFont(fonte);
@@ -80,45 +62,41 @@ public final class EstiloBase {
         return label;
     }
 
-    /**
-     * Cria um botão primário touch-friendly com gradiente laranja.
-     * Tamanho padrão: 280 x 68 px.
-     *
-     * @param texto Texto exibido no botão
-     * @return JButton estilizado
-     */
     public static JButton criarBotaoPrimario(String texto) {
         JButton btn = new JButton(texto) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                ativarQualidade(g2);
 
-                Color base = getModel().isPressed()  ? COR_DESTAQUE.darker() :
-                        getModel().isRollover() ? COR_DESTAQUE_HOVER   : COR_DESTAQUE;
+                float alpha = isEnabled() ? 1f : 0.4f;
+                g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
 
-                GradientPaint gp = new GradientPaint(
-                        0, 0, base, 0, getHeight(), base.darker()
-                );
+                int sombra = getModel().isPressed() ? 2 : 6;
+                g2.setColor(new Color(0, 0, 0, 90));
+                g2.fillRoundRect(0, sombra, getWidth(), getHeight() - sombra, 30, 30);
+
+                Color inicio = getModel().isPressed() ? COR_DESTAQUE.darker()
+                        : getModel().isRollover() ? COR_DESTAQUE_HOVER : COR_DESTAQUE;
+                Color fim = getModel().isPressed() ? COR_DESTAQUE_2.darker() : COR_DESTAQUE_2;
+                GradientPaint gp = new GradientPaint(0, 0, inicio, getWidth(), getHeight(), fim);
                 g2.setPaint(gp);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 16, 16);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight() - sombra, 30, 30));
 
-                // Brilho superior
-                g2.setColor(new Color(255, 255, 255, 30));
-                g2.fillRoundRect(2, 2, getWidth() - 4, getHeight() / 2, 14, 14);
+                g2.setColor(new Color(255, 255, 255, 55));
+                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - sombra - 3, 30, 30);
 
-                // Texto
-                g2.setColor(Color.WHITE);
-                g2.setFont(FONTE_BOTAO);
+                g2.setColor(COR_TEXTO_PRIMARIO);
+                g2.setFont(getFont());
                 FontMetrics fm = g2.getFontMetrics();
-                int tx = (getWidth()  - fm.stringWidth(getText())) / 2;
-                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                int tx = (getWidth() - fm.stringWidth(getText())) / 2;
+                int ty = ((getHeight() - sombra) + fm.getAscent() - fm.getDescent()) / 2;
                 g2.drawString(getText(), tx, ty);
                 g2.dispose();
             }
         };
-        btn.setPreferredSize(new Dimension(280, 68));
+        btn.setFont(FONTE_BOTAO);
+        btn.setPreferredSize(new Dimension(280, 70));
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
         btn.setFocusPainted(false);
@@ -126,38 +104,39 @@ public final class EstiloBase {
         return btn;
     }
 
-    /**
-     * Cria um botão secundário (outline) touch-friendly.
-     * Tamanho padrão: 240 x 60 px.
-     *
-     * @param texto Texto exibido no botão
-     * @return JButton estilizado
-     */
     public static JButton criarBotaoSecundario(String texto) {
         JButton btn = new JButton(texto) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                ativarQualidade(g2);
+
+                float alpha = isEnabled() ? 1f : 0.4f;
+                g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
 
                 boolean hover = getModel().isRollover() || getModel().isPressed();
-                g2.setColor(hover ? new Color(30, 50, 100) : new Color(15, 25, 60));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 16, 16);
+                Color fundo = hover ? new Color(255, 255, 255, 20) : new Color(255, 255, 255, 10);
+                g2.setColor(fundo);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
 
-                g2.setColor(hover ? COR_ACENTO : COR_CARD_BORDA);
-                g2.setStroke(new BasicStroke(2f));
-                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 16, 16);
+                GradientPaint borda = new GradientPaint(
+                        0, 0, hover ? COR_DESTAQUE : COR_CARD_BORDA,
+                        getWidth(), getHeight(), hover ? COR_ACENTO : COR_CARD_GLOW
+                );
+                g2.setPaint(borda);
+                g2.setStroke(new BasicStroke(1.8f));
+                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 28, 28);
 
                 g2.setColor(hover ? COR_TEXTO_PRIMARIO : COR_TEXTO_SECUNDARIO);
-                g2.setFont(FONTE_BOTAO.deriveFont(18f));
+                g2.setFont(getFont());
                 FontMetrics fm = g2.getFontMetrics();
-                int tx = (getWidth()  - fm.stringWidth(getText())) / 2;
+                int tx = (getWidth() - fm.stringWidth(getText())) / 2;
                 int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
                 g2.drawString(getText(), tx, ty);
                 g2.dispose();
             }
         };
+        btn.setFont(FONTE_BOTAO.deriveFont(17f));
         btn.setPreferredSize(new Dimension(240, 60));
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
@@ -166,75 +145,58 @@ public final class EstiloBase {
         return btn;
     }
 
-    /**
-     * Cria um JTextField touch-friendly com estilo espacial escuro.
-     *
-     * @param placeholder Texto de dica (não usado nativamente — apenas tamanho)
-     * @param colunas     Número de colunas do campo
-     * @return JTextField estilizado
-     */
     public static JTextField criarCampoTexto(String placeholder, int colunas) {
         JTextField campo = new JTextField(colunas) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(8, 14, 35));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+                ativarQualidade(g2);
+                g2.setColor(new Color(10, 10, 16));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 22, 22);
+                g2.setColor(new Color(255, 255, 255, 12));
+                g2.fillRoundRect(1, 1, getWidth() - 2, getHeight() / 2, 20, 20);
                 super.paintComponent(g);
                 g2.dispose();
             }
         };
-        campo.setFont(FONTE_CORPO);
+        campo.setFont(FONTE_CORPO.deriveFont(19f));
         campo.setForeground(COR_TEXTO_PRIMARIO);
-        campo.setBackground(new Color(8, 14, 35));
+        campo.setBackground(new Color(10, 10, 16));
         campo.setCaretColor(COR_DESTAQUE);
         campo.setOpaque(false);
-        campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COR_CARD_BORDA, 2, true),
-                BorderFactory.createEmptyBorder(10, 14, 10, 14)
-        ));
-        campo.setPreferredSize(new Dimension(380, 54));
+        campo.setBorder(criarBordaCampo(COR_CARD_BORDA));
+        campo.setPreferredSize(new Dimension(380, 58));
+        campo.setToolTipText(placeholder);
 
-        // Borda muda ao receber foco
         campo.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
-                campo.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(COR_ACENTO, 2, true),
-                        BorderFactory.createEmptyBorder(10, 14, 10, 14)
-                ));
+                campo.setBorder(criarBordaCampo(COR_DESTAQUE));
             }
+
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
-                campo.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(COR_CARD_BORDA, 2, true),
-                        BorderFactory.createEmptyBorder(10, 14, 10, 14)
-                ));
+                campo.setBorder(criarBordaCampo(COR_CARD_BORDA));
             }
         });
         return campo;
     }
 
-    /**
-     * Cria um painel card com fundo escuro e borda arredondada.
-     * Use setLayout() após criar para definir o gerenciador de layout.
-     *
-     * @return JPanel estilizado como card
-     */
     public static JPanel criarCard() {
         JPanel card = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                ativarQualidade(g2);
+                g2.setColor(new Color(0, 0, 0, 65));
+                g2.fillRoundRect(0, 10, getWidth(), getHeight() - 10, 30, 30);
                 g2.setColor(COR_CARD);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                g2.setColor(COR_CARD_BORDA);
-                g2.setStroke(new BasicStroke(1.5f));
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight() - 10, 30, 30);
+                g2.setPaint(new GradientPaint(0, 0, COR_CARD_BORDA, getWidth(), getHeight(), COR_CARD_GLOW));
+                g2.setStroke(new BasicStroke(1.4f));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 11, 30, 30);
+                g2.setColor(new Color(255, 255, 255, 16));
+                g2.drawRoundRect(10, 10, getWidth() - 21, getHeight() - 31, 22, 22);
                 g2.dispose();
             }
         };
@@ -242,26 +204,216 @@ public final class EstiloBase {
         return card;
     }
 
-    /**
-     * Desenha um campo estelar decorativo no painel.
-     * Deve ser chamado dentro de paintComponent() de um JPanel.
-     *
-     * @param g2     Contexto gráfico 2D já criado
-     * @param largura Largura do painel
-     * @param altura  Altura do painel
-     * @param seed    Semente para posicionamento determinístico das estrelas
-     */
+    public static JPanel criarPainelFundo(long seed) {
+        JPanel painel = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                desenharFundoGradiente(g2, getWidth(), getHeight(), seed);
+                g2.dispose();
+            }
+        };
+        painel.setOpaque(false);
+        return painel;
+    }
+
+    public static JLabel criarTag(String texto) {
+        JLabel tag = new JLabel(" " + texto.toUpperCase() + " ", SwingConstants.CENTER) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                ativarQualidade(g2);
+                g2.setColor(new Color(255, 255, 255, 12));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
+                g2.setColor(new Color(255, 255, 255, 30));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 18, 18);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        tag.setFont(FONTE_LABEL.deriveFont(13f));
+        tag.setForeground(COR_ACENTO_FRIO);
+        tag.setBorder(BorderFactory.createEmptyBorder(7, 12, 7, 12));
+        return tag;
+    }
+
+    public static JScrollPane criarScrollPane(Component conteudo) {
+        JScrollPane scroll = new JScrollPane(conteudo);
+        scroll.setBorder(null);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+        scroll.getVerticalScrollBar().setUnitIncrement(22);
+        scroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+        scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                thumbColor = new Color(255, 255, 255, 70);
+                trackColor = new Color(255, 255, 255, 10);
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return criarBotaoScroll();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return criarBotaoScroll();
+            }
+
+            private JButton criarBotaoScroll() {
+                JButton botao = new JButton();
+                botao.setPreferredSize(new Dimension(0, 0));
+                botao.setOpaque(false);
+                botao.setContentAreaFilled(false);
+                botao.setBorderPainted(false);
+                return botao;
+            }
+        });
+        return scroll;
+    }
+
+    public static void marcarCampoComErro(JTextField campo) {
+        campo.setBorder(criarBordaCampo(COR_ERRO));
+    }
+
+    public static void restaurarCampo(JTextField campo) {
+        campo.setBorder(criarBordaCampo(COR_CARD_BORDA));
+    }
+
+    public static void mostrarDialogoInformativo(Window owner, String marcador, String titulo, String mensagem, String textoBotao) {
+        JDialog dialogo = new JDialog(owner, titulo, Dialog.ModalityType.APPLICATION_MODAL);
+        dialogo.setUndecorated(true);
+        dialogo.setSize(560, 360);
+        dialogo.setLocationRelativeTo(owner);
+
+        JPanel fundo = criarPainelFundo(808L);
+        fundo.setLayout(null);
+
+        JPanel card = criarCard();
+        card.setLayout(null);
+        card.setBounds(24, 24, 512, 312);
+        fundo.add(card);
+
+        JLabel lblMarcador = criarTag(marcador);
+        lblMarcador.setBounds(28, 24, 120, 32);
+        card.add(lblMarcador);
+
+        JLabel lblTitulo = criarLabel(titulo, FONTE_SECAO.deriveFont(30f), COR_TEXTO_PRIMARIO);
+        lblTitulo.setHorizontalAlignment(SwingConstants.LEFT);
+        lblTitulo.setBounds(28, 70, 456, 40);
+        card.add(lblTitulo);
+
+        JTextArea corpo = new JTextArea(mensagem);
+        corpo.setEditable(false);
+        corpo.setWrapStyleWord(true);
+        corpo.setLineWrap(true);
+        corpo.setOpaque(false);
+        corpo.setForeground(COR_TEXTO_SECUNDARIO);
+        corpo.setFont(FONTE_CORPO);
+        corpo.setBounds(28, 124, 456, 108);
+        card.add(corpo);
+
+        JButton btnFechar = criarBotaoPrimario(textoBotao);
+        btnFechar.setBounds(156, 242, 200, 58);
+        btnFechar.addActionListener(e -> dialogo.dispose());
+        card.add(btnFechar);
+
+        dialogo.setContentPane(fundo);
+        dialogo.setVisible(true);
+    }
+
     public static void desenharEstrelas(Graphics2D g2, int largura, int altura, long seed) {
-        java.util.Random rng = new java.util.Random(seed);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        Random rng = new Random(seed);
+        ativarQualidade(g2);
         for (int i = 0; i < 180; i++) {
-            int x     = rng.nextInt(Math.max(1, largura));
-            int y     = rng.nextInt(Math.max(1, altura));
-            int r     = rng.nextInt(3);
+            int x = rng.nextInt(Math.max(1, largura));
+            int y = rng.nextInt(Math.max(1, altura));
+            int r = rng.nextInt(3);
             int alpha = 60 + rng.nextInt(180);
             g2.setColor(new Color(180, 200, 255, alpha));
             g2.fillOval(x, y, r + 1, r + 1);
         }
+    }
+
+    public static void desenharFundoGradiente(Graphics2D g2, int largura, int altura, long seed) {
+        ativarQualidade(g2);
+        g2.setColor(COR_FUNDO);
+        g2.fillRect(0, 0, largura, altura);
+
+        GradientPaint base = new GradientPaint(0, 0, new Color(5, 5, 8), largura, altura, new Color(18, 11, 13));
+        g2.setPaint(base);
+        g2.fillRect(0, 0, largura, altura);
+
+        desenharBlob(g2, largura * 0.18, altura * 0.18, Math.min(largura, altura) * 0.36f, COR_DESTAQUE);
+        desenharBlob(g2, largura * 0.56, altura * 0.15, Math.min(largura, altura) * 0.30f, COR_DESTAQUE_2);
+        desenharBlob(g2, largura * 0.84, altura * 0.78, Math.min(largura, altura) * 0.34f, COR_ACENTO);
+        desenharBlob(g2, largura * 0.15, altura * 0.82, Math.min(largura, altura) * 0.20f, new Color(255, 140, 72));
+
+        g2.setColor(new Color(0, 0, 0, 135));
+        g2.fillRect(0, 0, largura, altura);
+
+        g2.setColor(new Color(255, 255, 255, 8));
+        for (int i = 0; i < 5; i++) {
+            int offset = i * 32;
+            g2.drawRoundRect(40 + offset, 40 + offset, largura - (80 + offset * 2), altura - (80 + offset * 2), 42, 42);
+        }
+
+        Random rng = new Random(seed);
+        for (int i = 0; i < 2400; i++) {
+            int x = rng.nextInt(Math.max(1, largura));
+            int y = rng.nextInt(Math.max(1, altura));
+            int alpha = 8 + rng.nextInt(18);
+            g2.setColor(new Color(255, 255, 255, alpha));
+            g2.fillRect(x, y, 1, 1);
+        }
+    }
+
+    public static Font fontePoppins(float size) {
+        return BASE_POPPINS.deriveFont(size);
+    }
+
+    public static Font fonteInter(float size) {
+        return BASE_INTER.deriveFont(size);
+    }
+
+    private static Font carregarFonte(String resourcePath, String fallbackName) {
+        try (InputStream stream = EstiloBase.class.getResourceAsStream(resourcePath)) {
+            if (stream != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, stream);
+            }
+        } catch (FontFormatException | IOException ignored) {
+        }
+        return new Font(fallbackName, Font.PLAIN, 12);
+    }
+
+    private static Border criarBordaCampo(Color cor) {
+        return BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(cor, 1, true),
+                BorderFactory.createEmptyBorder(12, 16, 12, 16)
+        );
+    }
+
+    private static void desenharBlob(Graphics2D g2, double cx, double cy, float raio, Color cor) {
+        Color centro = new Color(cor.getRed(), cor.getGreen(), cor.getBlue(), 190);
+        Color meio = new Color(cor.getRed(), cor.getGreen(), cor.getBlue(), 80);
+        Color fim = new Color(cor.getRed(), cor.getGreen(), cor.getBlue(), 0);
+        RadialGradientPaint paint = new RadialGradientPaint(
+                new Point((int) cx, (int) cy), raio,
+                new float[]{0f, 0.45f, 1f},
+                new Color[]{centro, meio, fim}
+        );
+        Composite antigo = g2.getComposite();
+        g2.setComposite(AlphaComposite.SrcOver.derive(0.82f));
+        g2.setPaint(paint);
+        g2.fill(new Ellipse2D.Double(cx - raio, cy - raio, raio * 2, raio * 2));
+        g2.setComposite(antigo);
+    }
+
+    private static void ativarQualidade(Graphics2D g2) {
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
     }
 }
