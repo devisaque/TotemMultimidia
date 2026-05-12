@@ -113,7 +113,7 @@ public class Controle extends absPropriedades {
     }
 
     public boolean autenticarAdministracao(char[] senha) {
-        char[] senhaCorreta = {'m', 'u', 'l', 't', 'i', 'm', 'i', 'd', 'i', 'a'};
+        char[] senhaCorreta = {'1', '2', '3', '4', '5', '6'};
         boolean autenticado = senha != null && Arrays.equals(senha, senhaCorreta);
         Arrays.fill(senhaCorreta, '\0');
         return autenticado;
