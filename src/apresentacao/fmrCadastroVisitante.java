@@ -62,10 +62,11 @@ public class fmrCadastroVisitante extends JDialog {
         lblTitulo.setBounds(p, EstiloBase.escalar(84, tela), cardW - (p * 2), EstiloBase.escalar(44, tela));
         card.add(lblTitulo);
 
-        JLabel lblSub = new JLabel("<html><div style='width:" + (cardW - (p * 2) - EstiloBase.escalar(10, tela)) + "px'>"
-                + "Informe os dados basicos para iniciar a experiencia. Nenhuma chave, email ou dado sensivel e solicitado.</div></html>");
-        lblSub.setFont(EstiloBase.fonteResponsiva(15f, tela));
-        lblSub.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        JTextArea lblSub = EstiloBase.criarTextoQuebravel(
+                "Informe os dados basicos para iniciar a experiencia. Nenhuma chave, email ou dado sensivel e solicitado.",
+                EstiloBase.fonteResponsiva(15f, tela),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
         lblSub.setBounds(p, EstiloBase.escalar(136, tela), cardW - (p * 2), EstiloBase.escalar(54, tela));
         card.add(lblSub);
 

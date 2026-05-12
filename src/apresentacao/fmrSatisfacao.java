@@ -47,19 +47,22 @@ public class fmrSatisfacao extends JDialog {
         fundo.add(lblTag);
 
         int tituloW = Math.min(EstiloBase.escalar(900, tela), tela.width - EstiloBase.escalar(80, tela));
-        JLabel lblTitulo = new JLabel("<html><div style='text-align:center;width:" + tituloW + "px'>Como foi a sua experiencia no totem?</div></html>");
-        lblTitulo.setFont(EstiloBase.fonteResponsiva(54f, tela));
-        lblTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+        JTextArea lblTitulo = EstiloBase.criarTextoQuebravel(
+                "Como foi a sua experiencia no totem?",
+                EstiloBase.fonteResponsiva(54f, tela),
+                EstiloBase.COR_TEXTO_PRIMARIO
+        );
+        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblTitulo.setBounds(cx - tituloW / 2, EstiloBase.escalar(110, tela), tituloW, EstiloBase.escalar(120, tela));
         fundo.add(lblTitulo);
 
-        JLabel lblNome = EstiloBase.criarLabel(
+        JTextArea lblNome = EstiloBase.criarTextoQuebravel(
                 "Obrigado, " + controle.getNomeVisitante() + ". Sua opiniao fecha a jornada e ajuda a melhorar o acervo digital.",
                 EstiloBase.fonteResponsiva(22f, tela),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
         lblNome.setBounds(EstiloBase.escalar(40, tela), EstiloBase.escalar(240, tela),
-                tela.width - EstiloBase.escalar(80, tela), EstiloBase.escalar(34, tela));
+                tela.width - EstiloBase.escalar(80, tela), EstiloBase.escalar(62, tela));
         fundo.add(lblNome);
 
         JPanel card = EstiloBase.criarCard();
@@ -140,12 +143,13 @@ public class fmrSatisfacao extends JDialog {
         btnEnviar.addActionListener(e -> enviarAvaliacao());
         card.add(btnEnviar);
 
-        JLabel lblRodape = EstiloBase.criarLabel(
+        JTextArea lblRodape = EstiloBase.criarTextoQuebravel(
                 "Sua resposta fica apenas nesta sessao e orienta melhorias futuras da instalacao.",
                 EstiloBase.fonteResponsiva(14f, tela),
                 EstiloBase.COR_TEXTO_FRACO
         );
-        lblRodape.setBounds(0, tela.height - EstiloBase.escalar(52, tela), tela.width, EstiloBase.escalar(20, tela));
+        lblRodape.setBounds(EstiloBase.escalar(40, tela), tela.height - EstiloBase.escalar(58, tela),
+                tela.width - EstiloBase.escalar(80, tela), EstiloBase.escalar(32, tela));
         fundo.add(lblRodape);
 
         setContentPane(fundo);

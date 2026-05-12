@@ -49,12 +49,13 @@ public class fmrInicio extends JDialog {
         lblTitulo.setBounds(margem, EstiloBase.escalar(118, tela), colunaEsquerda - margem - 12, EstiloBase.escalar(112, tela));
         painel.add(lblTitulo);
 
-        JLabel lblSub = new JLabel("<html><div style='width:" + textoW + "px'>"
-                + "Uma experiencia imersiva sobre as missoes que transformaram nossa visao de Marte. "
-                + "Toque para iniciar a jornada, conhecer as obras e interagir com o acervo digital.</div></html>");
-        lblSub.setFont(EstiloBase.fonteResponsiva(25f, tela));
-        lblSub.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
-        lblSub.setBounds(margem, EstiloBase.escalar(246, tela), textoW, EstiloBase.escalar(206, tela));
+        JTextArea lblSub = EstiloBase.criarTextoQuebravel(
+                "Uma experiencia imersiva sobre as missoes que transformaram nossa visao de Marte. "
+                        + "Toque para iniciar a jornada, conhecer as obras e interagir com o acervo digital.",
+                EstiloBase.fonteResponsiva(25f, tela),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        lblSub.setBounds(margem, EstiloBase.escalar(246, tela), textoW, EstiloBase.escalar(226, tela));
         painel.add(lblSub);
 
         JButton btnIniciar = EstiloBase.criarBotaoPrimario("Iniciar experiencia");
@@ -139,22 +140,26 @@ public class fmrInicio extends JDialog {
         lblResumoTag.setBounds(EstiloBase.escalar(34, tela), EstiloBase.escalar(34, tela), EstiloBase.escalar(170, tela), EstiloBase.escalar(32, tela));
         poster.add(lblResumoTag);
 
-        int resumoTextoY = poster.getHeight() - EstiloBase.escalar(86, tela);
-        int resumoTituloY = resumoTextoY - EstiloBase.escalar(54, tela);
+        int resumoTituloY = poster.getHeight() - EstiloBase.escalar(150, tela);
+        int resumoTextoY = resumoTituloY + EstiloBase.escalar(58, tela);
+        int resumoW = poster.getWidth() - EstiloBase.escalar(132, tela);
 
-        JLabel lblResumoTitulo = new JLabel("<html><div style='width:" + (poster.getWidth() - EstiloBase.escalar(122, tela)) + "px'>Marte como palco da curiosidade humana</div></html>");
-        lblResumoTitulo.setFont(EstiloBase.fonteResponsiva(31f, tela));
-        lblResumoTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+        JTextArea lblResumoTitulo = EstiloBase.criarTextoQuebravel(
+                "Marte como palco da curiosidade humana",
+                EstiloBase.fonteResponsiva(31f, tela),
+                EstiloBase.COR_TEXTO_PRIMARIO
+        );
         lblResumoTitulo.setBounds(EstiloBase.escalar(34, tela), resumoTituloY,
-                poster.getWidth() - EstiloBase.escalar(102, tela), EstiloBase.escalar(54, tela));
+                resumoW, EstiloBase.escalar(58, tela));
         poster.add(lblResumoTitulo);
 
-        JLabel lblResumoTexto = new JLabel("<html><div style='width:" + (poster.getWidth() - EstiloBase.escalar(122, tela)) + "px'>"
-                + "Descubra as sondas, rovers e experimentos que redefiniram a exploracao planetaria.</div></html>");
-        lblResumoTexto.setFont(EstiloBase.fonteResponsiva(18f, tela));
-        lblResumoTexto.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        JTextArea lblResumoTexto = EstiloBase.criarTextoQuebravel(
+                "Descubra as sondas, rovers e experimentos que redefiniram a exploracao planetaria.",
+                EstiloBase.fonteResponsiva(18f, tela),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
         lblResumoTexto.setBounds(EstiloBase.escalar(34, tela), resumoTextoY,
-                poster.getWidth() - EstiloBase.escalar(102, tela), EstiloBase.escalar(68, tela));
+                resumoW, EstiloBase.escalar(78, tela));
         poster.add(lblResumoTexto);
 
         setContentPane(painel);

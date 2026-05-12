@@ -72,6 +72,20 @@ public final class EstiloBase {
         return label;
     }
 
+    public static JTextArea criarTextoQuebravel(String texto, Font fonte, Color cor) {
+        JTextArea area = new JTextArea(texto);
+        area.setEditable(false);
+        area.setFocusable(false);
+        area.setOpaque(false);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setFont(fonte);
+        area.setForeground(cor);
+        area.setBorder(BorderFactory.createEmptyBorder());
+        area.setHighlighter(null);
+        return area;
+    }
+
     public static JButton criarBotaoPrimario(String texto) {
         JButton btn = new JButton(texto) {
             @Override

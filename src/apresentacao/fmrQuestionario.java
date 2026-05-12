@@ -176,7 +176,7 @@ public class fmrQuestionario extends JDialog {
     }
 
     private JButton criarBotaoOpcao(String texto, int indicePergunta) {
-        JButton btn = new JButton("<html><div style='width:" + larguraTextoOpcao + "px'>" + texto + "</div></html>") {
+        JButton btn = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -196,13 +196,27 @@ public class fmrQuestionario extends JDialog {
                 g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
                 g2.dispose();
 
-                setForeground(selecionado ? EstiloBase.COR_TEXTO_PRIMARIO : EstiloBase.COR_TEXTO_SECUNDARIO);
-                super.paintComponent(g);
+                Component textoOpcao = getComponentCount() > 0 ? getComponent(0) : null;
+                if (textoOpcao != null) {
+                    Color corTexto = selecionado ? EstiloBase.COR_TEXTO_PRIMARIO : EstiloBase.COR_TEXTO_SECUNDARIO;
+                    textoOpcao.setForeground(corTexto);
+                    if (textoOpcao instanceof JTextArea) {
+                        ((JTextArea) textoOpcao).setDisabledTextColor(corTexto);
+                    }
+                }
             }
         };
-        btn.setFont(EstiloBase.fonteInter(indicePergunta == 4 ? 16f : 17f));
-        btn.setHorizontalAlignment(SwingConstants.LEFT);
-        btn.setBorder(BorderFactory.createEmptyBorder(18, 22, 18, 22));
+        btn.setLayout(new BorderLayout());
+        JTextArea areaTexto = EstiloBase.criarTextoQuebravel(
+                texto,
+                EstiloBase.fonteInter(indicePergunta == 4 ? 16f : 17f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        areaTexto.setEnabled(false);
+        areaTexto.setDisabledTextColor(EstiloBase.COR_TEXTO_SECUNDARIO);
+        areaTexto.setBorder(BorderFactory.createEmptyBorder(18, 22, 18, 22));
+        btn.add(areaTexto, BorderLayout.CENTER);
+        btn.setBorder(BorderFactory.createEmptyBorder());
         btn.setContentAreaFilled(false);
         btn.setOpaque(false);
         btn.setFocusPainted(false);

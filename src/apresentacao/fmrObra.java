@@ -101,18 +101,20 @@ public class fmrObra extends JDialog {
         lblTema.setBounds(30, 26, 160, 34);
         cardInfo.add(lblTema);
 
-        JLabel lblTitulo = new JLabel("<html><div style='width:" + (painelW - 70) + "px'>"
-                + controle.getTituloObra(indice) + "</div></html>");
-        lblTitulo.setFont(EstiloBase.fontePoppins(34f));
-        lblTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
+        JTextArea lblTitulo = EstiloBase.criarTextoQuebravel(
+                controle.getTituloObra(indice),
+                EstiloBase.fontePoppins(34f),
+                EstiloBase.COR_TEXTO_PRIMARIO
+        );
         lblTitulo.setBounds(30, 72, painelW - 60, 120);
         cardInfo.add(lblTitulo);
 
-        JLabel lblSub = new JLabel("<html><div style='width:" + (painelW - 70) + "px'>"
-                + "Conheça a história, os objetivos, os desafios e os impactos desta missão "
-                + "na exploração robótica de Marte.</div></html>");
-        lblSub.setFont(EstiloBase.FONTE_CORPO.deriveFont(18f));
-        lblSub.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+        JTextArea lblSub = EstiloBase.criarTextoQuebravel(
+                "Conheça a história, os objetivos, os desafios e os impactos desta missão "
+                        + "na exploração robótica de Marte.",
+                EstiloBase.FONTE_CORPO.deriveFont(18f),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
         lblSub.setBounds(30, 196, painelW - 60, 62);
         cardInfo.add(lblSub);
 
@@ -149,13 +151,12 @@ public class fmrObra extends JDialog {
         faixaAcao.setBounds(30, barraAcaoY, painelW - 60, 102);
         cardInfo.add(faixaAcao);
 
-        JLabel lblNota = EstiloBase.criarLabel(
+        JTextArea lblNota = EstiloBase.criarTextoQuebravel(
                 "Continue navegando pela linha do tempo para descobrir novas camadas da exploração de Marte.",
                 EstiloBase.FONTE_PEQUENA.deriveFont(15f),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
-        lblNota.setHorizontalAlignment(SwingConstants.LEFT);
-        lblNota.setBounds(22, 16, faixaAcao.getWidth() - 44, 22);
+        lblNota.setBounds(22, 12, faixaAcao.getWidth() - 44, 34);
         faixaAcao.add(lblNota);
 
         if (controle.deveExibirModelo3D(indice)) {

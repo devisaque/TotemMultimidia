@@ -183,10 +183,11 @@ public class fmrAdministracao extends JDialog {
         List<Integer> pontuacoes = controle.getHistoricoPontuacoes();
 
         if (satisfacoes.isEmpty()) {
-            JLabel lblVazio = new JLabel("<html><div style='width:" + (card.getWidth() - pad * 2) + "px'>"
-                    + "Nenhuma avaliacao registrada nesta execucao.</div></html>");
-            lblVazio.setFont(EstiloBase.fonteResponsiva(18f, tela));
-            lblVazio.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
+            JTextArea lblVazio = EstiloBase.criarTextoQuebravel(
+                    "Nenhuma avaliacao registrada nesta execucao.",
+                    EstiloBase.fonteResponsiva(18f, tela),
+                    EstiloBase.COR_TEXTO_SECUNDARIO
+            );
             lblVazio.setBounds(pad, EstiloBase.escalar(150, tela), card.getWidth() - pad * 2, EstiloBase.escalar(70, tela));
             card.add(lblVazio);
             return;
