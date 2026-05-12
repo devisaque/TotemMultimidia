@@ -4,6 +4,8 @@ import modelo.Controle;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Tela do questionario com leitura ampla e feedback contextual.
@@ -212,17 +214,55 @@ public class fmrQuestionario extends JDialog {
                 EstiloBase.fonteInter(indicePergunta == 4 ? 16f : 17f),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
-        areaTexto.setEnabled(false);
-        areaTexto.setDisabledTextColor(EstiloBase.COR_TEXTO_SECUNDARIO);
         areaTexto.setBorder(BorderFactory.createEmptyBorder(18, 22, 18, 22));
+        areaTexto.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        areaTexto.addMouseListener(criarEncaminhadorCliqueOpcao(btn));
         btn.add(areaTexto, BorderLayout.CENTER);
         btn.setBorder(BorderFactory.createEmptyBorder());
         btn.setContentAreaFilled(false);
         btn.setOpaque(false);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
+        btn.setRolloverEnabled(true);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
+    }
+
+    private MouseAdapter criarEncaminhadorCliqueOpcao(JButton botao) {
+        return new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                botao.getModel().setRollover(true);
+                botao.repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                botao.getModel().setRollover(false);
+                botao.getModel().setPressed(false);
+                botao.getModel().setArmed(false);
+                botao.repaint();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                botao.getModel().setArmed(true);
+                botao.getModel().setPressed(true);
+                botao.repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Point pontoNoBotao = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), botao);
+                botao.getModel().setPressed(false);
+                botao.getModel().setArmed(false);
+                botao.repaint();
+
+                if (botao.contains(pontoNoBotao)) {
+                    botao.doClick();
+                }
+            }
+        };
     }
 
     private void selecionarOpcao(int idx) {

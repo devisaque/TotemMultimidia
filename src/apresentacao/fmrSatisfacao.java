@@ -39,38 +39,35 @@ public class fmrSatisfacao extends JDialog {
         JPanel fundo = EstiloBase.criarPainelFundo(33L);
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         int cx = tela.width / 2;
+        int margem = EstiloBase.escalar(40, tela);
 
         JLabel lblTag = EstiloBase.criarTag("Encerramento da visita");
         lblTag.setFont(EstiloBase.fonteResponsiva(13f, tela));
-        lblTag.setBounds(cx - EstiloBase.escalar(108, tela), EstiloBase.escalar(52, tela),
+        int tagY = EstiloBase.escalar(52, tela);
+        int tagH = EstiloBase.escalar(34, tela);
+        lblTag.setBounds(cx - EstiloBase.escalar(108, tela), tagY,
                 EstiloBase.escalar(216, tela), EstiloBase.escalar(34, tela));
         fundo.add(lblTag);
 
         int tituloW = Math.min(EstiloBase.escalar(900, tela), tela.width - EstiloBase.escalar(80, tela));
+        int tituloY = tagY + tagH + EstiloBase.escalar(28, tela);
+        int tituloH = Math.max(130, EstiloBase.escalar(150, tela));
         JTextArea lblTitulo = EstiloBase.criarTextoQuebravel(
                 "Como foi a sua experiencia no totem?",
                 EstiloBase.fonteResponsiva(54f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblTitulo.setBounds(cx - tituloW / 2, EstiloBase.escalar(110, tela), tituloW, EstiloBase.escalar(120, tela));
+        lblTitulo.setBounds(cx - tituloW / 2, tituloY, tituloW, tituloH);
         fundo.add(lblTitulo);
-
-        JTextArea lblNome = EstiloBase.criarTextoQuebravel(
-                "Obrigado, " + controle.getNomeVisitante() + ". Sua opiniao fecha a jornada e ajuda a melhorar o acervo digital.",
-                EstiloBase.fonteResponsiva(22f, tela),
-                EstiloBase.COR_TEXTO_SECUNDARIO
-        );
-        lblNome.setBounds(EstiloBase.escalar(40, tela), EstiloBase.escalar(240, tela),
-                tela.width - EstiloBase.escalar(80, tela), EstiloBase.escalar(62, tela));
-        fundo.add(lblNome);
 
         JPanel card = EstiloBase.criarCard();
         card.setLayout(null);
         int cardW = Math.min(EstiloBase.escalar(840, tela), tela.width - EstiloBase.escalar(80, tela));
         int cardH = Math.min(EstiloBase.escalar(320, tela), tela.height - EstiloBase.escalar(360, tela));
         cardH = Math.max(EstiloBase.escalar(250, tela), cardH);
-        card.setBounds(cx - cardW / 2, EstiloBase.escalar(314, tela), cardW, cardH);
+        int cardY = tituloY + tituloH + EstiloBase.escalar(34, tela);
+        card.setBounds(cx - cardW / 2, cardY, cardW, cardH);
         fundo.add(card);
 
         JLabel lblCardTag = EstiloBase.criarTag("Avalie de 0 a 5");
@@ -143,14 +140,17 @@ public class fmrSatisfacao extends JDialog {
         btnEnviar.addActionListener(e -> enviarAvaliacao());
         card.add(btnEnviar);
 
-        JTextArea lblRodape = EstiloBase.criarTextoQuebravel(
-                "Sua resposta fica apenas nesta sessao e orienta melhorias futuras da instalacao.",
-                EstiloBase.fonteResponsiva(14f, tela),
-                EstiloBase.COR_TEXTO_FRACO
+        JLabel lblNome = EstiloBase.criarLabel(
+                "Obrigado, " + controle.getNomeVisitante() + ". Sua opiniao fecha a jornada e ajuda a melhorar o acervo digital.",
+                EstiloBase.fonteResponsiva(20f, tela),
+                EstiloBase.COR_TEXTO_SECUNDARIO
         );
-        lblRodape.setBounds(EstiloBase.escalar(40, tela), tela.height - EstiloBase.escalar(58, tela),
-                tela.width - EstiloBase.escalar(80, tela), EstiloBase.escalar(32, tela));
-        fundo.add(lblRodape);
+        int agradecimentoW = Math.min(EstiloBase.escalar(1120, tela), tela.width - (margem * 2));
+        int agradecimentoY = cardY + cardH + EstiloBase.escalar(22, tela);
+        lblNome.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNome.setBounds(cx - agradecimentoW / 2, agradecimentoY,
+                agradecimentoW, EstiloBase.escalar(32, tela));
+        fundo.add(lblNome);
 
         setContentPane(fundo);
     }

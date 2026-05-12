@@ -96,25 +96,21 @@ public final class EstiloBase {
                 float alpha = isEnabled() ? 1f : 0.4f;
                 g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
 
-                int sombra = getModel().isPressed() ? 2 : 6;
-                g2.setColor(new Color(0, 0, 0, 90));
-                g2.fillRoundRect(0, sombra, getWidth(), getHeight() - sombra, 30, 30);
-
                 Color inicio = getModel().isPressed() ? COR_DESTAQUE.darker()
                         : getModel().isRollover() ? COR_DESTAQUE_HOVER : COR_DESTAQUE;
                 Color fim = getModel().isPressed() ? COR_DESTAQUE_2.darker() : COR_DESTAQUE_2;
                 GradientPaint gp = new GradientPaint(0, 0, inicio, getWidth(), getHeight(), fim);
                 g2.setPaint(gp);
-                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight() - sombra, 30, 30));
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 30, 30));
 
                 g2.setColor(new Color(255, 255, 255, 55));
-                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - sombra - 3, 30, 30);
+                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 30, 30);
 
                 g2.setColor(COR_TEXTO_PRIMARIO);
                 g2.setFont(getFont());
                 FontMetrics fm = g2.getFontMetrics();
                 int tx = (getWidth() - fm.stringWidth(getText())) / 2;
-                int ty = ((getHeight() - sombra) + fm.getAscent() - fm.getDescent()) / 2;
+                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
                 g2.drawString(getText(), tx, ty);
                 g2.dispose();
             }
@@ -124,6 +120,9 @@ public final class EstiloBase {
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
         btn.setFocusPainted(false);
+        btn.setOpaque(false);
+        btn.setBorder(BorderFactory.createEmptyBorder());
+        btn.setMargin(new Insets(0, 0, 0, 0));
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
     }
@@ -139,7 +138,7 @@ public final class EstiloBase {
                 g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
 
                 boolean hover = getModel().isRollover() || getModel().isPressed();
-                Color fundo = hover ? new Color(255, 255, 255, 20) : new Color(255, 255, 255, 10);
+                Color fundo = hover ? new Color(36, 30, 32, 245) : new Color(14, 11, 14, 238);
                 g2.setColor(fundo);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
 
@@ -165,6 +164,9 @@ public final class EstiloBase {
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
         btn.setFocusPainted(false);
+        btn.setOpaque(false);
+        btn.setBorder(BorderFactory.createEmptyBorder());
+        btn.setMargin(new Insets(0, 0, 0, 0));
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
     }

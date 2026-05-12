@@ -14,6 +14,9 @@ import java.net.URL;
  */
 public class fmrObra extends JDialog {
 
+    private static final int ESPACO_CODIGO_ANO = 5;
+    private static final Color COR_FAIXA_ACAO = new Color(7, 5, 7);
+
     private final Controle controle;
     private final int indice;
 
@@ -29,17 +32,17 @@ public class fmrObra extends JDialog {
         JPanel fundo = EstiloBase.criarPainelFundo(220L + (indice * 31L));
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
 
-        int margem = Math.max(42, tela.width / 34);
-        int topo = 38;
-        int gap = 34;
-        int conteudoY = 124;
-        int conteudoH = tela.height - conteudoY - 86;
+        int margem = Math.max(30, EstiloBase.escalar(42, tela));
+        int topo = Math.max(26, EstiloBase.escalar(38, tela));
+        int gap = Math.max(24, EstiloBase.escalar(34, tela));
+        int conteudoY = topo + Math.max(76, EstiloBase.escalar(86, tela));
+        int conteudoH = tela.height - conteudoY - Math.max(54, EstiloBase.escalar(68, tela));
         int arteW = Math.min(560, (int) (tela.width * 0.34));
         int painelW = tela.width - (margem * 2) - arteW - gap;
         int arteH = conteudoH;
 
         JLabel lblColecao = EstiloBase.criarTag("Coleção Marte");
-        lblColecao.setBounds(margem, topo, 150, 34);
+        lblColecao.setBounds(margem, topo, Math.max(142, EstiloBase.escalar(150, tela)), Math.max(32, EstiloBase.escalar(34, tela)));
         fundo.add(lblColecao);
 
         JLabel lblEtapa = EstiloBase.criarLabel(
@@ -48,11 +51,12 @@ public class fmrObra extends JDialog {
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
         lblEtapa.setHorizontalAlignment(SwingConstants.RIGHT);
-        lblEtapa.setBounds(tela.width - margem - 180, topo + 2, 180, 28);
+        int etapaW = Math.max(160, EstiloBase.escalar(180, tela));
+        lblEtapa.setBounds(tela.width - margem - etapaW, topo + 2, etapaW, Math.max(26, EstiloBase.escalar(28, tela)));
         fundo.add(lblEtapa);
 
         JPanel barraProgress = criarBarraProgresso(tela.width - (margem * 2));
-        barraProgress.setBounds(margem, topo + 46, tela.width - (margem * 2), 18);
+        barraProgress.setBounds(margem, topo + Math.max(40, EstiloBase.escalar(46, tela)), tela.width - (margem * 2), Math.max(14, EstiloBase.escalar(18, tela)));
         fundo.add(barraProgress);
 
         // ── Card da imagem ────────────────────────────────────────────────
@@ -63,22 +67,34 @@ public class fmrObra extends JDialog {
         fundo.add(cardArte);
 
         String imageObra = controle.getImagemObra(indice);
+        int artePadding = Math.max(18, EstiloBase.escalar(20, tela));
+        int seloX = Math.max(20, EstiloBase.escalar(24, tela));
+        int seloY = arteH - Math.max(100, EstiloBase.escalar(100, tela));
+        int seloW = Math.max(92, EstiloBase.escalar(92, tela));
+        int seloH = Math.max(32, EstiloBase.escalar(32, tela));
 
         JPanel painelImagem = criarPainelImagemObra(imageObra);
-        painelImagem.setBounds(20, 20, arteW - 40, arteH - 132);
+        painelImagem.setBounds(
+                artePadding,
+                artePadding,
+                arteW - (artePadding * 2),
+                Math.max(120, seloY - artePadding - Math.max(14, EstiloBase.escalar(14, tela)))
+        );
         cardArte.add(painelImagem);
 
         JLabel lblCodigo = EstiloBase.criarTag(controle.getCodigoObra(indice));
-        lblCodigo.setBounds(24, arteH - 98, 92, 32);
+        lblCodigo.setBounds(seloX, seloY, seloW, seloH);
         cardArte.add(lblCodigo);
 
         JLabel lblAno = EstiloBase.criarLabel(
                 controle.getAnoObra(indice),
-                EstiloBase.fontePoppins(34f),
+                EstiloBase.fonteResponsiva(34f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
         lblAno.setHorizontalAlignment(SwingConstants.LEFT);
-        lblAno.setBounds(24, arteH - 66, 180, 30);
+        int anoY = seloY + seloH + ESPACO_CODIGO_ANO;
+        int anoH = Math.max(32, EstiloBase.escalar(34, tela));
+        lblAno.setBounds(seloX, anoY, Math.max(180, EstiloBase.escalar(180, tela)), anoH);
         cardArte.add(lblAno);
 
         JLabel lblLegenda = EstiloBase.criarLabel(
@@ -87,7 +103,7 @@ public class fmrObra extends JDialog {
                 EstiloBase.COR_TEXTO_FRACO
         );
         lblLegenda.setHorizontalAlignment(SwingConstants.LEFT);
-        lblLegenda.setBounds(24, arteH - 38, arteW - 48, 18);
+        lblLegenda.setBounds(seloX, anoY + anoH, arteW - (seloX * 2), Math.max(18, EstiloBase.escalar(20, tela)));
         cardArte.add(lblLegenda);
 
         // ── Card de informações ───────────────────────────────────────────
@@ -97,39 +113,51 @@ public class fmrObra extends JDialog {
         cardInfo.setBounds(margem + arteW + gap, conteudoY, painelW, conteudoH);
         fundo.add(cardInfo);
 
+        int infoPad = Math.max(24, EstiloBase.escalar(30, tela));
+        int infoTagY = Math.max(22, EstiloBase.escalar(26, tela));
+        int infoTagH = Math.max(32, EstiloBase.escalar(34, tela));
+
         JLabel lblTema = EstiloBase.criarTag("Detalhes da obra");
-        lblTema.setBounds(30, 26, 160, 34);
+        lblTema.setBounds(infoPad, infoTagY, Math.max(150, EstiloBase.escalar(160, tela)), infoTagH);
         cardInfo.add(lblTema);
 
         JTextArea lblTitulo = EstiloBase.criarTextoQuebravel(
                 controle.getTituloObra(indice),
-                EstiloBase.fontePoppins(34f),
+                EstiloBase.fonteResponsiva(34f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
-        lblTitulo.setBounds(30, 72, painelW - 60, 120);
+        int tituloY = infoTagY + infoTagH + Math.max(14, EstiloBase.escalar(12, tela));
+        int tituloH = Math.max(78, EstiloBase.escalar(120, tela));
+        lblTitulo.setBounds(infoPad, tituloY, painelW - (infoPad * 2), tituloH);
         cardInfo.add(lblTitulo);
 
         JTextArea lblSub = EstiloBase.criarTextoQuebravel(
                 "Conheça a história, os objetivos, os desafios e os impactos desta missão "
                         + "na exploração robótica de Marte.",
-                EstiloBase.FONTE_CORPO.deriveFont(18f),
+                EstiloBase.fonteResponsiva(18f, tela),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
-        lblSub.setBounds(30, 196, painelW - 60, 62);
+        int subY = tituloY + tituloH + Math.max(10, EstiloBase.escalar(10, tela));
+        int subH = Math.max(46, EstiloBase.escalar(62, tela));
+        lblSub.setBounds(infoPad, subY, painelW - (infoPad * 2), subH);
         cardInfo.add(lblSub);
 
         JLabel lblChipAno = EstiloBase.criarTag("ANO " + controle.getAnoObra(indice));
-        lblChipAno.setBounds(30, 270, 150, 32);
+        int chipY = subY + subH + Math.max(12, EstiloBase.escalar(12, tela));
+        int chipH = Math.max(32, EstiloBase.escalar(32, tela));
+        int chipAnoW = Math.max(138, EstiloBase.escalar(150, tela));
+        int chipTipoW = Math.max(176, EstiloBase.escalar(176, tela));
+        lblChipAno.setBounds(infoPad, chipY, chipAnoW, chipH);
         cardInfo.add(lblChipAno);
 
         JLabel lblChipTipo = EstiloBase.criarTag(
                 controle.deveExibirModelo3D(indice) ? "COM EXPERIÊNCIA 3D" : "TEXTO CURATORIAL"
         );
-        lblChipTipo.setBounds(190, 270, 176, 32);
+        lblChipTipo.setBounds(infoPad + chipAnoW + Math.max(10, EstiloBase.escalar(10, tela)), chipY, chipTipoW, chipH);
         cardInfo.add(lblChipTipo);
 
         JTextArea txtDesc = new JTextArea(controle.getDescricaoObra(indice));
-        txtDesc.setFont(EstiloBase.fonteInter(18f));
+        txtDesc.setFont(EstiloBase.fonteResponsiva(18f, tela));
         txtDesc.setForeground(EstiloBase.COR_TEXTO_SECUNDARIO);
         txtDesc.setBackground(new Color(0, 0, 0, 0));
         txtDesc.setLineWrap(true);
@@ -139,42 +167,51 @@ public class fmrObra extends JDialog {
         txtDesc.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         JScrollPane scroll = EstiloBase.criarScrollPane(txtDesc);
-        int scrollY = 326;
-        int barraAcaoY = conteudoH - 148;
-        int scrollH = Math.max(180, barraAcaoY - scrollY - 18);
+        int faixaH = Math.max(86, EstiloBase.escalar(102, tela));
+        int barraAcaoY = conteudoH - faixaH - Math.max(30, EstiloBase.escalar(46, tela));
+        int scrollY = chipY + chipH + Math.max(20, EstiloBase.escalar(24, tela));
+        int scrollH = Math.max(1, barraAcaoY - scrollY - Math.max(18, EstiloBase.escalar(24, tela)));
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setBounds(30, scrollY, painelW - 60, scrollH);
+        scroll.setBounds(infoPad, scrollY, painelW - (infoPad * 2), scrollH);
         cardInfo.add(scroll);
 
         JPanel faixaAcao = criarFaixaAcao();
-        faixaAcao.setBounds(30, barraAcaoY, painelW - 60, 102);
+        faixaAcao.setBounds(infoPad, barraAcaoY, painelW - (infoPad * 2), faixaH);
         cardInfo.add(faixaAcao);
 
-        JTextArea lblNota = EstiloBase.criarTextoQuebravel(
-                "Continue navegando pela linha do tempo para descobrir novas camadas da exploração de Marte.",
-                EstiloBase.FONTE_PEQUENA.deriveFont(15f),
-                EstiloBase.COR_TEXTO_SECUNDARIO
-        );
-        lblNota.setBounds(22, 12, faixaAcao.getWidth() - 44, 34);
-        faixaAcao.add(lblNota);
+        boolean exibeModelo3D = controle.deveExibirModelo3D(indice);
+        int acaoPadding = Math.max(18, EstiloBase.escalar(22, tela));
+        int acaoGap = Math.max(14, EstiloBase.escalar(16, tela));
+        int botaoH = Math.max(46, EstiloBase.escalar(50, tela));
+        int botaoY = Math.max(24, (faixaAcao.getHeight() - botaoH) / 2);
+        int larguraDisponivelBotoes = faixaAcao.getWidth() - (acaoPadding * 2) - (exibeModelo3D ? acaoGap : 0);
+        int larguraProximoDesejada = indice == controle.getTotalObras() - 1 ? 252 : 228;
+        int larguraProximo = Math.min(Math.max(190, EstiloBase.escalar(larguraProximoDesejada, tela)),
+                exibeModelo3D ? larguraDisponivelBotoes / 2 : larguraDisponivelBotoes);
 
-        if (controle.deveExibirModelo3D(indice)) {
-            JButton btn3D = EstiloBase.criarBotaoSecundario("Explorar modelo 3D");
-            btn3D.setBounds(22, 44, 230, 44);
+        if (exibeModelo3D) {
+            JButton btn3D = criarBotaoAcaoObra("Explorar modelo 3D", false);
+            btn3D.setFont(EstiloBase.fonteResponsiva(16f, tela));
+            int largura3D = Math.min(Math.max(190, EstiloBase.escalar(230, tela)),
+                    larguraDisponivelBotoes - larguraProximo);
+            btn3D.setBounds(acaoPadding, botaoY, largura3D, botaoH);
             btn3D.addActionListener(e -> abrirModelo3D());
             faixaAcao.add(btn3D);
         }
 
-        JButton btnProximo = EstiloBase.criarBotaoPrimario(
+        JButton btnProximo = criarBotaoAcaoObra(
                 indice == controle.getTotalObras() - 1
                         ? "Ir para o questionário"
-                        : "Próxima obra"
+                        : "Próxima obra",
+                true
         );
-        btnProximo.setBounds(faixaAcao.getWidth() - 250, 40, 228, 48);
+        btnProximo.setFont(EstiloBase.fonteResponsiva(18f, tela));
+        btnProximo.setBounds(faixaAcao.getWidth() - acaoPadding - larguraProximo, botaoY, larguraProximo, botaoH);
         btnProximo.addActionListener(e -> {
-            dispose();
+            btnProximo.setEnabled(false);
             controle.proximaEtapaAposObra(indice);
+            dispose();
         });
         faixaAcao.add(btnProximo);
 
@@ -301,17 +338,89 @@ public class fmrObra extends JDialog {
     }
 
     private JPanel criarFaixaAcao() {
-        return new JPanel(null) {
+        JPanel faixa = new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setColor(new Color(255, 255, 255, 10));
+                ativarQualidadeLocal(g2);
+                g2.setColor(COR_FAIXA_ACAO);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
                 g2.setColor(new Color(255, 255, 255, 18));
                 g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
                 g2.dispose();
             }
         };
+        faixa.setOpaque(false);
+        return faixa;
+    }
+
+    private JButton criarBotaoAcaoObra(String texto, boolean primario) {
+        JButton botao = new JButton(texto) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                ativarQualidadeLocal(g2);
+
+                g2.setColor(COR_FAIXA_ACAO);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+
+                boolean hover = getModel().isRollover() || getModel().isPressed();
+                int arco = 28;
+
+                if (primario) {
+                    Color inicio = hover ? EstiloBase.COR_DESTAQUE_HOVER : EstiloBase.COR_DESTAQUE;
+                    Color fim = hover ? new Color(255, 204, 28) : EstiloBase.COR_DESTAQUE_2;
+                    g2.setPaint(new GradientPaint(0, 0, inicio, getWidth(), getHeight(), fim));
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), arco, arco);
+                    g2.setColor(new Color(255, 255, 255, 58));
+                } else {
+                    g2.setColor(hover ? new Color(30, 23, 25) : new Color(16, 12, 14));
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), arco, arco);
+                    g2.setPaint(new GradientPaint(
+                            0, 0, hover ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA,
+                            getWidth(), getHeight(), hover ? EstiloBase.COR_DESTAQUE_2 : EstiloBase.COR_CARD_GLOW
+                    ));
+                }
+
+                g2.setStroke(new BasicStroke(2f));
+                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, arco, arco);
+
+                Font fonte = ajustarFonteAoBotao(g2, getFont(), texto, getWidth() - 26);
+                g2.setFont(fonte);
+                g2.setColor(primario || hover ? EstiloBase.COR_TEXTO_PRIMARIO : EstiloBase.COR_TEXTO_SECUNDARIO);
+                FontMetrics fm = g2.getFontMetrics();
+                int tx = (getWidth() - fm.stringWidth(texto)) / 2;
+                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                g2.drawString(texto, tx, ty);
+
+                g2.dispose();
+            }
+        };
+        botao.setBorderPainted(false);
+        botao.setContentAreaFilled(false);
+        botao.setFocusPainted(false);
+        botao.setOpaque(true);
+        botao.setBackground(COR_FAIXA_ACAO);
+        botao.setBorder(BorderFactory.createEmptyBorder());
+        botao.setMargin(new Insets(0, 0, 0, 0));
+        botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return botao;
+    }
+
+    private Font ajustarFonteAoBotao(Graphics2D g2, Font fonteBase, String texto, int larguraMaxima) {
+        Font fonte = fonteBase;
+        FontMetrics fm = g2.getFontMetrics(fonte);
+        while (fm.stringWidth(texto) > larguraMaxima && fonte.getSize2D() > 12f) {
+            fonte = fonte.deriveFont(fonte.getSize2D() - 1f);
+            fm = g2.getFontMetrics(fonte);
+        }
+        return fonte;
+    }
+
+    private void ativarQualidadeLocal(Graphics2D g2) {
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 
     private void abrirModelo3D() {
