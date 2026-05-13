@@ -180,7 +180,7 @@ public class Controle extends absPropriedades {
     public String    getImagemObra(int i)       { return imagensObras[i]; }
     public String    getCodigoObra(int i)       { return codigosObras[i]; }
     public String    getAnoObra(int i)          { return anosObras[i]; }
-    public boolean   deveExibirModelo3D(int i)  { return exibirModelo3D[i]; }
+    // deveExibirModelo3D() removido — funcionalidade de modelo 3D eliminada na Etapa 1
     public String    getPergunta(int i)         { return perguntas[i]; }
     public String[]  getOpcoesPergunta(int i)   { return opcoes[i]; }
     public int       getTotalObras()            { return titulosObras.length; }

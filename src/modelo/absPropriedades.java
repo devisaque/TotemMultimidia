@@ -26,7 +26,7 @@ public abstract class absPropriedades implements intMetodos {
     protected String[]  codigosObras;
     protected String[]  anosObras;
     protected String[]  imagensObras;
-    protected boolean[] exibirModelo3D;   // true = exibe botão 3D (a partir da obra 3)
+    // exibirModelo3D removido — funcionalidade de modelo 3D eliminada na Etapa 1
 
     // ── Questionário ───────────────────────────────────────────────────────
     protected String[]   perguntas;
@@ -134,8 +134,8 @@ public abstract class absPropriedades implements intMetodos {
         };
 
         anosObras = new String[]{
-                "1971", "1971", "1997", "2004", "2004–2018",
-                "2012–", "2021–", "2021", "2021", "2028"
+                "1971", "1971", "1997", "2004", "2004\u20132018",
+                "2012\u2013", "2021\u2013", "2021", "2021", "2028"
         };
 
         imagensObras = new String[]{
@@ -150,20 +150,16 @@ public abstract class absPropriedades implements intMetodos {
                 "/assets/obras/obra9-zhurong.jpeg",
                 "/assets/obras/obra10-rosalind-franklin.jpeg"
         };
-
-        exibirModelo3D = new boolean[]{
-                true, true, true, true, true,
-                true, true, true, true, true
-        };
+        // exibirModelo3D removido — botão 3D eliminado na Etapa 1
     }
 
     private void inicializarQuestionario() {
         perguntas = new String[]{
-                "Qual foi o primeiro rover que realmente funcionou na superfície de Marte?",
+                "Qual foi o primeiro rover que realmente funcionou na superf\u00edcie de Marte?",
                 "Qual rover ficou famoso por voar em Marte?",
                 "Qual rover da NASA pousou na cratera Gale em 2012?",
-                "Qual rover chinês fez parte da missão Tianwen-1?",
-                "Qual rover europeu da missão ExoMars tem lançamento previsto para 2028?"
+                "Qual rover chin\u00eas fez parte da miss\u00e3o Tianwen-1?",
+                "Qual rover europeu da miss\u00e3o ExoMars tem lan\u00e7amento previsto para 2028?"
         };
 
         opcoes = new String[][]{
@@ -222,7 +218,7 @@ public abstract class absPropriedades implements intMetodos {
     public String[]  getCodigosObras()            { return codigosObras; }
     public String[]  getAnosObras()               { return anosObras; }
     public String[]  getImagensObras()            { return imagensObras; }
-    public boolean[] getExibirModelo3D()          { return exibirModelo3D; }
+    // getExibirModelo3D() removido — funcionalidade de modelo 3D eliminada na Etapa 1
     public String[]  getPerguntas()               { return perguntas; }
     public String[][] getOpcoes()                 { return opcoes; }
     public int[]     getGabaritos()               { return gabaritos; }
