@@ -9,8 +9,8 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * Tela de obra com composição editorial:
- * imagem real da obra/missão na esquerda e descrição na direita.
+ * Tela de obra com composicao editorial:
+ * imagem real da obra/missao na esquerda e descricao na direita.
  */
 public class fmrObra extends JDialog {
 
@@ -41,7 +41,7 @@ public class fmrObra extends JDialog {
         int painelW = tela.width - (margem * 2) - arteW - gap;
         int arteH = conteudoH;
 
-        JLabel lblColecao = EstiloBase.criarTag("Coleção Marte");
+        JLabel lblColecao = EstiloBase.criarTag("Cole\u00e7\u00e3o Marte");
         lblColecao.setBounds(margem, topo, Math.max(142, EstiloBase.escalar(150, tela)), Math.max(32, EstiloBase.escalar(34, tela)));
         fundo.add(lblColecao);
 
@@ -59,7 +59,7 @@ public class fmrObra extends JDialog {
         barraProgress.setBounds(margem, topo + Math.max(40, EstiloBase.escalar(46, tela)), tela.width - (margem * 2), Math.max(14, EstiloBase.escalar(18, tela)));
         fundo.add(barraProgress);
 
-        // ── Card da imagem ────────────────────────────────────────────────
+        // ── Card da imagem ─────────────────────────────────────────────────────
 
         JPanel cardArte = EstiloBase.criarCard();
         cardArte.setLayout(null);
@@ -98,7 +98,7 @@ public class fmrObra extends JDialog {
         cardArte.add(lblAno);
 
         JLabel lblLegenda = EstiloBase.criarLabel(
-                "Imagem da obra / missão",
+                "Imagem da obra / miss\u00e3o",
                 EstiloBase.FONTE_PEQUENA,
                 EstiloBase.COR_TEXTO_FRACO
         );
@@ -106,7 +106,7 @@ public class fmrObra extends JDialog {
         lblLegenda.setBounds(seloX, anoY + anoH, arteW - (seloX * 2), Math.max(18, EstiloBase.escalar(20, tela)));
         cardArte.add(lblLegenda);
 
-        // ── Card de informações ───────────────────────────────────────────
+        // ── Card de informações ────────────────────────────────────────────────
 
         JPanel cardInfo = EstiloBase.criarCard();
         cardInfo.setLayout(null);
@@ -132,8 +132,8 @@ public class fmrObra extends JDialog {
         cardInfo.add(lblTitulo);
 
         JTextArea lblSub = EstiloBase.criarTextoQuebravel(
-                "Conheça a história, os objetivos, os desafios e os impactos desta missão "
-                        + "na exploração robótica de Marte.",
+                "Conhe\u00e7a a hist\u00f3ria, os objetivos, os desafios e os impactos desta miss\u00e3o "
+                        + "na explora\u00e7\u00e3o rob\u00f3tica de Marte.",
                 EstiloBase.fonteResponsiva(18f, tela),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
@@ -150,9 +150,8 @@ public class fmrObra extends JDialog {
         lblChipAno.setBounds(infoPad, chipY, chipAnoW, chipH);
         cardInfo.add(lblChipAno);
 
-        JLabel lblChipTipo = EstiloBase.criarTag(
-                controle.deveExibirModelo3D(indice) ? "COM EXPERIÊNCIA 3D" : "TEXTO CURATORIAL"
-        );
+        // Modelo 3D removido — chip fixo como TEXTO CURATORIAL
+        JLabel lblChipTipo = EstiloBase.criarTag("TEXTO CURATORIAL");
         lblChipTipo.setBounds(infoPad + chipAnoW + Math.max(10, EstiloBase.escalar(10, tela)), chipY, chipTipoW, chipH);
         cardInfo.add(lblChipTipo);
 
@@ -180,30 +179,20 @@ public class fmrObra extends JDialog {
         faixaAcao.setBounds(infoPad, barraAcaoY, painelW - (infoPad * 2), faixaH);
         cardInfo.add(faixaAcao);
 
-        boolean exibeModelo3D = controle.deveExibirModelo3D(indice);
+        // Modelo 3D removido — botao Proximo ocupa toda a largura disponivel
         int acaoPadding = Math.max(18, EstiloBase.escalar(22, tela));
-        int acaoGap = Math.max(14, EstiloBase.escalar(16, tela));
         int botaoH = Math.max(46, EstiloBase.escalar(50, tela));
         int botaoY = Math.max(24, (faixaAcao.getHeight() - botaoH) / 2);
-        int larguraDisponivelBotoes = faixaAcao.getWidth() - (acaoPadding * 2) - (exibeModelo3D ? acaoGap : 0);
         int larguraProximoDesejada = indice == controle.getTotalObras() - 1 ? 252 : 228;
-        int larguraProximo = Math.min(Math.max(190, EstiloBase.escalar(larguraProximoDesejada, tela)),
-                exibeModelo3D ? larguraDisponivelBotoes / 2 : larguraDisponivelBotoes);
-
-        if (exibeModelo3D) {
-            JButton btn3D = criarBotaoAcaoObra("Explorar modelo 3D", false);
-            btn3D.setFont(EstiloBase.fonteResponsiva(16f, tela));
-            int largura3D = Math.min(Math.max(190, EstiloBase.escalar(230, tela)),
-                    larguraDisponivelBotoes - larguraProximo);
-            btn3D.setBounds(acaoPadding, botaoY, largura3D, botaoH);
-            btn3D.addActionListener(e -> abrirModelo3D());
-            faixaAcao.add(btn3D);
-        }
+        int larguraProximo = Math.min(
+                Math.max(190, EstiloBase.escalar(larguraProximoDesejada, tela)),
+                faixaAcao.getWidth() - (acaoPadding * 2)
+        );
 
         JButton btnProximo = criarBotaoAcaoObra(
                 indice == controle.getTotalObras() - 1
-                        ? "Ir para o questionário"
-                        : "Próxima obra",
+                        ? "Ir para o question\u00e1rio"
+                        : "Pr\u00f3xima obra",
                 true
         );
         btnProximo.setFont(EstiloBase.fonteResponsiva(18f, tela));
@@ -329,7 +318,7 @@ public class fmrObra extends JDialog {
 
         JLabelHelper.drawCenteredText(
                 g2,
-                "Imagem não encontrada",
+                "Imagem n\u00e3o encontrada",
                 getWidth(),
                 getHeight(),
                 EstiloBase.fontePoppins(24f),
@@ -421,17 +410,6 @@ public class fmrObra extends JDialog {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    }
-
-    private void abrirModelo3D() {
-        EstiloBase.mostrarDialogoInformativo(
-                this,
-                "3D",
-                "Visualização do rover",
-                "A integração real com um visualizador 3D ainda é um placeholder, mas a interface já está preparada "
-                        + "para receber essa experiência sem quebrar o fluxo principal do totem.",
-                "Fechar"
-        );
     }
 
     private JPanel criarBarraProgresso(int largura) {
