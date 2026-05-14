@@ -48,7 +48,7 @@ public class fmrInicio extends JDialog {
 
         int btnAdminW = EstiloBase.escalar(82, tela);
         int btnAdminH = EstiloBase.escalar(72, tela);
-        int btnAdminX = margem;
+        int btnAdminX = tela.width - margem - btnAdminW + 3;
         int btnAdminY = tela.height - EstiloBase.escalar(90, tela) + 3;
 
         JLabel lblTitulo = new JLabel("Opera\u00e7\u00e3o Solo Vermelho");
