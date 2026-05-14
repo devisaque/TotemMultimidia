@@ -323,7 +323,7 @@ public class fmrObra extends JDialog {
                 g2.setClip(forma);
 
                 if (imagem != null) {
-                    desenharImagemContain(g2, imagem, getWidth(), getHeight());
+                    desenharImagemCover(g2, imagem, getWidth(), getHeight());
                 } else {
                     desenharFallbackImagem(g2);
                 }
@@ -365,11 +365,11 @@ public class fmrObra extends JDialog {
     }
 
     /**
-     * Exibe a imagem com object-fit: contain — sem cortes.
-     * A imagem e redimensionada para caber inteiramente no painel,
-     * mantendo proporcoes e centralizando com fundo escuro nas laterais.
+     * Exibe a imagem com object-fit: cover — preenche todo o espaco do painel.
+     * A imagem e redimensionada para cobrir o painel inteiro, podendo ser cortada
+     * nas bordas, sem deixar espacos vazios ou barras pretas.
      */
-    private void desenharImagemContain(Graphics2D g2, Image imagem, int larguraPainel, int alturaPainel) {
+    private void desenharImagemCover(Graphics2D g2, Image imagem, int larguraPainel, int alturaPainel) {
         int larguraImagem = imagem.getWidth(null);
         int alturaImagem  = imagem.getHeight(null);
 
@@ -378,10 +378,8 @@ public class fmrObra extends JDialog {
             return;
         }
 
-        g2.setColor(new Color(18, 14, 16));
-        g2.fillRect(0, 0, larguraPainel, alturaPainel);
-
-        double escala = Math.min(
+        // Escala cover: a imagem cobre todo o painel, podendo ser cortada nas bordas
+        double escala = Math.max(
                 (double) larguraPainel / larguraImagem,
                 (double) alturaPainel  / alturaImagem
         );
@@ -389,12 +387,14 @@ public class fmrObra extends JDialog {
         int novaLargura = (int) Math.round(larguraImagem * escala);
         int novaAltura  = (int) Math.round(alturaImagem  * escala);
 
+        // Centraliza a imagem no painel (o excesso e cortado pelo clip)
         int x = (larguraPainel - novaLargura) / 2;
         int y = (alturaPainel  - novaAltura)  / 2;
 
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2.drawImage(imagem, x, y, novaLargura, novaAltura, null);
 
+        // Sombra suave nas bordas inferiores
         GradientPaint sombra = new GradientPaint(
                 0, alturaPainel * 0.7f, new Color(0, 0, 0, 0),
                 0, alturaPainel,        new Color(0, 0, 0, 100)
