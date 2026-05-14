@@ -36,16 +36,28 @@ public class fmrInicio extends JDialog {
         int cardDireitaX = colunaEsquerda + 18;
         int cardDireitaW = tela.width - cardDireitaX - margem;
         int textoW = colunaEsquerda - margem - EstiloBase.escalar(140, tela);
-        int botoesY = tela.height - EstiloBase.escalar(202, tela);
 
-        JLabel lblTitulo = new JLabel("Operação Solo Vermelho");
+        // btnIniciar: deslocado para a direita em relacao ao titulo
+        int btnIniciarX = margem + EstiloBase.escalar(48, tela);
+        int btnIniciarY = (int) (tela.height * 0.62);
+        int btnIniciarW = EstiloBase.escalar(420, tela);
+        int btnIniciarH = EstiloBase.escalar(88, tela);
+
+        // btnAdmin: +3px para direita e +3px para baixo
+        int btnAdminW = EstiloBase.escalar(82, tela);
+        int btnAdminH = EstiloBase.escalar(72, tela);
+        int btnAdminX = tela.width - margem - btnAdminW + 3;
+        int btnAdminY = tela.height - EstiloBase.escalar(90, tela) + 3;
+
+        // ── Textos lado esquerdo ─────────────────────────────────────────────
+        JLabel lblTitulo = new JLabel("Opera\u00e7\u00e3o Solo Vermelho");
         lblTitulo.setFont(EstiloBase.fontePoppins((tela.width >= 1700 ? 72f : 64f) * escala));
         lblTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
         lblTitulo.setBounds(margem, EstiloBase.escalar(118, tela), colunaEsquerda - margem - 12, EstiloBase.escalar(112, tela));
         painel.add(lblTitulo);
 
         JTextArea lblSub = EstiloBase.criarTextoQuebravel(
-                "A história das missões que plantaram nossa curiosidade em Marte.  ",
+                "A hist\u00f3ria das miss\u00f5es que plantaram nossa curiosidade em Marte.  ",
                 EstiloBase.fontePoppins(22f),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
@@ -60,36 +72,13 @@ public class fmrInicio extends JDialog {
         lblText.setBounds(margem, EstiloBase.escalar(540, tela), textoW, EstiloBase.escalar(226, tela));
         painel.add(lblText);
 
-        JButton btnIniciar = EstiloBase.criarBotaoPrimario("Iniciar experiencia");
-        btnIniciar.setFont(EstiloBase.fonteResponsiva(20f, tela));
-        btnIniciar.setBounds(margem, botoesY, EstiloBase.escalar(330, tela), EstiloBase.escalar(72, tela));
-        btnIniciar.addActionListener(e -> {
-            dispose();
-            controle.exibirCadastro();
-        });
-        painel.add(btnIniciar);
-
-        JButton btnAdmin = criarBotaoEngrenagem(tela);
-        btnAdmin.setToolTipText("Administração");
-        btnAdmin.setBounds(margem + EstiloBase.escalar(354, tela), botoesY,
-                EstiloBase.escalar(82, tela), EstiloBase.escalar(72, tela));
-        btnAdmin.addActionListener(e -> abrirAcessoAdministracao());
-        painel.add(btnAdmin);
-
-        JLabel lblLinha = EstiloBase.criarLabel(
-                "10 obras  •  linha do tempo completa  •  1 questionario final",
-                EstiloBase.fonteResponsiva(15f, tela),
-                EstiloBase.COR_TEXTO_FRACO
-        );
-        lblLinha.setHorizontalAlignment(SwingConstants.LEFT);
-        lblLinha.setBounds(margem, botoesY + EstiloBase.escalar(88, tela), colunaEsquerda - margem, EstiloBase.escalar(24, tela));
-        painel.add(lblLinha);
-
+        // ── Card lateral direito ─────────────────────────────────────────────
         JPanel cardResumo = EstiloBase.criarCard();
         cardResumo.setLayout(null);
         int cardResumoY = EstiloBase.escalar(86, tela);
         int cardResumoH = tela.height - (cardResumoY * 2);
         cardResumo.setBounds(cardDireitaX, cardResumoY, cardDireitaW, cardResumoH);
+        cardResumo.setEnabled(false);
         painel.add(cardResumo);
 
         JPanel poster = new JPanel(null) {
@@ -132,6 +121,7 @@ public class fmrInicio extends JDialog {
             }
         };
         poster.setOpaque(false);
+        poster.setEnabled(false);
         int posterX = EstiloBase.escalar(24, tela);
         int posterH = Math.max(EstiloBase.escalar(250, tela), cardResumoH - (posterX * 2));
         poster.setBounds(posterX, posterX, cardDireitaW - (posterX * 2), posterH);
@@ -146,8 +136,7 @@ public class fmrInicio extends JDialog {
                 EstiloBase.fonteResponsiva(31f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
-        lblResumoTitulo.setBounds(EstiloBase.escalar(34, tela), resumoTituloY,
-                resumoW, EstiloBase.escalar(58, tela));
+        lblResumoTitulo.setBounds(EstiloBase.escalar(34, tela), resumoTituloY, resumoW, EstiloBase.escalar(58, tela));
         poster.add(lblResumoTitulo);
 
         JTextArea lblResumoTexto = EstiloBase.criarTextoQuebravel(
@@ -155,9 +144,37 @@ public class fmrInicio extends JDialog {
                 EstiloBase.fonteResponsiva(18f, tela),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
-        lblResumoTexto.setBounds(EstiloBase.escalar(34, tela), resumoTextoY,
-                resumoW, EstiloBase.escalar(78, tela));
+        lblResumoTexto.setBounds(EstiloBase.escalar(34, tela), resumoTextoY, resumoW, EstiloBase.escalar(78, tela));
         poster.add(lblResumoTexto);
+
+        // ── Botao Iniciar ────────────────────────────────────────────────────
+        JButton btnIniciar = EstiloBase.criarBotaoPrimario("Iniciar experiencia");
+        btnIniciar.setFont(EstiloBase.fonteResponsiva(26f, tela));
+        btnIniciar.setBounds(btnIniciarX, btnIniciarY, btnIniciarW, btnIniciarH);
+        btnIniciar.addActionListener(e -> {
+            dispose();
+            controle.exibirCadastro();
+        });
+        painel.add(btnIniciar);
+        painel.setComponentZOrder(btnIniciar, 0);
+
+        JLabel lblLinha = EstiloBase.criarLabel(
+                "10 obras  \u2022  linha do tempo completa  \u2022  1 questionario final",
+                EstiloBase.fonteResponsiva(15f, tela),
+                EstiloBase.COR_TEXTO_FRACO
+        );
+        lblLinha.setHorizontalAlignment(SwingConstants.LEFT);
+        lblLinha.setBounds(btnIniciarX, btnIniciarY + btnIniciarH + EstiloBase.escalar(18, tela),
+                colunaEsquerda - margem, EstiloBase.escalar(24, tela));
+        painel.add(lblLinha);
+
+        // ── Botao Admin ──────────────────────────────────────────────────────
+        JButton btnAdmin = criarBotaoEngrenagemTranslucido(tela);
+        btnAdmin.setToolTipText("Administra\u00e7\u00e3o");
+        btnAdmin.setBounds(btnAdminX, btnAdminY, btnAdminW, btnAdminH);
+        btnAdmin.addActionListener(e -> abrirAcessoAdministracao());
+        painel.add(btnAdmin);
+        painel.setComponentZOrder(btnAdmin, 0);
 
         setContentPane(painel);
     }
@@ -167,7 +184,7 @@ public class fmrInicio extends JDialog {
         int dialogW = Math.min(EstiloBase.escalar(560, tela), tela.width - EstiloBase.escalar(56, tela));
         int dialogH = Math.min(EstiloBase.escalar(360, tela), tela.height - EstiloBase.escalar(56, tela));
 
-        JDialog dialogo = new JDialog(this, "Administração", true);
+        JDialog dialogo = new JDialog(this, "Administra\u00e7\u00e3o", true);
         dialogo.setUndecorated(true);
         dialogo.setBackground(new Color(0, 0, 0, 0));
         dialogo.setSize(dialogW, dialogH);
@@ -188,7 +205,7 @@ public class fmrInicio extends JDialog {
                 EstiloBase.escalar(154, tela), EstiloBase.escalar(32, tela));
         card.add(lblTag);
 
-        JLabel lblTitulo = EstiloBase.criarLabel("Administração", EstiloBase.fonteResponsiva(30f, tela),
+        JLabel lblTitulo = EstiloBase.criarLabel("Administra\u00e7\u00e3o", EstiloBase.fonteResponsiva(30f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO);
         lblTitulo.setHorizontalAlignment(SwingConstants.LEFT);
         lblTitulo.setBounds(EstiloBase.escalar(28, tela), EstiloBase.escalar(78, tela),
@@ -262,7 +279,7 @@ public class fmrInicio extends JDialog {
         return campo;
     }
 
-    private JButton criarBotaoEngrenagem(Dimension tela) {
+    private JButton criarBotaoEngrenagemTranslucido(Dimension tela) {
         JButton btn = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -270,18 +287,22 @@ public class fmrInicio extends JDialog {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 boolean hover = getModel().isRollover() || getModel().isPressed();
-                Color fundo = hover ? new Color(255, 255, 255, 20) : new Color(255, 255, 255, 10);
+                Color fundo = hover ? new Color(255, 255, 255, 38) : new Color(255, 255, 255, 14);
                 g2.setColor(fundo);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
 
                 GradientPaint borda = new GradientPaint(
-                        0, 0, hover ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA,
-                        getWidth(), getHeight(), hover ? EstiloBase.COR_ACENTO : EstiloBase.COR_CARD_GLOW
+                        0, 0, hover ? new Color(EstiloBase.COR_DESTAQUE.getRed(), EstiloBase.COR_DESTAQUE.getGreen(), EstiloBase.COR_DESTAQUE.getBlue(), 160)
+                                     : new Color(EstiloBase.COR_CARD_BORDA.getRed(), EstiloBase.COR_CARD_BORDA.getGreen(), EstiloBase.COR_CARD_BORDA.getBlue(), 80),
+                        getWidth(), getHeight(),
+                        hover ? new Color(EstiloBase.COR_ACENTO.getRed(), EstiloBase.COR_ACENTO.getGreen(), EstiloBase.COR_ACENTO.getBlue(), 160)
+                               : new Color(EstiloBase.COR_CARD_GLOW.getRed(), EstiloBase.COR_CARD_GLOW.getGreen(), EstiloBase.COR_CARD_GLOW.getBlue(), 80)
                 );
                 g2.setPaint(borda);
-                g2.setStroke(new BasicStroke(1.8f));
+                g2.setStroke(new BasicStroke(1.4f));
                 g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 28, 28);
 
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, hover ? 0.85f : 0.45f));
                 desenharEngrenagem(g2, getWidth() / 2, getHeight() / 2, EstiloBase.escalar(17, tela), hover);
                 g2.dispose();
             }
@@ -307,12 +328,8 @@ public class fmrInicio extends JDialog {
             double r = (i % 4 == 0 || i % 4 == 1) ? raioExterno : raioInterno;
             double x = cx + Math.cos(angulo) * r;
             double y = cy + Math.sin(angulo) * r;
-
-            if (i == 0) {
-                forma.moveTo(x, y);
-            } else {
-                forma.lineTo(x, y);
-            }
+            if (i == 0) forma.moveTo(x, y);
+            else forma.lineTo(x, y);
         }
         forma.closePath();
 
@@ -332,18 +349,14 @@ public class fmrInicio extends JDialog {
         timerEntrada.addActionListener(e -> {
             alphaAnima = Math.min(1f, alphaAnima + 0.04f);
             setOpacity(alphaAnima);
-            if (alphaAnima >= 1f) {
-                timerEntrada.stop();
-            }
+            if (alphaAnima >= 1f) timerEntrada.stop();
         });
         timerEntrada.start();
     }
 
     @Override
     public void dispose() {
-        if (timerEntrada != null) {
-            timerEntrada.stop();
-        }
+        if (timerEntrada != null) timerEntrada.stop();
         super.dispose();
     }
 }

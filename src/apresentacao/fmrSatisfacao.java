@@ -10,6 +10,9 @@ import java.awt.geom.Path2D;
 
 /**
  * Tela final de satisfacao em sintonia com o novo visual.
+ * Etapa 6: badges com largura aumentada para exibir texto completo;
+ * bottom do painel deslocado para baixo; agradecimento reposicionado.
+ * Fix: botao Encerrar visita subido para nao sobrepor margem interna do card.
  */
 public class fmrSatisfacao extends JDialog {
 
@@ -41,19 +44,20 @@ public class fmrSatisfacao extends JDialog {
         int cx = tela.width / 2;
         int margem = EstiloBase.escalar(40, tela);
 
+        // Badge "Encerramento da visita" — largura aumentada para texto completo
         JLabel lblTag = EstiloBase.criarTag("Encerramento da visita");
         lblTag.setFont(EstiloBase.fonteResponsiva(13f, tela));
         int tagY = EstiloBase.escalar(52, tela);
         int tagH = EstiloBase.escalar(34, tela);
-        int tagW = Math.max(EstiloBase.escalar(216, tela), lblTag.getPreferredSize().width);
-        lblTag.setBounds(cx - tagW / 2, tagY, tagW, EstiloBase.escalar(34, tela));
+        int tagW = EstiloBase.escalar(270, tela);
+        lblTag.setBounds(cx - tagW / 2, tagY, tagW, tagH);
         fundo.add(lblTag);
 
         int tituloW = Math.min(EstiloBase.escalar(900, tela), tela.width - EstiloBase.escalar(80, tela));
         int tituloY = tagY + tagH + EstiloBase.escalar(28, tela);
         int tituloH = Math.max(130, EstiloBase.escalar(150, tela));
         JTextArea lblTitulo = EstiloBase.criarTextoQuebravel(
-                "Como foi a sua experiencia na exposição?",
+                "Como foi a sua experiencia na exposi\u00e7\u00e3o?",
                 EstiloBase.fonteResponsiva(54f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
@@ -64,15 +68,16 @@ public class fmrSatisfacao extends JDialog {
         JPanel card = EstiloBase.criarCard();
         card.setLayout(null);
         int cardW = Math.min(EstiloBase.escalar(840, tela), tela.width - EstiloBase.escalar(80, tela));
-        int cardH = Math.min(EstiloBase.escalar(320, tela), tela.height - EstiloBase.escalar(360, tela));
-        cardH = Math.max(EstiloBase.escalar(250, tela), cardH);
+        int cardH = Math.min(EstiloBase.escalar(360, tela), tela.height - EstiloBase.escalar(360, tela));
+        cardH = Math.max(EstiloBase.escalar(290, tela), cardH);
         int cardY = tituloY + tituloH + EstiloBase.escalar(34, tela);
         card.setBounds(cx - cardW / 2, cardY, cardW, cardH);
         fundo.add(card);
 
+        // Badge "Avalie de 1 a 5" — largura aumentada para texto completo
         JLabel lblCardTag = EstiloBase.criarTag("Avalie de 1 a 5");
         lblCardTag.setFont(EstiloBase.fonteResponsiva(13f, tela));
-        int cardTagW = Math.max(EstiloBase.escalar(132, tela), lblCardTag.getPreferredSize().width);
+        int cardTagW = EstiloBase.escalar(170, tela);
         lblCardTag.setBounds(EstiloBase.escalar(30, tela), EstiloBase.escalar(28, tela),
                 cardTagW, EstiloBase.escalar(32, tela));
         card.add(lblCardTag);
@@ -85,7 +90,7 @@ public class fmrSatisfacao extends JDialog {
 
         estrelas = new JLabel[5];
         for (int i = 0; i < 5; i++) {
-            final int nota = i+1;
+            final int nota = i + 1;
             JLabel estrela = new EstrelaAvaliacao();
             estrela.setFont(EstiloBase.fonteResponsiva(58f, tela));
             estrela.setForeground(EstiloBase.COR_TEXTO_FRACO);
@@ -125,7 +130,7 @@ public class fmrSatisfacao extends JDialog {
 
         int pontos = controle.calcularPontuacao();
         JLabel lblQuiz = EstiloBase.criarLabel(
-                "Desempenho no questionario: " + pontos + " de " + controle.getTotalPerguntas() + " acertos",
+                "Desempenho no question\u00e1rio: " + pontos + " de " + controle.getTotalPerguntas() + " acertos",
                 EstiloBase.fonteResponsiva(15f, tela),
                 EstiloBase.COR_TEXTO_FRACO
         );
@@ -136,18 +141,19 @@ public class fmrSatisfacao extends JDialog {
         btnEnviar = EstiloBase.criarBotaoPrimario("Encerrar visita");
         btnEnviar.setEnabled(false);
         btnEnviar.setFont(EstiloBase.fonteResponsiva(18f, tela));
-        btnEnviar.setBounds((cardW - EstiloBase.escalar(232, tela)) / 2, cardH - EstiloBase.escalar(58, tela),
+        // era cardH - 58 — subido para cardH - 76 para nao sobrepor a margem interna do card
+        btnEnviar.setBounds((cardW - EstiloBase.escalar(232, tela)) / 2, cardH - EstiloBase.escalar(76, tela),
                 EstiloBase.escalar(232, tela), EstiloBase.escalar(42, tela));
         btnEnviar.addActionListener(e -> enviarAvaliacao());
         card.add(btnEnviar);
 
         JLabel lblNome = EstiloBase.criarLabel(
-                "Obrigado, " + controle.getNomeVisitante() + ". Sua opiniao fecha a jornada e ajuda a melhorar o acervo digital.",
+                "Obrigado, " + controle.getNomeVisitante() + ". Sua opini\u00e3o fecha a jornada e ajuda a melhorar o acervo digital.",
                 EstiloBase.fonteResponsiva(20f, tela),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
         int agradecimentoW = Math.min(EstiloBase.escalar(1120, tela), tela.width - (margem * 2));
-        int agradecimentoY = cardY + cardH + EstiloBase.escalar(22, tela);
+        int agradecimentoY = cardY + cardH + EstiloBase.escalar(32, tela);
         lblNome.setHorizontalAlignment(SwingConstants.CENTER);
         lblNome.setBounds(cx - agradecimentoW / 2, agradecimentoY,
                 agradecimentoW, EstiloBase.escalar(32, tela));
@@ -178,11 +184,8 @@ public class fmrSatisfacao extends JDialog {
         for (int i = 0; i < 5; i++) {
             boolean ativo = i < nota;
             estrelas[i].setForeground(
-                    ativo
-                    ?EstiloBase.COR_DESTAQUE
-                    :EstiloBase.COR_TEXTO_FRACO
+                    ativo ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_TEXTO_FRACO
             );
-
             estrelas[i].repaint();
         }
     }
@@ -214,13 +217,13 @@ public class fmrSatisfacao extends JDialog {
             double centroX = getWidth() / 2.0;
             double centroY = getHeight() / 2.0 + 2;
 
-            Path2D estrela = criarFormaEstrela(centroX, centroY, raioExterno, raioInterno);
+            Path2D estrelaShape = criarFormaEstrela(centroX, centroY, raioExterno, raioInterno);
 
             g2.setColor(getForeground());
-            g2.fill(estrela);
+            g2.fill(estrelaShape);
             g2.setStroke(new BasicStroke(1.2f));
             g2.setColor(new Color(255, 255, 255, 48));
-            g2.draw(estrela);
+            g2.draw(estrelaShape);
             g2.dispose();
         }
 
