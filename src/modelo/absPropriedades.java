@@ -103,11 +103,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A Mars 2 foi o primeiro artefato humano a atingir a superf\u00edcie de Marte, mesmo que por um impacto n\u00e3o controlado.</li>"
             + "<li>O PrOP&#8209;11 \u00e9 lembrado como um dos primeiros rovers semiaut\u00f4nomos j\u00e1 constru\u00eddos.</li>"
             + "<li>Boa parte do que se sabe sobre o PrOP&#8209;11 vem de documenta\u00e7\u00e3o t\u00e9cnica e reconstru\u00e7\u00f5es hist\u00f3ricas.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>O PrOP&#8209;11 aparece junto aos destro\u00e7os do m\u00f3dulo de pouso em um cen\u00e1rio de rochas e poeira avermelhada. "
-            + "O \"rob\u00f4 fantasma\" simboliza tentativas corajosas que n\u00e3o deram certo, mas abriram caminho para miss\u00f5es "
-            + "futuras aprenderem com os erros e aperfei\u00e7oarem t\u00e9cnicas de pouso.</p>",
+            + "</ul>",
 
             // Obra 2 — A Tempestade da Mars 3
             "<b>[ Miss\u00e3o: Mars 3 | Pa\u00eds: URSS | Ano: 1971 ]</b>"
@@ -125,11 +121,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>Apesar de ser vista como fracasso, a Mars 3 realizou o primeiro pouso suave bem-sucedido em Marte.</li>"
             + "<li>A tempestade de poeira serve at\u00e9 hoje como exemplo dos riscos ambientais do planeta para naves.</li>"
             + "<li>O PrOP&#8209;11 da Mars 3 \u00e9 s\u00edmbolo de tecnologia pronta, impedida pelos extremos do clima marciano.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra mostra o PrOP&#8209;11 ainda sobre a plataforma da Mars 3, enquanto o c\u00e9u ao redor escurece sob uma "
-            + "gigantesca tempestade de poeira. A imagem fala sobre a fragilidade humana diante de um planeta duro, "
-            + "mas tamb\u00e9m sobre a coragem de tentar inovar mesmo sabendo dos riscos.</p>",
+            + "</ul>",
 
             // Obra 3 — Sojourner
             "<b>[ Miss\u00e3o: Mars Pathfinder | Pa\u00eds: EUA/NASA | Ano: 1997 ]</b>"
@@ -145,11 +137,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>O nome \"Sojourner\" homenageia Sojourner Truth, ativista contra a escravid\u00e3o e pelos direitos civis.</li>"
             + "<li>O uso de airbags para amortecer o pouso foi uma inova\u00e7\u00e3o marcante da miss\u00e3o.</li>"
             + "<li>As imagens do pequeno rob\u00f4 andando entre as rochas em Marte tiveram grande impacto na m\u00eddia.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra mostra o Sojourner como um pequeno explorador diante de um grande campo de rochas. Essa composi\u00e7\u00e3o "
-            + "convida o visitante a pensar em como grandes avan\u00e7os cient\u00edficos podem come\u00e7ar com experimentos "
-            + "modestos, mas bem planejados.</p>",
+            + "</ul>",
 
             // Obra 4 — Spirit
             "<b>[ Miss\u00e3o: MER-A | Pa\u00eds: EUA/NASA | Ano: 2004 ]</b>"
@@ -166,11 +154,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A Spirit sobreviveu a tempestades de poeira e invernos marcianos durante anos.</li>"
             + "<li>O atolamento em Troy virou um caso cl\u00e1ssico de limite operacional de um rover em terreno desconhecido.</li>"
             + "<li>As Columbia Hills revelaram camadas de rochas formadas em diferentes ambientes ao longo da hist\u00f3ria de Marte.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>Na obra, a Spirit aparece inclinada e presa em uma \u00e1rea de areia clara. A cena resume a trajet\u00f3ria da "
-            + "miss\u00e3o: um rob\u00f4 que superou em muito o tempo previsto e, no fim, foi detido pelo pr\u00f3prio terreno "
-            + "que tentava estudar.</p>",
+            + "</ul>",
 
             // Obra 5 — Opportunity
             "<b>[ Miss\u00e3o: MER-B | Pa\u00eds: EUA/NASA | Ano: 2004 ]</b>"
@@ -186,11 +170,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A Opportunity operou cerca de 57 vezes mais tempo do que o planejado originalmente.</li>"
             + "<li>A frase \"my battery is low and it's getting dark\" ficou famosa como met\u00e1fora do fim da miss\u00e3o.</li>"
             + "<li>A dist\u00e2ncia percorrida fez dela um dos ve\u00eddculos com maior quilometragem em outro corpo celeste.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>Na obra, a Opportunity aparece na borda de uma grande cratera com o c\u00e9u escurecido por poeira. "
-            + "A pe\u00e7a transmite a ideia de persist\u00eancia e resist\u00eancia, lembrando que at\u00e9 as miss\u00f5es mais "
-            + "bem-sucedidas t\u00eam um ponto final.</p>",
+            + "</ul>",
 
             // Obra 6 — Curiosity
             "<b>[ Miss\u00e3o: Mars Science Laboratory | Pa\u00eds: EUA/NASA | Ano: 2012 ]</b>"
@@ -206,11 +186,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>O pouso com sky crane foi t\u00e3o complexo que os engenheiros chamaram o momento de \"sete minutos de terror\".</li>"
             + "<li>O Curiosity ainda est\u00e1 ativo, subindo o Monte Sharp e estudando novas camadas de rocha.</li>"
             + "<li>Suas imagens s\u00e3o amplamente usadas em materiais educativos e document\u00e1rios sobre Marte.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra mostra o Curiosity em meio a rochas perfuradas, com o Monte Sharp ao fundo exibindo suas "
-            + "camadas sedimentares. A cena convida o visitante a pensar em como cada furo na rocha pode conter "
-            + "pistas sobre bilh\u00f5es de anos de hist\u00f3ria planet\u00e1ria.</p>",
+            + "</ul>",
 
             // Obra 7 — Perseverance
             "<b>[ Miss\u00e3o: Mars 2020 | Pa\u00eds: EUA/NASA | Ano: 2021 ]</b>"
@@ -226,11 +202,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>O Perseverance carrega uma plaquinha com o nome de 10,9 milh\u00f5es de pessoas que participaram de uma campanha da NASA.</li>"
             + "<li>O MOXIE produziu oxig\u00eanio suficiente para um astronauta respirar por cerca de 10 minutos.</li>"
             + "<li>O rover tamb\u00e9m carregou o helic\u00f3ptero Ingenuity, que realizou o primeiro voo motorizado em outro planeta.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra mostra o Perseverance com seus tubos de armazenamento de amostras em primeiro plano. "
-            + "A ideia das \"mensagens em garrafas\" remete \u00e0 esperan\u00e7a de que esse material chegue algum dia \u00e0 Terra "
-            + "e responda perguntas que ainda n\u00e3o sabemos fazer.</p>",
+            + "</ul>",
 
             // Obra 8 — Ingenuity
             "<b>[ Miss\u00e3o: Mars 2020 | Pa\u00eds: EUA/NASA | Ano: 2021 ]</b>"
@@ -246,10 +218,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>O Ingenuity carregava um pequeno peda\u00e7o do tecido da asa do Flyer, o avi\u00e3o dos Irm\u00e3os Wright.</li>"
             + "<li>A NASA o chamou de \"momento Kitty Hawk em Marte\", em refer\u00eancia ao primeiro voo motorizado da hist\u00f3ria.</li>"
             + "<li>Ele funcionou muito al\u00e9m do planejado: a miss\u00e3o original previa apenas 5 voos de demonstra\u00e7\u00e3o.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra captura o Ingenuity suspenso sobre o solo avermelhado de Marte, com sua sombra projetada "
-            + "abaixo. A cena celebra a ousadia humana de tentar voar onde ningu\u00e9m jamais havia voado.</p>",
+            + "</ul>",
 
             // Obra 9 — Zhurong
             "<b>[ Miss\u00e3o: Tianwen-1 | Pa\u00eds: China/CNSA | Ano: 2021 ]</b>"
@@ -264,11 +233,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>\"Zhurong\" \u00e9 o nome do deus do fogo na mitologia chinesa.</li>"
             + "<li>A Tianwen-1 foi a primeira miss\u00e3o chinesa a alcan\u00e7ar com sucesso a superf\u00edcie de Marte.</li>"
             + "<li>O radar de subsolo do Zhurong encontrou ind\u00edcios de camadas de gelo enterradas em Utopia Planitia.</li>"
-            + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra mostra o Zhurong diante da vast\u00e3o de Utopia Planitia, com o m\u00f3dulo de pouso ao fundo. "
-            + "A composi\u00e7\u00e3o representa a entrada de uma nova na\u00e7\u00e3o na corrida espacial marciana e o in\u00edcio de uma "
-            + "nova era de explora\u00e7\u00e3o multipolar do planeta.</p>",
+            + "</ul>",
 
             // Obra 10 — Rosalind Franklin
             "<b>[ Miss\u00e3o: ExoMars | Pa\u00eds: ESA/NASA | Ano: 2028 (previsto) ]</b>"
@@ -285,10 +250,6 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A broca do rover pode coletar amostras em camadas abaixo do alcance da radia\u00e7\u00e3o UV que esteriliza a superf\u00edcie.</li>"
             + "<li>\u00c9 a \u00fanica miss\u00e3o planejada especificamente para buscar sinais diretos de vida em Marte.</li>"
             + "</ul>"
-            + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra mostra o rover Rosalind Franklin com sua broca apontada para o solo, em uma paisagem de Oxia Planum. "
-            + "A imagem convida o visitante a refletir sobre as perguntas que ainda n\u00e3o foram respondidas e sobre "
-            + "a ci\u00eancia que ainda est\u00e1 por ser feita.</p>"
         };
 
         codigosObras = new String[]{"PM-02", "PM-03", "PM-97", "PM-04A", "PM-04B", "PM-12", "PM-21A", "PM-21B", "PM-21C", "PM-28"};
