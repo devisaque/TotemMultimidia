@@ -23,6 +23,7 @@ public abstract class absPropriedades implements intMetodos {
     // ── Obras (10 rovers/missões marcianas) ────────────────────────────────────────────
     protected String[]  titulosObras;
     protected String[]  descricoesObras;
+    protected String[]  explicacoesObras;  // texto exibido no card da imagem (abaixo da foto)
     protected String[]  codigosObras;
     protected String[]  anosObras;
     protected String[]  imagensObras;
@@ -250,6 +251,79 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A broca do rover pode coletar amostras em camadas abaixo do alcance da radia\u00e7\u00e3o UV que esteriliza a superf\u00edcie.</li>"
             + "<li>\u00c9 a \u00fanica miss\u00e3o planejada especificamente para buscar sinais diretos de vida em Marte.</li>"
             + "</ul>"
+        };
+
+        // ── Explicacao da obra (exibida no card da imagem, abaixo da foto) ────────────
+        explicacoesObras = new String[]{
+
+            // Obra 1
+            "Nesta obra, o PrOP\u2011M aparece junto aos destro\u00e7os do m\u00f3dulo de pouso da Mars 2 em um cen\u00e1rio de rochas "
+            + "e poeira avermelhada. A composi\u00e7\u00e3o destaca a sensa\u00e7\u00e3o de uma tecnologia pioneira que chegou at\u00e9 Marte, "
+            + "mas que foi calada por um acidente no \u00faltimo momento. O \u201crob\u00f4 fantasma\u201d simboliza tentativas corajosas "
+            + "que n\u00e3o deram certo, mas abriram caminho para miss\u00f5es futuras aprenderem com os erros e aperfei\u00e7oarem "
+            + "t\u00e9cnicas de pouso e explora\u00e7\u00e3o.",
+
+            // Obra 2
+            "A obra mostra o PrOP\u2011M ainda sobre a plataforma da Mars 3, enquanto o c\u00e9u ao redor escurece sob uma "
+            + "gigantesca tempestade de poeira. A imagem refor\u00e7a a ideia de que, mesmo quando a engenharia funciona "
+            + "e o pouso \u00e9 bem\u2011sucedido, Marte tem for\u00e7as naturais capazes de interromper uma miss\u00e3o em segundos. "
+            + "Ao colocar o pequeno rover frente a um horizonte tomado pela poeira, a obra fala sobre a fragilidade "
+            + "humana diante de um planeta duro, mas tamb\u00e9m sobre a coragem de tentar inovar, mesmo sabendo dos riscos.",
+
+            // Obra 3
+            "A obra mostra o Sojourner como um pequeno explorador diante de um grande campo de rochas, com a base "
+            + "Mars Pathfinder ao fundo. Essa composi\u00e7\u00e3o evidencia a coragem de dar o primeiro passo na explora\u00e7\u00e3o "
+            + "m\u00f3vel de Marte: um rob\u00f4 pequeno, mas capaz de abrir espa\u00e7o para miss\u00f5es muito mais ambiciosas. Ao "
+            + "mostrar a escala reduzida do rover em compara\u00e7\u00e3o com o ambiente, a obra convida o visitante a pensar "
+            + "em como grandes avan\u00e7os cient\u00edficos podem come\u00e7ar com experimentos modestos, mas bem planejados.",
+
+            // Obra 4
+            "Na obra, a Spirit aparece inclinada e presa em uma \u00e1rea de areia clara, com marcas de rodas e colinas "
+            + "ao fundo. Essa cena resume a trajet\u00f3ria da miss\u00e3o: um rob\u00f4 que superou em muito o tempo previsto, "
+            + "explorou ambientes variados e, no fim, foi detido pelo pr\u00f3prio terreno que tentava estudar. A obra "
+            + "destaca a ideia de ousadia e limite, mostrando que a explora\u00e7\u00e3o cient\u00edfica envolve tanto grandes "
+            + "descobertas quanto situa\u00e7\u00f5es em que a natureza vence a tecnologia.",
+
+            // Obra 5
+            "Na obra, a Opportunity aparece na borda de uma grande cratera, com o c\u00e9u escurecido por poeira. "
+            + "O contraste entre o pequeno rob\u00f4 e o horizonte amplo, tomado pela tempestade, refor\u00e7a a sensa\u00e7\u00e3o "
+            + "de uma longa viagem chegando ao fim. A pe\u00e7a transmite a ideia de persist\u00eancia e resist\u00eancia, mas "
+            + "tamb\u00e9m lembra que at\u00e9 as miss\u00f5es mais bem\u2011sucedidas t\u00eam um ponto final.",
+
+            // Obra 6
+            "A obra mostra o Curiosity em meio a rochas perfuradas, com o Monte Sharp ao fundo exibindo suas "
+            + "camadas bem definidas. Essa imagem refor\u00e7a a ideia do rover como um ge\u00f3logo rob\u00f3tico, que l\u00ea a "
+            + "hist\u00f3ria do planeta nas rochas, camada por camada. Ao destacar o contraste entre a m\u00e1quina complexa "
+            + "e a paisagem antiga de Marte, a obra convida o visitante a imaginar como seria caminhar por ali "
+            + "e enxergar, naquelas mesmas rochas, marcas de um passado mais \u00famido e possivelmente habit\u00e1vel.",
+
+            // Obra 7
+            "A obra apresenta o Perseverance trabalhando no delta de Jezero, cercado por rochas estratificadas "
+            + "e tubos de amostra. Essa representa\u00e7\u00e3o destaca a fun\u00e7\u00e3o do rover como um colecionador de pistas, "
+            + "enchendo cada tubo como se fosse uma garrafa com mensagem para o futuro: amostras que ainda n\u00e3o "
+            + "podem ser completamente interpretadas em Marte, mas que um dia chegar\u00e3o a laborat\u00f3rios aqui na Terra.",
+
+            // Obra 8
+            "Na obra, Ingenuity aparece em voo, com sua sombra projetada no solo marciano e o Perseverance ao "
+            + "fundo. Essa imagem registra o momento em que a explora\u00e7\u00e3o de Marte deixou de ser apenas sobre rodas "
+            + "e passou a ter tamb\u00e9m uma dimens\u00e3o a\u00e9rea. A pe\u00e7a transmite a sensa\u00e7\u00e3o de leveza e inova\u00e7\u00e3o, "
+            + "convidando o visitante a perceber que, na ci\u00eancia, novas ideias podem literalmente tirar um projeto "
+            + "do ch\u00e3o e abrir possibilidades que antes pareciam imposs\u00edveis.",
+
+            // Obra 9
+            "Na obra, o Zhurong segue em frente, afastando\u2011se da plataforma de pouso que exibe a bandeira da China. "
+            + "Essa composi\u00e7\u00e3o simboliza o primeiro passo do pa\u00eds sobre o solo marciano, mostrando ao visitante "
+            + "que a explora\u00e7\u00e3o de Marte se tornou um esfor\u00e7o verdadeiramente internacional. A pe\u00e7a refor\u00e7a a ideia "
+            + "de que a ci\u00eancia e a tecnologia ultrapassam fronteiras pol\u00edticas e que diferentes na\u00e7\u00f5es podem "
+            + "contribuir com pontos de vista e instrumentos distintos para desvendar o mesmo planeta.",
+
+            // Obra 10
+            "Na obra, o Rover Rosalind Franklin aparece perfurando o solo de Oxia Planum, enquanto a ideia "
+            + "central \u00e9 mostrar que a busca por vida em Marte n\u00e3o se limita \u00e0 superf\u00edcie. A pe\u00e7a transmite a "
+            + "imagem de um detetive do subsolo, que procura pistas quase invis\u00edveis, escondidas em camadas profundas "
+            + "e antigas. Para o visitante, a obra representa o pr\u00f3ximo cap\u00edtulo da explora\u00e7\u00e3o de Marte: depois de "
+            + "descobrir \u00e1gua passada e ambientes habit\u00e1veis, a humanidade se prepara para investigar se algum dia "
+            + "houve vida de fato naquele planeta."
         };
 
         codigosObras = new String[]{"PM-02", "PM-03", "PM-97", "PM-04A", "PM-04B", "PM-12", "PM-21A", "PM-21B", "PM-21C", "PM-28"};
