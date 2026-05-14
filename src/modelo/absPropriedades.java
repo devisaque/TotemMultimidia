@@ -294,7 +294,8 @@ public abstract class absPropriedades implements intMetodos {
         codigosObras = new String[]{"PM-02", "PM-03", "PM-97", "PM-04A", "PM-04B", "PM-12", "PM-21A", "PM-21B", "PM-21C", "PM-28"};
         anosObras    = new String[]{"1971", "1971", "1997", "2004", "2004", "2012", "2021", "2021", "2021", "2028"};
 
-        // Caminhos corrigidos para src/assets/obras/ com os nomes reais dos arquivos
+        // Caminhos atualizados: obra7-ingenuity e obra8-perseverance
+        // (renomear os arquivos fisicos localmente com git mv antes de fazer push)
         imagensObras = new String[]{
                 "/assets/obras/obra1-prop-m-mars2.jpeg",
                 "/assets/obras/obra2-prop-m-mars3.jpeg",
@@ -302,8 +303,8 @@ public abstract class absPropriedades implements intMetodos {
                 "/assets/obras/obra4-spirit.jpeg",
                 "/assets/obras/obra5-opportunity.jpeg",
                 "/assets/obras/obra6-curiosity.jpeg",
-                "/assets/obras/obra7-perseverance.jpeg",
-                "/assets/obras/obra8-ingenuity.jpeg",
+                "/assets/obras/obra7-ingenuity.jpeg",
+                "/assets/obras/obra8-perseverance.jpeg",
                 "/assets/obras/obra9-zhurong.jpeg",
                 "/assets/obras/obra10-rosalind-franklin.jpeg"
         };
