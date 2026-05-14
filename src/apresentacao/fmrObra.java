@@ -71,16 +71,22 @@ public class fmrObra extends JDialog {
         String imageObra = controle.getImagemObra(indice);
         int artePadding = Math.max(18, EstiloBase.escalar(20, tela));
         int seloX = Math.max(20, EstiloBase.escalar(24, tela));
-        int seloY = arteH - Math.max(100, EstiloBase.escalar(100, tela));
-        int seloW = Math.max(92, EstiloBase.escalar(92, tela));
-        int seloH = Math.max(32, EstiloBase.escalar(32, tela));
+
+        // Alturas dos elementos inferiores ao painel de imagem
+        int legendaH = Math.max(20, EstiloBase.escalar(22, tela));
+        int seloH    = Math.max(32, EstiloBase.escalar(32, tela));
+        int anoH     = Math.max(32, EstiloBase.escalar(34, tela));
+        int espacoInternoInferior = artePadding + legendaH + anoH + seloH + ESPACO_CODIGO_ANO + Math.max(10, EstiloBase.escalar(10, tela));
+
+        // Altura da imagem ocupa todo o espaco disponivel acima dos elementos inferiores
+        int imagemH = arteH - artePadding - espacoInternoInferior;
 
         JPanel painelImagem = criarPainelImagemObra(imageObra);
         painelImagem.setBounds(
                 artePadding,
                 artePadding,
                 arteW - (artePadding * 2),
-                Math.max(120, seloY - artePadding - Math.max(14, EstiloBase.escalar(14, tela)))
+                Math.max(120, imagemH)
         );
         painelImagem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         painelImagem.addMouseListener(new MouseAdapter() {
@@ -91,8 +97,10 @@ public class fmrObra extends JDialog {
         });
         cardArte.add(painelImagem);
 
+        int seloY = artePadding + Math.max(120, imagemH) + Math.max(10, EstiloBase.escalar(10, tela));
+
         JLabel lblCodigo = EstiloBase.criarTag(controle.getCodigoObra(indice));
-        lblCodigo.setBounds(seloX, seloY, seloW, seloH);
+        lblCodigo.setBounds(seloX, seloY, Math.max(92, EstiloBase.escalar(92, tela)), seloH);
         cardArte.add(lblCodigo);
 
         JLabel lblAno = EstiloBase.criarLabel(
@@ -102,17 +110,17 @@ public class fmrObra extends JDialog {
         );
         lblAno.setHorizontalAlignment(SwingConstants.LEFT);
         int anoY = seloY + seloH + ESPACO_CODIGO_ANO;
-        int anoH = Math.max(32, EstiloBase.escalar(34, tela));
         lblAno.setBounds(seloX, anoY, Math.max(180, EstiloBase.escalar(180, tela)), anoH);
         cardArte.add(lblAno);
 
+        // Legenda informativa substituindo "Imagem da obra / missao"
         JLabel lblLegenda = EstiloBase.criarLabel(
-                "Imagem da obra / miss\u00e3o",
+                "\ud83d\udd0d Clique na imagem para ampliar",
                 EstiloBase.FONTE_PEQUENA,
-                EstiloBase.COR_TEXTO_FRACO
+                new Color(200, 160, 90)
         );
         lblLegenda.setHorizontalAlignment(SwingConstants.LEFT);
-        lblLegenda.setBounds(seloX, anoY + anoH, arteW - (seloX * 2), Math.max(18, EstiloBase.escalar(20, tela)));
+        lblLegenda.setBounds(seloX, anoY + anoH, arteW - (seloX * 2), legendaH);
         cardArte.add(lblLegenda);
 
         // ── Card de informacoes ───────────────────────────────────────────────
@@ -315,7 +323,7 @@ public class fmrObra extends JDialog {
                 g2.setClip(forma);
 
                 if (imagem != null) {
-                    desenharImagemCover(g2, imagem, getWidth(), getHeight());
+                    desenharImagemContain(g2, imagem, getWidth(), getHeight());
                 } else {
                     desenharFallbackImagem(g2);
                 }
@@ -356,31 +364,43 @@ public class fmrObra extends JDialog {
         return null;
     }
 
-    private void desenharImagemCover(Graphics2D g2, Image imagem, int larguraPainel, int alturaPainel) {
+    /**
+     * Exibe a imagem com object-fit: contain — sem cortes.
+     * A imagem e redimensionada para caber inteiramente no painel,
+     * mantendo proporcoes e centralizando com fundo escuro nas laterais.
+     */
+    private void desenharImagemContain(Graphics2D g2, Image imagem, int larguraPainel, int alturaPainel) {
         int larguraImagem = imagem.getWidth(null);
-        int alturaImagem = imagem.getHeight(null);
+        int alturaImagem  = imagem.getHeight(null);
 
         if (larguraImagem <= 0 || alturaImagem <= 0) {
             desenharFallbackImagem(g2);
             return;
         }
 
-        double escala = Math.max(
+        // Fundo escuro para as areas nao cobertas pela imagem
+        g2.setColor(new Color(18, 14, 16));
+        g2.fillRect(0, 0, larguraPainel, alturaPainel);
+
+        // Escala contain: a imagem cabe inteiramente sem cortes
+        double escala = Math.min(
                 (double) larguraPainel / larguraImagem,
-                (double) alturaPainel / alturaImagem
+                (double) alturaPainel  / alturaImagem
         );
 
-        int novaLargura = (int) Math.ceil(larguraImagem * escala);
-        int novaAltura = (int) Math.ceil(alturaImagem * escala);
+        int novaLargura = (int) Math.round(larguraImagem * escala);
+        int novaAltura  = (int) Math.round(alturaImagem  * escala);
 
         int x = (larguraPainel - novaLargura) / 2;
-        int y = (alturaPainel - novaAltura) / 2;
+        int y = (alturaPainel  - novaAltura)  / 2;
 
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2.drawImage(imagem, x, y, novaLargura, novaAltura, null);
 
+        // Sombra suave nas bordas inferiores
         GradientPaint sombra = new GradientPaint(
-                0, 0, new Color(0, 0, 0, 20),
-                0, alturaPainel, new Color(0, 0, 0, 150)
+                0, alturaPainel * 0.7f, new Color(0, 0, 0, 0),
+                0, alturaPainel,        new Color(0, 0, 0, 100)
         );
         g2.setPaint(sombra);
         g2.fillRect(0, 0, larguraPainel, alturaPainel);
