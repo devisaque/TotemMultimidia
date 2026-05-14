@@ -87,7 +87,7 @@ public class fmrObra extends JDialog {
         // Largura da imagem respeitando margem lateral interna
         int imagemW = arteW - (artePadding * 2);
 
-        // Painel da imagem posicionado no topo com margem interna do card
+        // Painel da imagem: topo = artePadding (margem interna do card), sem espacamento extra
         JPanel painelImagem = criarPainelImagemObra(imageObra);
         painelImagem.setBounds(artePadding, artePadding, imagemW, imagemH);
         painelImagem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -299,7 +299,7 @@ public class fmrObra extends JDialog {
         viewer.setVisible(true);
     }
 
-    // ── Painel de imagem com borda arredondada no tamanho exato da imagem ────────────
+    // ── Painel de imagem alinhado ao topo, com borda arredondada no tamanho real da imagem ──
 
     private JPanel criarPainelImagemObra(String caminhoImagem) {
         return new JPanel(null) {
@@ -316,7 +316,8 @@ public class fmrObra extends JDialog {
 
                 int arco = 20;
 
-                // Calcula dimensoes reais da imagem mantendo proporcao (contain)
+                // Calcula dimensoes reais mantendo proporcao (contain),
+                // mas alinhando ao TOPO (py = 0) em vez de centralizar verticalmente
                 int px = 0, py = 0, pw = getWidth(), ph = getHeight();
                 if (imagem != null) {
                     int imgW = imagem.getWidth(null);
@@ -325,17 +326,16 @@ public class fmrObra extends JDialog {
                         double escala = Math.min((double) getWidth() / imgW, (double) getHeight() / imgH);
                         pw = (int) Math.round(imgW * escala);
                         ph = (int) Math.round(imgH * escala);
-                        px = (getWidth()  - pw) / 2;
-                        py = (getHeight() - ph) / 2;
+                        px = (getWidth() - pw) / 2; // centralizado horizontalmente
+                        py = 0;                      // alinhado ao TOPO do painel
                     }
                 }
 
-                // Clipar e pintar apenas a area da imagem com cantos arredondados
+                // Clip arredondado apenas na area da imagem
                 Shape forma = new RoundRectangle2D.Float(px, py, pw, ph, arco, arco);
                 g2.setClip(forma);
 
                 if (imagem != null) {
-                    // Fundo escuro atras da imagem
                     g2.setColor(new Color(18, 14, 16));
                     g2.fillRect(px, py, pw, ph);
 
