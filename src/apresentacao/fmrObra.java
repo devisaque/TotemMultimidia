@@ -61,7 +61,7 @@ public class fmrObra extends JDialog {
         barraProgress.setBounds(margem, topo + Math.max(40, EstiloBase.escalar(46, tela)), tela.width - (margem * 2), Math.max(14, EstiloBase.escalar(18, tela)));
         fundo.add(barraProgress);
 
-        // ── Card da imagem ─────────────────────────────────────────────────────
+        // ── Card da imagem ───────────────────────────────────────────────────────────────────
 
         JPanel cardArte = EstiloBase.criarCard();
         cardArte.setLayout(null);
@@ -115,7 +115,7 @@ public class fmrObra extends JDialog {
         lblLegenda.setBounds(seloX, anoY + anoH, arteW - (seloX * 2), Math.max(18, EstiloBase.escalar(20, tela)));
         cardArte.add(lblLegenda);
 
-        // ── Card de informacoes ───────────────────────────────────────────────
+        // ── Card de informacoes ────────────────────────────────────────────────────
 
         JPanel cardInfo = EstiloBase.criarCard();
         cardInfo.setLayout(null);
@@ -148,8 +148,7 @@ public class fmrObra extends JDialog {
         painelConteudo.add(lblTitulo);
         painelConteudo.add(Box.createVerticalStrut(Math.max(14, EstiloBase.escalar(16, tela))));
 
-        // Texto descritivo: usa HTML com cor branca explícita no body para garantir
-        // que o texto seja legível sobre o fundo escuro, independentemente do L&F.
+        // Texto descritivo em HTML com cor branca explícita para legibilidade no fundo escuro
         String corHex = String.format("#%02x%02x%02x",
                 EstiloBase.COR_TEXTO_SECUNDARIO.getRed(),
                 EstiloBase.COR_TEXTO_SECUNDARIO.getGreen(),
@@ -167,6 +166,9 @@ public class fmrObra extends JDialog {
         JTextPane txtDesc = new JTextPane();
         txtDesc.setContentType("text/html");
         txtDesc.setText(htmlDesc);
+        // Correcao do scroll: apos setText o Swing move o caret para o fim do documento.
+        // SwingUtilities.invokeLater garante que o reset para 0 ocorra apos a renderizacao.
+        SwingUtilities.invokeLater(() -> txtDesc.setCaretPosition(0));
         txtDesc.setEditable(false);
         txtDesc.setOpaque(false);
         txtDesc.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -184,7 +186,7 @@ public class fmrObra extends JDialog {
         scroll.setBounds(infoPad, scrollY, painelW - (infoPad * 2), scrollH);
         cardInfo.add(scroll);
 
-        // ── Faixa de acao com botoes Voltar e Proximo ────────────────────────
+        // ── Faixa de acao com botoes Voltar e Proximo ─────────────────────────
 
         JPanel faixaAcao = criarFaixaAcao();
         faixaAcao.setBounds(infoPad, barraAcaoY, painelW - (infoPad * 2), faixaH);
@@ -233,7 +235,7 @@ public class fmrObra extends JDialog {
         setContentPane(fundo);
     }
 
-    // ── Visualizador fullscreen (4.3) ─────────────────────────────────────────
+    // ── Visualizador fullscreen (4.3) ────────────────────────────────────────────────
 
     private void abrirVisualizadorFullscreen(String caminhoImagem) {
         Image imagem = carregarImagem(caminhoImagem);
@@ -290,7 +292,7 @@ public class fmrObra extends JDialog {
         viewer.setVisible(true);
     }
 
-    // ── Painel de imagem ──────────────────────────────────────────────────────
+    // ── Painel de imagem ────────────────────────────────────────────────────────────────
 
     private JPanel criarPainelImagemObra(String caminhoImagem) {
         return new JPanel(null) {
@@ -368,190 +370,79 @@ public class fmrObra extends JDialog {
                 (double) alturaPainel / alturaImagem
         );
 
-        int novaLargura = (int) Math.ceil(larguraImagem * escala);
-        int novaAltura = (int) Math.ceil(alturaImagem * escala);
-
+        int novaLargura = (int) (larguraImagem * escala);
+        int novaAltura  = (int) (alturaImagem * escala);
         int x = (larguraPainel - novaLargura) / 2;
         int y = (alturaPainel - novaAltura) / 2;
 
         g2.drawImage(imagem, x, y, novaLargura, novaAltura, null);
-
-        GradientPaint sombra = new GradientPaint(
-                0, 0, new Color(0, 0, 0, 20),
-                0, alturaPainel, new Color(0, 0, 0, 150)
-        );
-        g2.setPaint(sombra);
-        g2.fillRect(0, 0, larguraPainel, alturaPainel);
     }
 
     private void desenharFallbackImagem(Graphics2D g2) {
-        GradientPaint fundo = new GradientPaint(
-                0, 0, new Color(255, 98, 36, 54),
-                getWidth(), getHeight(), new Color(233, 32, 97, 42)
-        );
-        g2.setPaint(fundo);
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+        g2.setColor(new Color(40, 38, 45));
+        g2.fillRect(0, 0, 9999, 9999);
+        g2.setColor(new Color(90, 88, 98));
+        g2.setFont(EstiloBase.FONTE_LABEL.deriveFont(13f));
+        FontMetrics fm = g2.getFontMetrics();
+        String msg = "Imagem n\u00e3o dispon\u00edvel";
+        g2.drawString(msg, (getWidth() - fm.stringWidth(msg)) / 2, getHeight() / 2);
+    }
 
-        g2.setColor(new Color(255, 255, 255, 26));
-        for (int x = 24; x < getWidth(); x += 26) {
-            g2.drawLine(x, 0, x, getHeight());
-        }
-
-        for (int y = 24; y < getHeight(); y += 26) {
-            g2.drawLine(0, y, getWidth(), y);
-        }
-
-        JLabelHelper.drawCenteredText(
-                g2,
-                "Imagem n\u00e3o encontrada",
-                getWidth(),
-                getHeight(),
-                EstiloBase.fontePoppins(24f),
-                new Color(255, 255, 255, 190)
-        );
+    private JPanel criarBarraProgresso(int larguraTotal) {
+        int total = controle.getTotalObras();
+        JPanel barra = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int h = getHeight();
+                g2.setColor(new Color(255, 255, 255, 28));
+                g2.fillRoundRect(0, 0, getWidth(), h, h, h);
+                int preenchido = (int) ((double)(indice + 1) / total * getWidth());
+                g2.setColor(EstiloBase.COR_ACENTO);
+                g2.fillRoundRect(0, 0, preenchido, h, h, h);
+                g2.dispose();
+            }
+        };
+        barra.setOpaque(false);
+        return barra;
     }
 
     private JPanel criarFaixaAcao() {
-        JPanel faixa = new JPanel(null) {
+        return new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
-                ativarQualidadeLocal(g2);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(COR_FAIXA_ACAO);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
-                g2.setColor(new Color(255, 255, 255, 18));
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
                 g2.dispose();
             }
         };
-        faixa.setOpaque(false);
-        return faixa;
     }
 
-    private JButton criarBotaoAcaoObra(String texto, boolean primario) {
-        JButton botao = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                ativarQualidadeLocal(g2);
-
-                g2.setColor(COR_FAIXA_ACAO);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-
-                boolean hover = getModel().isRollover() || getModel().isPressed();
-                int arco = 28;
-
-                if (primario) {
-                    Color inicio = hover ? EstiloBase.COR_DESTAQUE_HOVER : EstiloBase.COR_DESTAQUE;
-                    Color fim = hover ? new Color(255, 204, 28) : EstiloBase.COR_DESTAQUE_2;
-                    g2.setPaint(new GradientPaint(0, 0, inicio, getWidth(), getHeight(), fim));
-                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), arco, arco);
-                    g2.setColor(new Color(255, 255, 255, 58));
-                } else {
-                    g2.setColor(hover ? new Color(30, 23, 25) : new Color(16, 12, 14));
-                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), arco, arco);
-                    g2.setPaint(new GradientPaint(
-                            0, 0, hover ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA,
-                            getWidth(), getHeight(), hover ? EstiloBase.COR_DESTAQUE_2 : EstiloBase.COR_CARD_GLOW
-                    ));
-                }
-
-                g2.setStroke(new BasicStroke(2f));
-                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, arco, arco);
-
-                Font fonte = ajustarFonteAoBotao(g2, getFont(), texto, getWidth() - 26);
-                g2.setFont(fonte);
-                g2.setColor(primario || hover ? EstiloBase.COR_TEXTO_PRIMARIO : EstiloBase.COR_TEXTO_SECUNDARIO);
-                FontMetrics fm = g2.getFontMetrics();
-                int tx = (getWidth() - fm.stringWidth(texto)) / 2;
-                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
-                g2.drawString(texto, tx, ty);
-
-                g2.dispose();
-            }
-        };
-        botao.setBorderPainted(false);
-        botao.setContentAreaFilled(false);
-        botao.setFocusPainted(false);
-        botao.setOpaque(true);
-        botao.setBackground(COR_FAIXA_ACAO);
-        botao.setBorder(BorderFactory.createEmptyBorder());
-        botao.setMargin(new Insets(0, 0, 0, 0));
-        botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return botao;
-    }
-
-    private Font ajustarFonteAoBotao(Graphics2D g2, Font fonteBase, String texto, int larguraMaxima) {
-        Font fonte = fonteBase;
-        FontMetrics fm = g2.getFontMetrics(fonte);
-        while (fm.stringWidth(texto) > larguraMaxima && fonte.getSize2D() > 12f) {
-            fonte = fonte.deriveFont(fonte.getSize2D() - 1f);
-            fm = g2.getFontMetrics(fonte);
-        }
-        return fonte;
-    }
-
-    private void ativarQualidadeLocal(Graphics2D g2) {
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    }
-
-    private JPanel criarBarraProgresso(int largura) {
-        return new JPanel() {
+    private JButton criarBotaoAcaoObra(String texto, boolean destaque) {
+        JButton btn = new JButton(texto) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                int total = controle.getTotalObras();
-                int gap = 8;
-                int segW = (largura - ((total - 1) * gap)) / total;
-
-                for (int i = 0; i < total; i++) {
-                    int x = i * (segW + gap);
-
-                    g2.setColor(new Color(255, 255, 255, 18));
-                    g2.fillRoundRect(x, 4, segW, 10, 10, 10);
-
-                    if (i <= indice) {
-                        GradientPaint gp = new GradientPaint(
-                                x, 0, EstiloBase.COR_DESTAQUE,
-                                x + segW, 14, EstiloBase.COR_DESTAQUE_2
-                        );
-                        g2.setPaint(gp);
-                        g2.fillRoundRect(x, 4, segW, 10, 10, 10);
-                    }
-                }
-
+                Color cor = destaque ? EstiloBase.COR_ACENTO : new Color(55, 53, 62);
+                g2.setColor(getModel().isPressed() ? cor.darker() :
+                        getModel().isRollover() ? cor.brighter() : cor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 14, 14);
                 g2.dispose();
+                super.paintComponent(g);
             }
         };
-    }
-
-    private static class JLabelHelper {
-        static void drawCenteredText(
-                Graphics2D g2,
-                String texto,
-                int largura,
-                int altura,
-                Font fonte,
-                Color cor
-        ) {
-            Font fonteAnterior = g2.getFont();
-            Color corAnterior = g2.getColor();
-
-            g2.setFont(fonte);
-            g2.setColor(cor);
-
-            FontMetrics fm = g2.getFontMetrics();
-            int x = (largura - fm.stringWidth(texto)) / 2;
-            int y = (altura - fm.getHeight()) / 2 + fm.getAscent();
-
-            g2.drawString(texto, x, y);
-
-            g2.setFont(fonteAnterior);
-            g2.setColor(corAnterior);
-        }
+        btn.setForeground(Color.WHITE);
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return btn;
     }
 }
