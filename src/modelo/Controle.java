@@ -17,9 +17,12 @@ public class Controle extends absPropriedades {
     public Controle() {
         framePai = new JFrame();
         framePai.setUndecorated(true);
+        framePai.setBackground(EstiloBase.COR_FUNDO);
+        framePai.getRootPane().setBackground(EstiloBase.COR_FUNDO);
+        framePai.setContentPane(EstiloBase.criarPainelFundo(9L));
         framePai.setExtendedState(JFrame.MAXIMIZED_BOTH);
         framePai.setVisible(true);
-        framePai.toFront();
+        framePai.toBack();
         framePai.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         validacao = new Validacao();
     }
