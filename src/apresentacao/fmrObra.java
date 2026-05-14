@@ -13,6 +13,7 @@ import java.net.URL;
 /**
  * Tela de obra com composicao editorial:
  * imagem real da obra/missao na esquerda e descricao na direita.
+ * Abaixo da imagem: painel "Sobre esta obra" com scroll.
  */
 public class fmrObra extends JDialog {
 
@@ -70,15 +71,23 @@ public class fmrObra extends JDialog {
 
         String imageObra  = controle.getImagemObra(indice);
 
-        // Margem interna do card (imagem nao encosta na borda do card)
+        // Margem interna do card
         int artePadding = Math.max(14, EstiloBase.escalar(16, tela));
         int seloX       = Math.max(20, EstiloBase.escalar(24, tela));
 
-        // Alturas dos elementos inferiores
+        // Alturas dos elementos inferiores (codigo, ano, legenda)
         int legendaH = Math.max(20, EstiloBase.escalar(22, tela));
         int seloH    = Math.max(32, EstiloBase.escalar(32, tela));
         int anoH     = Math.max(32, EstiloBase.escalar(34, tela));
-        int espacoInternoInferior = artePadding + legendaH + anoH + seloH + ESPACO_CODIGO_ANO + Math.max(10, EstiloBase.escalar(10, tela));
+
+        // Altura do painel "Sobre esta obra" (scroll) — fixado entre imagem e bloco inferior
+        int sobreH   = Math.max(80, EstiloBase.escalar(100, tela));
+        int sobreGap = Math.max(10, EstiloBase.escalar(12, tela));
+
+        int espacoInternoInferior = artePadding + legendaH + anoH + seloH
+                + ESPACO_CODIGO_ANO
+                + sobreH + sobreGap
+                + Math.max(10, EstiloBase.escalar(10, tela));
 
         // Altura disponivel para a imagem
         int imagemH = arteH - artePadding - espacoInternoInferior;
@@ -87,7 +96,7 @@ public class fmrObra extends JDialog {
         // Largura da imagem respeitando margem lateral interna
         int imagemW = arteW - (artePadding * 2);
 
-        // Painel da imagem: topo = artePadding (margem interna do card), sem espacamento extra
+        // Painel da imagem
         JPanel painelImagem = criarPainelImagemObra(imageObra);
         painelImagem.setBounds(artePadding, artePadding, imagemW, imagemH);
         painelImagem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -99,8 +108,47 @@ public class fmrObra extends JDialog {
         });
         cardArte.add(painelImagem);
 
-        // Elementos abaixo da imagem
-        int seloY = artePadding + imagemH + Math.max(10, EstiloBase.escalar(10, tela));
+        // ── Painel "Sobre esta obra" com scroll ────────────────────────────────
+
+        int sobreY = artePadding + imagemH + sobreGap;
+
+        String explicacao = controle.getExplicacaoObra(indice);
+
+        String corSobre = String.format("#%02x%02x%02x",
+                EstiloBase.COR_TEXTO_SECUNDARIO.getRed(),
+                EstiloBase.COR_TEXTO_SECUNDARIO.getGreen(),
+                EstiloBase.COR_TEXTO_SECUNDARIO.getBlue());
+        int fonteSobrePx = Math.max(12, EstiloBase.escalar(14, tela));
+
+        JTextPane txtSobre = new JTextPane();
+        txtSobre.setContentType("text/html");
+        txtSobre.setText("<html><body style=\""
+                + "color:" + corSobre + ";"
+                + "font-family:sans-serif;"
+                + "font-size:" + fonteSobrePx + "px;"
+                + "margin:4px 2px;padding:0;"
+                + "\">" + explicacao + "</body></html>");
+        txtSobre.setEditable(false);
+        txtSobre.setOpaque(false);
+        txtSobre.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        JScrollPane scrollSobre = new JScrollPane(txtSobre);
+        scrollSobre.setOpaque(false);
+        scrollSobre.getViewport().setOpaque(false);
+        scrollSobre.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(255, 255, 255, 28)));
+        scrollSobre.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollSobre.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollSobre.getVerticalScrollBar().setUnitIncrement(12);
+        // Barra de scroll discreta (sem aparencia padrao do SO)
+        scrollSobre.getVerticalScrollBar().setPreferredSize(new Dimension(4, 0));
+        scrollSobre.setBounds(artePadding, sobreY, imagemW, sobreH);
+        cardArte.add(scrollSobre);
+
+        SwingUtilities.invokeLater(() -> scrollSobre.getVerticalScrollBar().setValue(0));
+
+        // ── Elementos abaixo do painel Sobre (codigo, ano, legenda) ───────────
+
+        int seloY = sobreY + sobreH + Math.max(10, EstiloBase.escalar(10, tela));
 
         JLabel lblCodigo = EstiloBase.criarTag(controle.getCodigoObra(indice));
         lblCodigo.setBounds(seloX, seloY, Math.max(92, EstiloBase.escalar(92, tela)), seloH);
@@ -316,8 +364,6 @@ public class fmrObra extends JDialog {
 
                 int arco = 20;
 
-                // Calcula dimensoes reais mantendo proporcao (contain),
-                // mas alinhando ao TOPO (py = 0) em vez de centralizar verticalmente
                 int px = 0, py = 0, pw = getWidth(), ph = getHeight();
                 if (imagem != null) {
                     int imgW = imagem.getWidth(null);
@@ -326,12 +372,11 @@ public class fmrObra extends JDialog {
                         double escala = Math.min((double) getWidth() / imgW, (double) getHeight() / imgH);
                         pw = (int) Math.round(imgW * escala);
                         ph = (int) Math.round(imgH * escala);
-                        px = (getWidth() - pw) / 2; // centralizado horizontalmente
-                        py = 0;                      // alinhado ao TOPO do painel
+                        px = (getWidth() - pw) / 2;
+                        py = 0;
                     }
                 }
 
-                // Clip arredondado apenas na area da imagem
                 Shape forma = new RoundRectangle2D.Float(px, py, pw, ph, arco, arco);
                 g2.setClip(forma);
 
@@ -342,7 +387,6 @@ public class fmrObra extends JDialog {
                     g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                     g2.drawImage(imagem, px, py, pw, ph, null);
 
-                    // Sombra inferior suave
                     GradientPaint sombra = new GradientPaint(
                             0, py + ph * 0.7f, new Color(0, 0, 0, 0),
                             0, py + ph,        new Color(0, 0, 0, 100)
@@ -355,7 +399,6 @@ public class fmrObra extends JDialog {
 
                 g2.setClip(null);
 
-                // Borda arredondada exatamente no tamanho da imagem renderizada
                 g2.setColor(new Color(255, 255, 255, 40));
                 g2.setStroke(new BasicStroke(1.5f));
                 g2.draw(new RoundRectangle2D.Float(px, py, pw - 1, ph - 1, arco, arco));
