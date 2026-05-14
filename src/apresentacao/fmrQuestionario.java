@@ -10,7 +10,8 @@ import java.awt.event.MouseEvent;
 /**
  * Tela do questionario — fluxo em dois passos:
  * 1) Selecionar opcao (destaque laranja, botao "Verificar Resposta" habilitado)
- * 2) Verificar resposta (verde/vermelho + explicacao inline, botao vira "Proxima Pergunta")
+ * 2) Verificar resposta (verde/vermelho + explicacao inline, botao vira "Proxima Pergunta"
+ *    ou "Finalizar Questionario" na ultima pergunta)
  *
  * As perguntas, opcoes e gabaritos sao carregados de Controle (definidos em absPropriedades),
  * sem nenhuma alteracao nesta classe.
@@ -59,14 +60,14 @@ public class fmrQuestionario extends JDialog {
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         int cx = tela.width / 2;
 
-        // ETAPA 5 — badge "Questionario final" removido conforme especificacao
-
         lblNumero = EstiloBase.criarLabel(
                 "PERGUNTA 1 DE 5",
                 EstiloBase.FONTE_LABEL.deriveFont(14f),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
+        // largura aumentada para que o texto "PERGUNTA X DE 5" caiba sem truncar
         lblNumero.setBounds(0, 50, tela.width, 24);
+        lblNumero.setHorizontalAlignment(SwingConstants.CENTER);
         fundo.add(lblNumero);
 
         barraProgresso = new JPanel() {
@@ -122,7 +123,6 @@ public class fmrQuestionario extends JDialog {
         int footerX = cx - cw / 2;
         int footerW = cw;
 
-        // lblFeedback (mantido para compatibilidade, posicionado abaixo das opcoes)
         lblFeedback = EstiloBase.criarLabel(
                 "Escolha uma alternativa para continuar",
                 EstiloBase.FONTE_CORPO,
@@ -131,7 +131,6 @@ public class fmrQuestionario extends JDialog {
         lblFeedback.setBounds(footerX, 618, footerW, 24);
         fundo.add(lblFeedback);
 
-        // lblCertos e lblErrados — visiveis e funcionais no rodape
         lblCertos = EstiloBase.criarLabel("Certos: 0", EstiloBase.FONTE_CORPO, EstiloBase.COR_SUCESSO);
         lblCertos.setHorizontalAlignment(SwingConstants.LEFT);
         lblCertos.setBounds(footerX, 650, 120, 22);
@@ -142,7 +141,6 @@ public class fmrQuestionario extends JDialog {
         lblErrados.setBounds(footerX + 128, 650, 120, 22);
         fundo.add(lblErrados);
 
-        // Botao de acao: inicia como "Verificar Resposta" desabilitado + translucido
         btnAcao = criarBotaoAcao();
         btnAcao.setBounds(footerX + footerW - 290, 638, 290, 64);
         btnAcao.setEnabled(false);
@@ -243,7 +241,8 @@ public class fmrQuestionario extends JDialog {
         char letra = 'A';
         for (int i = 0; i < opcoes.length; i++) {
             int indiceOpcao = i;
-            JButton botao = criarBotaoOpcao(letra + ". " + opcoes[i], idx);
+            // fonte uniforme 17f para todas as perguntas (inclusive a ultima)
+            JButton botao = criarBotaoOpcao(letra + ". " + opcoes[i], 17f);
             botao.addActionListener(e -> selecionarOpcao(indiceOpcao));
             botoesOpcao[i] = botao;
             painelOpcoes.add(botao);
@@ -266,7 +265,7 @@ public class fmrQuestionario extends JDialog {
         }
     }
 
-    private JButton criarBotaoOpcao(String texto, int indicePergunta) {
+    private JButton criarBotaoOpcao(String texto, float tamanhoFonte) {
         JButton btn = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -310,7 +309,7 @@ public class fmrQuestionario extends JDialog {
         btn.setLayout(new BorderLayout());
         JTextArea areaTexto = EstiloBase.criarTextoQuebravel(
                 texto,
-                EstiloBase.fonteInter(indicePergunta == 4 ? 16f : 17f),
+                EstiloBase.fonteInter(tamanhoFonte),
                 EstiloBase.COR_TEXTO_SECUNDARIO
         );
         areaTexto.setBorder(BorderFactory.createEmptyBorder(18, 22, 18, 22));
@@ -376,7 +375,9 @@ public class fmrQuestionario extends JDialog {
 
         atualizarResumoAcertosErros();
 
-        btnAcao.setText("Proxima Pergunta");
+        // Na ultima pergunta o botao mostra "Finalizar Questionario"
+        boolean ultimaPergunta = (perguntaAtual == controle.getTotalPerguntas() - 1);
+        btnAcao.setText(ultimaPergunta ? "Finalizar Questionario" : "Proxima Pergunta");
         btnAcao.setEnabled(true);
         btnAcao.putClientProperty("translucido", false);
         btnAcao.repaint();
