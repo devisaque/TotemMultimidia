@@ -14,11 +14,8 @@ import java.net.URL;
  * Tela de obra com composicao editorial:
  * imagem real da obra/missao na esquerda e descricao na direita.
  *
- * Etapa 7 — Transições suaves:
- * Os botões Voltar e Próximo agora usam EstiloBase.fadeOutThen() antes de
- * navegar, garantindo uma transição suave (fade-out de ~300 ms) em vez de
- * troca abrupta de tela. O dispose() da tela atual é feito automaticamente
- * pelo fadeOutThen após o fade completar, antes de abrir a próxima tela.
+ * Navegacao entre obras e instantanea (sem fade) para evitar clarao branco.
+ * O fade so e aplicado ao abrir a primeira obra a partir da tela inicial.
  */
 public class fmrObra extends JDialog {
 
@@ -39,7 +36,8 @@ public class fmrObra extends JDialog {
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
-        if (b) EstiloBase.fadeIn(this);
+        // Fade-in apenas na primeira obra (indice 0); demais trocas sao instantaneas
+        if (b && indice == 0) EstiloBase.fadeIn(this);
     }
 
     private void construirInterface() {
@@ -73,7 +71,7 @@ public class fmrObra extends JDialog {
         barraProgress.setBounds(margem, topo + Math.max(40, EstiloBase.escalar(46, tela)), tela.width - (margem * 2), Math.max(14, EstiloBase.escalar(18, tela)));
         fundo.add(barraProgress);
 
-        // ── Card da imagem ────────────────────────────────────────────────────
+        // ── Card da imagem ────────────────────────────────────────────
 
         JPanel cardArte = EstiloBase.criarCard();
         cardArte.setLayout(null);
@@ -132,7 +130,7 @@ public class fmrObra extends JDialog {
         lblLegenda.setBounds(seloX, anoY + anoH, arteW - (seloX * 2), legendaH);
         cardArte.add(lblLegenda);
 
-        // ── Card de informacoes ───────────────────────────────────────────────
+        // ── Card de informacoes ───────────────────────────────────────────
 
         JPanel cardInfo = EstiloBase.criarCard();
         cardInfo.setLayout(null);
@@ -147,7 +145,7 @@ public class fmrObra extends JDialog {
         lblTema.setBounds(infoPad, infoTagY, Math.max(150, EstiloBase.escalar(160, tela)), infoTagH);
         cardInfo.add(lblTema);
 
-        // ── Conteudo scrollavel: TITULO + texto descritivo ────────────────────
+        // ── Conteudo scrollavel: TITULO + texto descritivo ──────────────────
 
         JPanel painelConteudo = new JPanel();
         painelConteudo.setLayout(new BoxLayout(painelConteudo, BoxLayout.Y_AXIS));
@@ -200,7 +198,7 @@ public class fmrObra extends JDialog {
 
         SwingUtilities.invokeLater(() -> scroll.getVerticalScrollBar().setValue(0));
 
-        // ── Faixa de acao com botoes Voltar e Proximo ─────────────────────────
+        // ── Faixa de acao com botoes Voltar e Proximo ─────────────────────
 
         JPanel faixaAcao = criarFaixaAcao();
         faixaAcao.setBounds(infoPad, barraAcaoY, painelW - (infoPad * 2), faixaH);
@@ -217,23 +215,21 @@ public class fmrObra extends JDialog {
                 faixaAcao.getWidth() - (acaoPadding * 2) - larguraBotaoVoltar - espaco
         );
 
-        // Etapa 7: botão Voltar usa fadeOutThen para transição suave.
-        // O dispose() desta tela é executado automaticamente pelo fadeOutThen
-        // antes de abrir a tela de destino, evitando janelas órfãs na memória.
+        // Navegacao instantanea entre obras (sem fade) para evitar clarao branco
         JButton btnVoltar = criarBotaoAcaoObra("\u2190 Voltar", false);
         btnVoltar.setFont(EstiloBase.fonteResponsiva(17f, tela));
         btnVoltar.setBounds(acaoPadding, botaoY, larguraBotaoVoltar, botaoH);
         btnVoltar.addActionListener(e -> {
             btnVoltar.setEnabled(false);
+            dispose();
             if (indice == 0) {
-                EstiloBase.fadeOutThen(this, () -> controle.voltarParaInicio());
+                controle.voltarParaInicio();
             } else {
-                EstiloBase.fadeOutThen(this, () -> controle.abrirObra(indice - 1));
+                controle.abrirObra(indice - 1);
             }
         });
         faixaAcao.add(btnVoltar);
 
-        // Etapa 7: botão Próximo usa fadeOutThen para transição suave.
         JButton btnProximo = criarBotaoAcaoObra(
                 indice == controle.getTotalObras() - 1
                         ? "Ir para o question\u00e1rio"
@@ -244,14 +240,15 @@ public class fmrObra extends JDialog {
         btnProximo.setBounds(faixaAcao.getWidth() - acaoPadding - larguraProximo, botaoY, larguraProximo, botaoH);
         btnProximo.addActionListener(e -> {
             btnProximo.setEnabled(false);
-            EstiloBase.fadeOutThen(this, () -> controle.proximaEtapaAposObra(indice));
+            dispose();
+            controle.proximaEtapaAposObra(indice);
         });
         faixaAcao.add(btnProximo);
 
         setContentPane(fundo);
     }
 
-    // ── Visualizador fullscreen (4.3) ─────────────────────────────────────────
+    // ── Visualizador fullscreen (4.3) ──────────────────────────────────────────
 
     private void abrirVisualizadorFullscreen(String caminhoImagem) {
         Image imagem = carregarImagem(caminhoImagem);
@@ -308,7 +305,7 @@ public class fmrObra extends JDialog {
         viewer.setVisible(true);
     }
 
-    // ── Painel de imagem ──────────────────────────────────────────────────────
+    // ── Painel de imagem ──────────────────────────────────────────────────
 
     private JPanel criarPainelImagemObra(String caminhoImagem) {
         return new JPanel(null) {
