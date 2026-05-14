@@ -217,15 +217,15 @@ public abstract class absPropriedades implements intMetodos {
             + "<p>O Perseverance \u00e9 o rover mais avan\u00e7ado enviado pela NASA a Marte at\u00e9 hoje. Lan\u00e7ado em julho de 2020, "
             + "pousou na cratera Jezero em fevereiro de 2021 usando o mesmo sistema sky crane do Curiosity, por\u00e9m com "
             + "sensores e c\u00e2meras de navega\u00e7\u00e3o ainda mais sofisticados. A cratera Jezero foi escolhida por ser o local "
-            + "de um antigo delta de rio, considerado um ambiente propício para preservar sinais de vida passada.</p>"
+            + "de um antigo delta de rio, considerado um ambiente prop\u00edcio para preservar sinais de vida passada.</p>"
             + "<p>O Perseverance carrega 7 instrumentos cient\u00edficos, incluindo o MOXIE, que realiza experi\u00eancias de "
-            + "convers\u00e3o do CO\u2082 marciano em oxig\u00eanio, e tubos de titânio para coletar e selar amostras de rocha que "
+            + "convers\u00e3o do CO\u2082 marciano em oxig\u00eanio, e tubos de tit\u00e2nio para coletar e selar amostras de rocha que "
             + "poder\u00e3o ser trazidas \u00e0 Terra em miss\u00f5es futuras.</p>"
             + "<p><b>Curiosidades</b></p>"
             + "<ul>"
             + "<li>O Perseverance carrega uma plaquinha com o nome de 10,9 milh\u00f5es de pessoas que participaram de uma campanha da NASA.</li>"
             + "<li>O MOXIE produziu oxig\u00eanio suficiente para um astronauta respirar por cerca de 10 minutos.</li>"
-            + "<li>O rover tamb\u00e9m carregou o helicóptero Ingenuity, que realizou o primeiro voo motorizado em outro planeta.</li>"
+            + "<li>O rover tamb\u00e9m carregou o helic\u00f3ptero Ingenuity, que realizou o primeiro voo motorizado em outro planeta.</li>"
             + "</ul>"
             + "<p><b>Sobre esta obra</b></p>"
             + "<p>A obra mostra o Perseverance com seus tubos de armazenamento de amostras em primeiro plano. "
@@ -234,16 +234,16 @@ public abstract class absPropriedades implements intMetodos {
 
             // Obra 8 — Ingenuity
             "<b>[ Miss\u00e3o: Mars 2020 | Pa\u00eds: EUA/NASA | Ano: 2021 ]</b>"
-            + "<p>O Ingenuity \u00e9 um helicóptero robótico que viajou preso \u00e0 barriga do Perseverance e pousou em Marte "
+            + "<p>O Ingenuity \u00e9 um helic\u00f3ptero rob\u00f3tico que viajou preso \u00e0 barriga do Perseverance e pousou em Marte "
             + "junto com ele em fevereiro de 2021. Em abril de 2021, realizou o primeiro voo motorizado e controlado "
             + "em outro planeta, pairando por cerca de 39 segundos a poucos metros do solo.</p>"
             + "<p>Voar em Marte \u00e9 extremamente desafiador: a atmosfera tem apenas 1% da densidade da terrestre, o que "
-            + "obriga as p\u00e1s a girarem muito mais r\u00e1pido do que em qualquer helicóptero na Terra. O Ingenuity foi "
+            + "obriga as p\u00e1s a girarem muito mais r\u00e1pido do que em qualquer helic\u00f3ptero na Terra. O Ingenuity foi "
             + "projetado como uma demonstra\u00e7\u00e3o tecnol\u00f3gica e superou todas as expectativas, completando mais de 70 voos "
             + "antes de encerrar opera\u00e7\u00f5es em janeiro de 2024.</p>"
             + "<p><b>Curiosidades</b></p>"
             + "<ul>"
-            + "<li>O Ingenuity carregava um pequeno pedaço do tecido da asa do Flyer, o avi\u00e3o dos Irm\u00e3os Wright.</li>"
+            + "<li>O Ingenuity carregava um pequeno peda\u00e7o do tecido da asa do Flyer, o avi\u00e3o dos Irm\u00e3os Wright.</li>"
             + "<li>A NASA o chamou de \"momento Kitty Hawk em Marte\", em refer\u00eancia ao primeiro voo motorizado da hist\u00f3ria.</li>"
             + "<li>Ele funcionou muito al\u00e9m do planejado: a miss\u00e3o original previa apenas 5 voos de demonstra\u00e7\u00e3o.</li>"
             + "</ul>"
@@ -254,11 +254,11 @@ public abstract class absPropriedades implements intMetodos {
             // Obra 9 — Zhurong
             "<b>[ Miss\u00e3o: Tianwen-1 | Pa\u00eds: China/CNSA | Ano: 2021 ]</b>"
             + "<p>O Zhurong \u00e9 o primeiro rover marciano da China, parte da miss\u00e3o Tianwen-1 lan\u00e7ada em julho de 2020. "
-            + "Em maio de 2021, o m\u00f3dulo de pouso aterrissou com sucesso em Utopia Planitia, uma grande planície no "
+            + "Em maio de 2021, o m\u00f3dulo de pouso aterrissou com sucesso em Utopia Planitia, uma grande plan\u00edcie no "
             + "hemisf\u00e9rio norte de Marte, tornando a China o segundo pa\u00eds a operar um rover funcional no planeta.</p>"
-            + "<p>Com cerca de 240 kg, o Zhurong carregava 6 instrumentos cient\u00edficos, incluindo câmera multispectral, "
+            + "<p>Com cerca de 240 kg, o Zhurong carregava 6 instrumentos cient\u00edficos, incluindo c\u00e2mera multispectral, "
             + "radar de penetra\u00e7\u00e3o de subsolo, detector de campo magn\u00e9tico e um sensor meteorol\u00f3gico. O rover operou "
-            + "por cerca de um ano marciano antes de entrar em modo de hibernação em maio de 2022.</p>"
+            + "por cerca de um ano marciano antes de entrar em modo de hiberna\u00e7\u00e3o em maio de 2022.</p>"
             + "<p><b>Curiosidades</b></p>"
             + "<ul>"
             + "<li>\"Zhurong\" \u00e9 o nome do deus do fogo na mitologia chinesa.</li>"
@@ -266,9 +266,9 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>O radar de subsolo do Zhurong encontrou ind\u00edcios de camadas de gelo enterradas em Utopia Planitia.</li>"
             + "</ul>"
             + "<p><b>Sobre esta obra</b></p>"
-            + "<p>A obra mostra o Zhurong diante da vastid\u00e3o de Utopia Planitia, com o m\u00f3dulo de pouso ao fundo. "
-            + "A composi\u00e7\u00e3o representa a entrada de uma nova n\u00e7\u00e3o na corrida espacial marciana e o in\u00edcio de uma "
-            + "nova era de explora\u00e7\u00e3o multipo lar do planeta.</p>",
+            + "<p>A obra mostra o Zhurong diante da vast\u00e3o de Utopia Planitia, com o m\u00f3dulo de pouso ao fundo. "
+            + "A composi\u00e7\u00e3o representa a entrada de uma nova na\u00e7\u00e3o na corrida espacial marciana e o in\u00edcio de uma "
+            + "nova era de explora\u00e7\u00e3o multipolar do planeta.</p>",
 
             // Obra 10 — Rosalind Franklin
             "<b>[ Miss\u00e3o: ExoMars | Pa\u00eds: ESA/NASA | Ano: 2028 (previsto) ]</b>"
@@ -293,17 +293,19 @@ public abstract class absPropriedades implements intMetodos {
 
         codigosObras = new String[]{"PM-02", "PM-03", "PM-97", "PM-04A", "PM-04B", "PM-12", "PM-21A", "PM-21B", "PM-21C", "PM-28"};
         anosObras    = new String[]{"1971", "1971", "1997", "2004", "2004", "2012", "2021", "2021", "2021", "2028"};
+
+        // Caminhos corrigidos para src/assets/obras/ com os nomes reais dos arquivos
         imagensObras = new String[]{
-                "/recursos/obras/mars2.jpg",
-                "/recursos/obras/mars3.jpg",
-                "/recursos/obras/sojourner.jpg",
-                "/recursos/obras/spirit.jpg",
-                "/recursos/obras/opportunity.jpg",
-                "/recursos/obras/curiosity.jpg",
-                "/recursos/obras/perseverance.jpg",
-                "/recursos/obras/ingenuity.jpg",
-                "/recursos/obras/zhurong.jpg",
-                "/recursos/obras/rosalind.jpg"
+                "/assets/obras/obra1-prop-m-mars2.jpeg",
+                "/assets/obras/obra2-prop-m-mars3.jpeg",
+                "/assets/obras/obra3-sojourner.jpeg",
+                "/assets/obras/obra4-spirit.jpeg",
+                "/assets/obras/obra5-opportunity.jpeg",
+                "/assets/obras/obra6-curiosity.jpeg",
+                "/assets/obras/obra7-perseverance.jpeg",
+                "/assets/obras/obra8-ingenuity.jpeg",
+                "/assets/obras/obra9-zhurong.jpeg",
+                "/assets/obras/obra10-rosalind-franklin.jpeg"
         };
     }
 
@@ -313,7 +315,7 @@ public abstract class absPropriedades implements intMetodos {
                 "Qual rover foi o primeiro a se deslocar com sucesso pela superf\u00edcie marciana?",
                 "Qual miss\u00e3o utilizou a t\u00e9cnica de pouso com airbags em Marte?",
                 "Qual rover encerrou sua miss\u00e3o ap\u00f3s uma grande tempestade de poeira em 2018?",
-                "Qual foi o primeiro helicóptero a voar em outro planeta?"
+                "Qual foi o primeiro helic\u00f3ptero a voar em outro planeta?"
         };
 
         opcoes = new String[][]{
