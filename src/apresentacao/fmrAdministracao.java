@@ -171,7 +171,8 @@ public class fmrAdministracao extends JDialog {
         int pad = EstiloBase.escalar(30, tela);
         JLabel lblTag = EstiloBase.criarTag("Sessao atual");
         lblTag.setFont(EstiloBase.fonteResponsiva(13f, tela));
-        lblTag.setBounds(pad, EstiloBase.escalar(28, tela), EstiloBase.escalar(134, tela), EstiloBase.escalar(32, tela));
+        int tagW = Math.max(EstiloBase.escalar(134, tela), lblTag.getPreferredSize().width);
+        lblTag.setBounds(pad, EstiloBase.escalar(28, tela), tagW, EstiloBase.escalar(32, tela));
         card.add(lblTag);
 
         JLabel lblTitulo = EstiloBase.criarLabel("Ultimas visitas", EstiloBase.fonteResponsiva(30f, tela), EstiloBase.COR_TEXTO_PRIMARIO);

@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
@@ -272,7 +271,7 @@ public final class EstiloBase {
     }
 
     public static JLabel criarTag(String texto) {
-        JLabel tag = new JLabel(" " + texto.toUpperCase() + " ", SwingConstants.CENTER) {
+        JLabel tag = new JLabel(texto.toUpperCase(), SwingConstants.CENTER) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -371,8 +370,8 @@ public final class EstiloBase {
         fundo.add(card);
 
         JLabel lblMarcador = criarTag(marcador);
-        // largura aumentada de 132 para 200 para que o texto do badge caiba inteiro
-        lblMarcador.setBounds(escalar(28, tela), escalar(24, tela), escalar(200, tela), escalar(32, tela));
+        int marcadorW = Math.max(escalar(132, tela), lblMarcador.getPreferredSize().width);
+        lblMarcador.setBounds(escalar(28, tela), escalar(24, tela), marcadorW, escalar(32, tela));
         card.add(lblMarcador);
 
         JLabel lblTitulo = criarLabel(titulo, fonteResponsiva(30f, tela), COR_TEXTO_PRIMARIO);
@@ -387,7 +386,10 @@ public final class EstiloBase {
         corpo.setOpaque(false);
         corpo.setForeground(COR_TEXTO_SECUNDARIO);
         corpo.setFont(fonteResponsiva(18f, tela));
-        corpo.setBounds(escalar(28, tela), escalar(130, tela), card.getWidth() - escalar(56, tela), escalar(112, tela));
+        int corpoY = escalar(130, tela);
+        int botaoY = card.getHeight() - escalar(76, tela);
+        int corpoH = Math.max(escalar(112, tela), botaoY - corpoY - escalar(18, tela));
+        corpo.setBounds(escalar(28, tela), corpoY, card.getWidth() - escalar(56, tela), corpoH);
         card.add(corpo);
 
         JButton btnFechar = criarBotaoPrimario(textoBotao);
@@ -400,19 +402,6 @@ public final class EstiloBase {
         dialogo.setContentPane(fundo);
         dialogo.getRootPane().setOpaque(false);
         dialogo.setVisible(true);
-    }
-
-    public static void desenharEstrelas(Graphics2D g2, int largura, int altura, long seed) {
-        Random rng = new Random(seed);
-        ativarQualidade(g2);
-        for (int i = 0; i < 180; i++) {
-            int x = rng.nextInt(Math.max(1, largura));
-            int y = rng.nextInt(Math.max(1, altura));
-            int r = rng.nextInt(3);
-            int alpha = 60 + rng.nextInt(180);
-            g2.setColor(new Color(180, 200, 255, alpha));
-            g2.fillOval(x, y, r + 1, r + 1);
-        }
     }
 
     public static void desenharFundoGradiente(Graphics2D g2, int largura, int altura, long seed) {
@@ -474,22 +463,6 @@ public final class EstiloBase {
                 BorderFactory.createLineBorder(cor, 1, true),
                 BorderFactory.createEmptyBorder(12, 16, 12, 16)
         );
-    }
-
-    private static void desenharBlob(Graphics2D g2, double cx, double cy, float raio, Color cor) {
-        Color centro = new Color(cor.getRed(), cor.getGreen(), cor.getBlue(), 190);
-        Color meio = new Color(cor.getRed(), cor.getGreen(), cor.getBlue(), 80);
-        Color fim = new Color(cor.getRed(), cor.getGreen(), cor.getBlue(), 0);
-        RadialGradientPaint paint = new RadialGradientPaint(
-                new Point((int) cx, (int) cy), raio,
-                new float[]{0f, 0.45f, 1f},
-                new Color[]{centro, meio, fim}
-        );
-        Composite antigo = g2.getComposite();
-        g2.setComposite(AlphaComposite.SrcOver.derive(0.82f));
-        g2.setPaint(paint);
-        g2.fill(new Ellipse2D.Double(cx - raio, cy - raio, raio * 2, raio * 2));
-        g2.setComposite(antigo);
     }
 
     private static void desenharGradienteCanto(Graphics2D g2, int largura, int altura, double cx, double cy, float raio, Color cor, float intensidade) {

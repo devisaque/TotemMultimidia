@@ -73,6 +73,7 @@ public class Controle extends absPropriedades {
     public void exibirAdministracao() { new fmrAdministracao(framePai, this).setVisible(true); }
 
     public void exibirObra(int indice) {
+        // Guarda a obra em foco para que as proximas telas saibam onde o visitante esta no percurso.
         obraAtual = indice;
         new fmrObra(framePai, this, indice).setVisible(true);
     }
@@ -90,11 +91,13 @@ public class Controle extends absPropriedades {
     }
 
     public void aposQuestionario() {
+        // Salva o desempenho da sessao antes de pedir a avaliacao final da experiencia.
         historicoPontuacoes.add(calcularPontuacao());
         exibirSatisfacao();
     }
 
     public void finalizarVisita(int notaFinal) {
+        // Consolida os dados da sessao em memoria e reinicia o fluxo para o proximo visitante.
         registrarSatisfacao(notaFinal);
         historicoNomes.add(getNomeCompletoVisitanteAtual());
         historicoSobrenomes.add(sobrenomeVisitante);
@@ -111,7 +114,6 @@ public class Controle extends absPropriedades {
         dadosVisitante[0]    = "";
         dadosVisitante[1]    = "";
         dadosVisitante[2]    = "";
-        idadeVisitante       = 0;
         obraAtual            = 0;
         etapaAtual           = 0;
         notaSatisfacao       = -1;

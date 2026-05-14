@@ -135,7 +135,8 @@ public class fmrObra extends JDialog {
         int infoTagH = Math.max(32, EstiloBase.escalar(34, tela));
 
         JLabel lblTema = EstiloBase.criarTag("Detalhes da obra");
-        lblTema.setBounds(infoPad, infoTagY, Math.max(150, EstiloBase.escalar(160, tela)), infoTagH);
+        int temaW = Math.max(Math.max(150, EstiloBase.escalar(160, tela)), lblTema.getPreferredSize().width);
+        lblTema.setBounds(infoPad, infoTagY, temaW, infoTagH);
         cardInfo.add(lblTema);
 
         // ── Conteudo scrollavel: TITULO + texto descritivo ────────────────────

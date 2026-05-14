@@ -356,6 +356,7 @@ public class fmrQuestionario extends JDialog {
     private void verificarResposta() {
         if (opcaoSelecionada < 0) return;
 
+        // Registra a resposta atual e avanca automaticamente apos um breve feedback visual.
         controle.registrarResposta(perguntaAtual, opcaoSelecionada);
         int gabarito = controle.getGabaritos()[perguntaAtual];
         boolean correto = gabarito == opcaoSelecionada;
@@ -428,6 +429,7 @@ public class fmrQuestionario extends JDialog {
     }
 
     private void exibirResultado() {
+        // O encerramento do quiz usa a pontuacao consolidada antes de seguir para a avaliacao final.
         int pontos = controle.calcularPontuacao();
         int total  = controle.getTotalPerguntas();
         String mensagem = "Voce acertou " + pontos + " de " + total + " perguntas.\n\n"

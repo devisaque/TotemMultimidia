@@ -227,6 +227,7 @@ public class fmrCadastroVisitante extends JDialog {
     }
 
     private void validarEAvancar() {
+        // Valida cada campo separadamente para manter o feedback visual no proprio formulario.
         String nome = campoNome.getText().trim();
         String sobrenome = campoSobrenome.getText().trim();
         String faixaEtaria = obterFaixaEtariaSelecionada();

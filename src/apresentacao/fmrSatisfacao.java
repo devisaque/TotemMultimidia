@@ -191,6 +191,7 @@ public class fmrSatisfacao extends JDialog {
     }
 
     private void enviarAvaliacao() {
+        // Fecha a tela atual e devolve ao controlador o encerramento completo da visita.
         dispose();
         controle.finalizarVisita(notaSelecionada);
     }

@@ -1,5 +1,3 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import modelo.Controle;
 import apresentacao.EstiloBase;
 import javax.swing.*;
@@ -12,8 +10,10 @@ public class Main {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
+        // Aplica a identidade visual antes de abrir qualquer tela do fluxo.
         EstiloBase.aplicarFonteGlobal();
 
+        // O controlador passa a gerenciar toda a navegacao a partir da tela inicial.
         SwingUtilities.invokeLater(Controle::new);
     }
 }

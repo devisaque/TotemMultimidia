@@ -14,7 +14,6 @@ public abstract class absPropriedades implements intMetodos {
     protected String sobrenomeVisitante;
     protected String faixaEtariaVisitante;
     protected String[] dadosVisitante;
-    protected int    idadeVisitante;
 
     // ── Controle de Fluxo ──────────────────────────────────────────────────────
     protected int     etapaAtual;
@@ -40,7 +39,6 @@ public abstract class absPropriedades implements intMetodos {
     protected List<String>  historicoNomes;
     protected List<String>  historicoSobrenomes;
     protected List<String>  historicoFaixasEtarias;
-    protected List<Integer> historicoIdades;
     protected List<Integer> historicoPontuacoes;
     protected List<Integer> historicoSatisfacoes;
 
@@ -54,7 +52,6 @@ public abstract class absPropriedades implements intMetodos {
         sobrenomeVisitante    = "";
         faixaEtariaVisitante  = "";
         dadosVisitante        = new String[]{"", "", ""};
-        idadeVisitante        = 0;
         etapaAtual            = 0;
         obraAtual             = 0;
         notaSatisfacao        = -1;
@@ -63,7 +60,6 @@ public abstract class absPropriedades implements intMetodos {
         historicoNomes        = new ArrayList<>();
         historicoSobrenomes   = new ArrayList<>();
         historicoFaixasEtarias = new ArrayList<>();
-        historicoIdades       = new ArrayList<>();
         historicoPontuacoes   = new ArrayList<>();
         historicoSatisfacoes  = new ArrayList<>();
 
