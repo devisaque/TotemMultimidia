@@ -11,8 +11,9 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * Tela de obra com composicao editorial:
- * imagem real da obra/missao na esquerda e descricao na direita.
+ * Tela de obra:
+ * Coluna esquerda — imagem no topo + texto descritivo scrollavel abaixo + rodape (codigo/ano/legenda)
+ * Coluna direita  — tag + titulo da obra + faixa de botoes
  */
 public class fmrObra extends JDialog {
 
@@ -34,15 +35,16 @@ public class fmrObra extends JDialog {
         JPanel fundo = EstiloBase.criarPainelFundo(220L + (indice * 31L));
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
 
-        int margem = Math.max(30, EstiloBase.escalar(42, tela));
-        int topo = Math.max(26, EstiloBase.escalar(38, tela));
-        int gap = Math.max(24, EstiloBase.escalar(34, tela));
+        int margem    = Math.max(30, EstiloBase.escalar(42, tela));
+        int topo      = Math.max(26, EstiloBase.escalar(38, tela));
+        int gap       = Math.max(24, EstiloBase.escalar(34, tela));
         int conteudoY = topo + Math.max(76, EstiloBase.escalar(86, tela));
         int conteudoH = tela.height - conteudoY - Math.max(54, EstiloBase.escalar(68, tela));
-        int arteW = Math.min(560, (int) (tela.width * 0.34));
-        int painelW = tela.width - (margem * 2) - arteW - gap;
-        int arteH = conteudoH;
+        int arteW     = Math.min(560, (int) (tela.width * 0.34));
+        int painelW   = tela.width - (margem * 2) - arteW - gap;
+        int arteH     = conteudoH;
 
+        // ── Cabecalho ──────────────────────────────────────────────────────────
         JLabel lblColecao = EstiloBase.criarTag("Cole\u00e7\u00e3o Marte");
         lblColecao.setBounds(margem, topo, Math.max(142, EstiloBase.escalar(150, tela)), Math.max(32, EstiloBase.escalar(34, tela)));
         fundo.add(lblColecao);
@@ -61,33 +63,27 @@ public class fmrObra extends JDialog {
         barraProgress.setBounds(margem, topo + Math.max(40, EstiloBase.escalar(46, tela)), tela.width - (margem * 2), Math.max(14, EstiloBase.escalar(18, tela)));
         fundo.add(barraProgress);
 
-        // ── Card da imagem ─────────────────────────────────────────────────────
-
+        // ── Card da imagem (coluna esquerda) ───────────────────────────────────
         JPanel cardArte = EstiloBase.criarCard();
         cardArte.setLayout(null);
         cardArte.setBounds(margem, conteudoY, arteW, arteH);
         fundo.add(cardArte);
 
-        String imageObra = controle.getImagemObra(indice);
-        int artePadding = Math.max(18, EstiloBase.escalar(20, tela));
-        int seloX = Math.max(20, EstiloBase.escalar(24, tela));
+        String imageObra  = controle.getImagemObra(indice);
+        int seloX         = Math.max(16, EstiloBase.escalar(20, tela));
+        int rodapeH       = Math.max(32, EstiloBase.escalar(32, tela))   // seloH
+                          + ESPACO_CODIGO_ANO
+                          + Math.max(32, EstiloBase.escalar(34, tela))   // anoH
+                          + Math.max(20, EstiloBase.escalar(22, tela))   // legendaH
+                          + Math.max(10, EstiloBase.escalar(12, tela));  // gap acima do rodape
 
-        // Alturas dos elementos inferiores ao painel de imagem
-        int legendaH = Math.max(20, EstiloBase.escalar(22, tela));
-        int seloH    = Math.max(32, EstiloBase.escalar(32, tela));
-        int anoH     = Math.max(32, EstiloBase.escalar(34, tela));
-        int espacoInternoInferior = artePadding + legendaH + anoH + seloH + ESPACO_CODIGO_ANO + Math.max(10, EstiloBase.escalar(10, tela));
+        // Altura da imagem: 40% do card
+        int imagemH = (int) (arteH * 0.40);
+        imagemH = Math.max(120, imagemH);
 
-        // Altura da imagem ocupa todo o espaco disponivel acima dos elementos inferiores
-        int imagemH = arteH - artePadding - espacoInternoInferior;
-
+        // A imagem começa logo no topo do card, sem padding superior
         JPanel painelImagem = criarPainelImagemObra(imageObra);
-        painelImagem.setBounds(
-                artePadding,
-                artePadding,
-                arteW - (artePadding * 2),
-                Math.max(120, imagemH)
-        );
+        painelImagem.setBounds(0, 0, arteW, imagemH);
         painelImagem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         painelImagem.addMouseListener(new MouseAdapter() {
             @Override
@@ -97,25 +93,71 @@ public class fmrObra extends JDialog {
         });
         cardArte.add(painelImagem);
 
-        int seloY = artePadding + Math.max(120, imagemH) + Math.max(10, EstiloBase.escalar(10, tela));
+        // ── Texto descritivo scrollavel (abaixo da imagem) ─────────────────────
+        int descY = imagemH + Math.max(10, EstiloBase.escalar(12, tela));
+        int descH = arteH - descY - rodapeH;
+        descH = Math.max(40, descH);
+
+        String corHexDesc = String.format("#%02x%02x%02x",
+                EstiloBase.COR_TEXTO_SECUNDARIO.getRed(),
+                EstiloBase.COR_TEXTO_SECUNDARIO.getGreen(),
+                EstiloBase.COR_TEXTO_SECUNDARIO.getBlue());
+        String fontePxDesc = String.valueOf(Math.max(13, EstiloBase.escalar(15, tela)));
+        String htmlDescArte = "<html><body style=\""
+                + "color:" + corHexDesc + ";"
+                + "font-family:sans-serif;"
+                + "font-size:" + fontePxDesc + "px;"
+                + "margin:0;padding:0;"
+                + "\">"
+                + controle.getDescricaoObra(indice)
+                + "</body></html>";
+
+        JPanel painelDescConteudo = new JPanel();
+        painelDescConteudo.setLayout(new BoxLayout(painelDescConteudo, BoxLayout.Y_AXIS));
+        painelDescConteudo.setOpaque(false);
+        painelDescConteudo.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
+
+        JTextPane txtDescArte = new JTextPane();
+        txtDescArte.setContentType("text/html");
+        txtDescArte.setText(htmlDescArte);
+        txtDescArte.setEditable(false);
+        txtDescArte.setOpaque(false);
+        txtDescArte.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        txtDescArte.setAlignmentX(Component.LEFT_ALIGNMENT);
+        txtDescArte.setMaximumSize(new Dimension(arteW - (seloX * 2), Integer.MAX_VALUE));
+        painelDescConteudo.add(txtDescArte);
+
+        JScrollPane scrollDesc = EstiloBase.criarScrollPane(painelDescConteudo);
+        scrollDesc.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollDesc.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollDesc.setBounds(seloX, descY, arteW - (seloX * 2), descH);
+        cardArte.add(scrollDesc);
+        SwingUtilities.invokeLater(() -> scrollDesc.getVerticalScrollBar().setValue(0));
+
+        // ── Rodape: codigo / ano / legenda ─────────────────────────────────────
+        int seloH    = Math.max(32, EstiloBase.escalar(32, tela));
+        int anoH     = Math.max(32, EstiloBase.escalar(34, tela));
+        int legendaH = Math.max(20, EstiloBase.escalar(22, tela));
+        int gapAcima = Math.max(10, EstiloBase.escalar(12, tela));
+        int seloY    = arteH - seloH - anoH - legendaH - ESPACO_CODIGO_ANO - Math.max(6, EstiloBase.escalar(8, tela));
 
         JLabel lblCodigo = EstiloBase.criarTag(controle.getCodigoObra(indice));
         lblCodigo.setBounds(seloX, seloY, Math.max(92, EstiloBase.escalar(92, tela)), seloH);
         cardArte.add(lblCodigo);
 
+        int anoY = seloY + seloH + ESPACO_CODIGO_ANO;
         JLabel lblAno = EstiloBase.criarLabel(
                 controle.getAnoObra(indice),
                 EstiloBase.fonteResponsiva(34f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
         lblAno.setHorizontalAlignment(SwingConstants.LEFT);
-        int anoY = seloY + seloH + ESPACO_CODIGO_ANO;
         lblAno.setBounds(seloX, anoY, Math.max(180, EstiloBase.escalar(180, tela)), anoH);
         cardArte.add(lblAno);
 
-        // Legenda informativa substituindo "Imagem da obra / missao"
+        // Legenda sem emoji
         JLabel lblLegenda = EstiloBase.criarLabel(
-                "\ud83d\udd0d Clique na imagem para ampliar",
+                "Clique na imagem para ampliar",
                 EstiloBase.FONTE_PEQUENA,
                 new Color(200, 160, 90)
         );
@@ -123,14 +165,13 @@ public class fmrObra extends JDialog {
         lblLegenda.setBounds(seloX, anoY + anoH, arteW - (seloX * 2), legendaH);
         cardArte.add(lblLegenda);
 
-        // ── Card de informacoes ───────────────────────────────────────────────
-
+        // ── Card de informacoes (coluna direita) ───────────────────────────────
         JPanel cardInfo = EstiloBase.criarCard();
         cardInfo.setLayout(null);
         cardInfo.setBounds(margem + arteW + gap, conteudoY, painelW, conteudoH);
         fundo.add(cardInfo);
 
-        int infoPad = Math.max(24, EstiloBase.escalar(30, tela));
+        int infoPad  = Math.max(24, EstiloBase.escalar(30, tela));
         int infoTagY = Math.max(22, EstiloBase.escalar(26, tela));
         int infoTagH = Math.max(32, EstiloBase.escalar(34, tela));
 
@@ -138,75 +179,33 @@ public class fmrObra extends JDialog {
         lblTema.setBounds(infoPad, infoTagY, Math.max(150, EstiloBase.escalar(160, tela)), infoTagH);
         cardInfo.add(lblTema);
 
-        // ── Conteudo scrollavel: TITULO + texto descritivo ────────────────────
-
-        JPanel painelConteudo = new JPanel();
-        painelConteudo.setLayout(new BoxLayout(painelConteudo, BoxLayout.Y_AXIS));
-        painelConteudo.setOpaque(false);
-        painelConteudo.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
-
-        // Titulo dentro do scroll
+        // Titulo da obra (sem texto descritivo — movido para coluna esquerda)
         JTextArea lblTitulo = EstiloBase.criarTextoQuebravel(
                 controle.getTituloObra(indice),
                 EstiloBase.fonteResponsiva(34f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
         lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lblTitulo.setMaximumSize(new Dimension(painelW - (infoPad * 2), Integer.MAX_VALUE));
-        painelConteudo.add(lblTitulo);
-        painelConteudo.add(Box.createVerticalStrut(Math.max(14, EstiloBase.escalar(16, tela))));
+        int tituloY = infoTagY + infoTagH + Math.max(14, EstiloBase.escalar(16, tela));
+        int tituloH = Math.max(80, EstiloBase.escalar(100, tela));
+        lblTitulo.setBounds(infoPad, tituloY, painelW - (infoPad * 2), tituloH);
+        cardInfo.add(lblTitulo);
 
-        // Texto descritivo
-        String corHex = String.format("#%02x%02x%02x",
-                EstiloBase.COR_TEXTO_SECUNDARIO.getRed(),
-                EstiloBase.COR_TEXTO_SECUNDARIO.getGreen(),
-                EstiloBase.COR_TEXTO_SECUNDARIO.getBlue());
-        String fontePx = String.valueOf(Math.max(14, EstiloBase.escalar(18, tela)));
-        String htmlDesc = "<html><body style=\""
-                + "color:" + corHex + ";"
-                + "font-family:sans-serif;"
-                + "font-size:" + fontePx + "px;"
-                + "margin:0;padding:0;"
-                + "\">"
-                + controle.getDescricaoObra(indice)
-                + "</body></html>";
-
-        JTextPane txtDesc = new JTextPane();
-        txtDesc.setContentType("text/html");
-        txtDesc.setText(htmlDesc);
-        txtDesc.setEditable(false);
-        txtDesc.setOpaque(false);
-        txtDesc.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        txtDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
-        txtDesc.setMaximumSize(new Dimension(painelW - (infoPad * 2), Integer.MAX_VALUE));
-        painelConteudo.add(txtDesc);
-
-        JScrollPane scroll = EstiloBase.criarScrollPane(painelConteudo);
-        int faixaH = Math.max(86, EstiloBase.escalar(102, tela));
-        int scrollY = infoTagY + infoTagH + Math.max(16, EstiloBase.escalar(18, tela));
+        // ── Faixa de acao com botoes Voltar e Proximo ──────────────────────────
+        int faixaH    = Math.max(86, EstiloBase.escalar(102, tela));
         int barraAcaoY = conteudoH - faixaH - Math.max(30, EstiloBase.escalar(46, tela));
-        int scrollH = Math.max(1, barraAcaoY - scrollY - Math.max(18, EstiloBase.escalar(24, tela)));
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setBounds(infoPad, scrollY, painelW - (infoPad * 2), scrollH);
-        cardInfo.add(scroll);
-
-        // Garante que o scroll inicie no topo apos o Swing renderizar o HTML
-        SwingUtilities.invokeLater(() -> scroll.getVerticalScrollBar().setValue(0));
-
-        // ── Faixa de acao com botoes Voltar e Proximo ────────────────────────
 
         JPanel faixaAcao = criarFaixaAcao();
         faixaAcao.setBounds(infoPad, barraAcaoY, painelW - (infoPad * 2), faixaH);
         cardInfo.add(faixaAcao);
 
-        int acaoPadding = Math.max(18, EstiloBase.escalar(22, tela));
-        int botaoH = Math.max(46, EstiloBase.escalar(50, tela));
-        int botaoY = Math.max(24, (faixaAcao.getHeight() - botaoH) / 2);
+        int acaoPadding        = Math.max(18, EstiloBase.escalar(22, tela));
+        int botaoH             = Math.max(46, EstiloBase.escalar(50, tela));
+        int botaoY             = Math.max(24, (faixaAcao.getHeight() - botaoH) / 2);
         int larguraBotaoVoltar = Math.max(140, EstiloBase.escalar(150, tela));
         int larguraProximoDesejada = indice == controle.getTotalObras() - 1 ? 252 : 228;
-        int espaco = Math.max(10, EstiloBase.escalar(12, tela));
-        int larguraProximo = Math.min(
+        int espaco             = Math.max(10, EstiloBase.escalar(12, tela));
+        int larguraProximo     = Math.min(
                 Math.max(190, EstiloBase.escalar(larguraProximoDesejada, tela)),
                 faixaAcao.getWidth() - (acaoPadding * 2) - larguraBotaoVoltar - espaco
         );
@@ -243,7 +242,7 @@ public class fmrObra extends JDialog {
         setContentPane(fundo);
     }
 
-    // ── Visualizador fullscreen (4.3) ─────────────────────────────────────────
+    // ── Visualizador fullscreen ────────────────────────────────────────────────
 
     private void abrirVisualizadorFullscreen(String caminhoImagem) {
         Image imagem = carregarImagem(caminhoImagem);
@@ -300,26 +299,24 @@ public class fmrObra extends JDialog {
         viewer.setVisible(true);
     }
 
-    // ── Painel de imagem ──────────────────────────────────────────────────────
+    // ── Painel de imagem (sem bordas laterais, encosta nas extremidades do card) ──
 
     private JPanel criarPainelImagemObra(String caminhoImagem) {
         return new JPanel(null) {
-            private Image imagem;
+            private final Image imagem = carregarImagem(caminhoImagem);
 
-            {
-                imagem = carregarImagem(caminhoImagem);
-                setOpaque(false);
-            }
+            { setOpaque(false); }
 
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-                Shape forma = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 28, 28);
+                // Arredondamento apenas nos cantos superior-esquerdo e superior-direito
+                int arco = 28;
+                Shape forma = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), arco, arco);
                 g2.setClip(forma);
 
                 if (imagem != null) {
@@ -329,78 +326,53 @@ public class fmrObra extends JDialog {
                 }
 
                 g2.setClip(null);
+                // Borda fina apenas ao redor da imagem, no mesmo tamanho dela
                 g2.setColor(new Color(255, 255, 255, 26));
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 28, 28);
-
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arco, arco);
                 g2.dispose();
             }
         };
     }
 
     private Image carregarImagem(String caminhoImagem) {
-        if (caminhoImagem == null || caminhoImagem.isBlank()) {
-            return null;
-        }
-
+        if (caminhoImagem == null || caminhoImagem.isBlank()) return null;
         try {
             URL url = getClass().getResource(caminhoImagem);
-            if (url != null) {
-                return new ImageIcon(url).getImage();
-            }
+            if (url != null) return new ImageIcon(url).getImage();
 
             File arquivo = new File("src" + caminhoImagem);
-            if (arquivo.exists()) {
-                return new ImageIcon(arquivo.getAbsolutePath()).getImage();
-            }
+            if (arquivo.exists()) return new ImageIcon(arquivo.getAbsolutePath()).getImage();
 
             File arquivoDireto = new File(caminhoImagem);
-            if (arquivoDireto.exists()) {
-                return new ImageIcon(arquivoDireto.getAbsolutePath()).getImage();
-            }
-        } catch (Exception e) {
-            return null;
-        }
-
+            if (arquivoDireto.exists()) return new ImageIcon(arquivoDireto.getAbsolutePath()).getImage();
+        } catch (Exception ignored) {}
         return null;
     }
 
     /**
-     * Exibe a imagem com object-fit: contain — sem cortes.
-     * A imagem e redimensionada para caber inteiramente no painel,
-     * mantendo proporcoes e centralizando com fundo escuro nas laterais.
+     * Renderiza a imagem com object-fit: contain.
+     * A imagem cabe inteiramente no painel sem ser cortada.
      */
     private void desenharImagemContain(Graphics2D g2, Image imagem, int larguraPainel, int alturaPainel) {
         int larguraImagem = imagem.getWidth(null);
         int alturaImagem  = imagem.getHeight(null);
+        if (larguraImagem <= 0 || alturaImagem <= 0) { desenharFallbackImagem(g2); return; }
 
-        if (larguraImagem <= 0 || alturaImagem <= 0) {
-            desenharFallbackImagem(g2);
-            return;
-        }
-
-        // Fundo escuro para as areas nao cobertas pela imagem
         g2.setColor(new Color(18, 14, 16));
         g2.fillRect(0, 0, larguraPainel, alturaPainel);
 
-        // Escala contain: a imagem cabe inteiramente sem cortes
-        double escala = Math.min(
-                (double) larguraPainel / larguraImagem,
-                (double) alturaPainel  / alturaImagem
-        );
-
-        int novaLargura = (int) Math.round(larguraImagem * escala);
-        int novaAltura  = (int) Math.round(alturaImagem  * escala);
-
+        double escala    = Math.min((double) larguraPainel / larguraImagem, (double) alturaPainel / alturaImagem);
+        int novaLargura  = (int) Math.round(larguraImagem * escala);
+        int novaAltura   = (int) Math.round(alturaImagem  * escala);
         int x = (larguraPainel - novaLargura) / 2;
         int y = (alturaPainel  - novaAltura)  / 2;
 
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2.drawImage(imagem, x, y, novaLargura, novaAltura, null);
 
-        // Sombra suave nas bordas inferiores
         GradientPaint sombra = new GradientPaint(
                 0, alturaPainel * 0.7f, new Color(0, 0, 0, 0),
-                0, alturaPainel,        new Color(0, 0, 0, 100)
+                0, alturaPainel,        new Color(0, 0, 0, 80)
         );
         g2.setPaint(sombra);
         g2.fillRect(0, 0, larguraPainel, alturaPainel);
@@ -413,24 +385,11 @@ public class fmrObra extends JDialog {
         );
         g2.setPaint(fundo);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
-
         g2.setColor(new Color(255, 255, 255, 26));
-        for (int x = 24; x < getWidth(); x += 26) {
-            g2.drawLine(x, 0, x, getHeight());
-        }
-
-        for (int y = 24; y < getHeight(); y += 26) {
-            g2.drawLine(0, y, getWidth(), y);
-        }
-
-        JLabelHelper.drawCenteredText(
-                g2,
-                "Imagem n\u00e3o encontrada",
-                getWidth(),
-                getHeight(),
-                EstiloBase.fontePoppins(24f),
-                new Color(255, 255, 255, 190)
-        );
+        for (int x = 24; x < getWidth(); x += 26) g2.drawLine(x, 0, x, getHeight());
+        for (int y = 24; y < getHeight(); y += 26) g2.drawLine(0, y, getWidth(), y);
+        JLabelHelper.drawCenteredText(g2, "Imagem n\u00e3o encontrada", getWidth(), getHeight(),
+                EstiloBase.fontePoppins(24f), new Color(255, 255, 255, 190));
     }
 
     private JPanel criarFaixaAcao() {
@@ -456,16 +415,13 @@ public class fmrObra extends JDialog {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 ativarQualidadeLocal(g2);
-
                 g2.setColor(COR_FAIXA_ACAO);
                 g2.fillRect(0, 0, getWidth(), getHeight());
-
                 boolean hover = getModel().isRollover() || getModel().isPressed();
                 int arco = 28;
-
                 if (primario) {
                     Color inicio = hover ? EstiloBase.COR_DESTAQUE_HOVER : EstiloBase.COR_DESTAQUE;
-                    Color fim = hover ? new Color(255, 204, 28) : EstiloBase.COR_DESTAQUE_2;
+                    Color fim    = hover ? new Color(255, 204, 28) : EstiloBase.COR_DESTAQUE_2;
                     g2.setPaint(new GradientPaint(0, 0, inicio, getWidth(), getHeight(), fim));
                     g2.fillRoundRect(0, 0, getWidth(), getHeight(), arco, arco);
                     g2.setColor(new Color(255, 255, 255, 58));
@@ -474,13 +430,10 @@ public class fmrObra extends JDialog {
                     g2.fillRoundRect(0, 0, getWidth(), getHeight(), arco, arco);
                     g2.setPaint(new GradientPaint(
                             0, 0, hover ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_CARD_BORDA,
-                            getWidth(), getHeight(), hover ? EstiloBase.COR_DESTAQUE_2 : EstiloBase.COR_CARD_GLOW
-                    ));
+                            getWidth(), getHeight(), hover ? EstiloBase.COR_DESTAQUE_2 : EstiloBase.COR_CARD_GLOW));
                 }
-
                 g2.setStroke(new BasicStroke(2f));
                 g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, arco, arco);
-
                 Font fonte = ajustarFonteAoBotao(g2, getFont(), texto, getWidth() - 26);
                 g2.setFont(fonte);
                 g2.setColor(primario || hover ? EstiloBase.COR_TEXTO_PRIMARIO : EstiloBase.COR_TEXTO_SECUNDARIO);
@@ -488,7 +441,6 @@ public class fmrObra extends JDialog {
                 int tx = (getWidth() - fm.stringWidth(texto)) / 2;
                 int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
                 g2.drawString(texto, tx, ty);
-
                 g2.dispose();
             }
         };
@@ -525,55 +477,31 @@ public class fmrObra extends JDialog {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
                 int total = controle.getTotalObras();
-                int gap = 8;
-                int segW = (largura - ((total - 1) * gap)) / total;
-
+                int gapSeg = 8;
+                int segW = (largura - ((total - 1) * gapSeg)) / total;
                 for (int i = 0; i < total; i++) {
-                    int x = i * (segW + gap);
-
+                    int x = i * (segW + gapSeg);
                     g2.setColor(new Color(255, 255, 255, 18));
                     g2.fillRoundRect(x, 4, segW, 10, 10, 10);
-
                     if (i <= indice) {
-                        GradientPaint gp = new GradientPaint(
-                                x, 0, EstiloBase.COR_DESTAQUE,
-                                x + segW, 14, EstiloBase.COR_DESTAQUE_2
-                        );
+                        GradientPaint gp = new GradientPaint(x, 0, EstiloBase.COR_DESTAQUE, x + segW, 14, EstiloBase.COR_DESTAQUE_2);
                         g2.setPaint(gp);
                         g2.fillRoundRect(x, 4, segW, 10, 10, 10);
                     }
                 }
-
                 g2.dispose();
             }
         };
     }
 
     private static class JLabelHelper {
-        static void drawCenteredText(
-                Graphics2D g2,
-                String texto,
-                int largura,
-                int altura,
-                Font fonte,
-                Color cor
-        ) {
-            Font fonteAnterior = g2.getFont();
-            Color corAnterior = g2.getColor();
-
-            g2.setFont(fonte);
-            g2.setColor(cor);
-
+        static void drawCenteredText(Graphics2D g2, String texto, int largura, int altura, Font fonte, Color cor) {
+            Font fa = g2.getFont(); Color ca = g2.getColor();
+            g2.setFont(fonte); g2.setColor(cor);
             FontMetrics fm = g2.getFontMetrics();
-            int x = (largura - fm.stringWidth(texto)) / 2;
-            int y = (altura - fm.getHeight()) / 2 + fm.getAscent();
-
-            g2.drawString(texto, x, y);
-
-            g2.setFont(fonteAnterior);
-            g2.setColor(corAnterior);
+            g2.drawString(texto, (largura - fm.stringWidth(texto)) / 2, (altura - fm.getHeight()) / 2 + fm.getAscent());
+            g2.setFont(fa); g2.setColor(ca);
         }
     }
 }
