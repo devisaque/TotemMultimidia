@@ -9,36 +9,35 @@ import java.util.List;
  */
 public abstract class absPropriedades implements intMetodos {
 
-    // ── Dados do Visitante ─────────────────────────────────────────────────────
+    // ── Dados do Visitante ────────────────────────────────────────────────────────────────────────────
     protected String nomeVisitante;
     protected String sobrenomeVisitante;
     protected String faixaEtariaVisitante;
     protected String[] dadosVisitante;
     protected int    idadeVisitante;
 
-    // ── Controle de Fluxo ──────────────────────────────────────────────────────
+    // ── Controle de Fluxo ───────────────────────────────────────────────────────────────────────────
     protected int     etapaAtual;
     protected int     obraAtual;
 
-    // ── Obras (10 rovers/missões marcianas) ────────────────────────────────────────────
+    // ── Obras (10 rovers/missões marcianas) ──────────────────────────────────────────────────────────
     protected String[]  titulosObras;
     protected String[]  descricoesObras;
-    protected String[]  explicacoesObras;  // texto exibido no card da imagem (abaixo da foto)
     protected String[]  codigosObras;
     protected String[]  anosObras;
     protected String[]  imagensObras;
     // exibirModelo3D removido — funcionalidade de modelo 3D eliminada na Etapa 1
 
-    // ── Questionário ─────────────────────────────────────────────────────────
+    // ── Questionário ─────────────────────────────────────────────────────────────────────────────
     protected String[]   perguntas;
     protected String[][] opcoes;
     protected int[]      gabaritos;
     protected int[]      respostasVisitante;
 
-    // ── Satisfação ──────────────────────────────────────────────────────────────
+    // ── Satisfação ───────────────────────────────────────────────────────────────────────────────
     protected int notaSatisfacao;
 
-    // ── Histórico in-memory (sem banco de dados) ───────────────────────────────────────
+    // ── Histórico in-memory (sem banco de dados) ───────────────────────────────────────────────────────
     protected List<String>  historicoNomes;
     protected List<String>  historicoSobrenomes;
     protected List<String>  historicoFaixasEtarias;
@@ -104,7 +103,11 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A Mars 2 foi o primeiro artefato humano a atingir a superf\u00edcie de Marte, mesmo que por um impacto n\u00e3o controlado.</li>"
             + "<li>O PrOP&#8209;11 \u00e9 lembrado como um dos primeiros rovers semiaut\u00f4nomos j\u00e1 constru\u00eddos.</li>"
             + "<li>Boa parte do que se sabe sobre o PrOP&#8209;11 vem de documenta\u00e7\u00e3o t\u00e9cnica e reconstru\u00e7\u00f5es hist\u00f3ricas.</li>"
-            + "</ul>",
+            + "</ul>"
+            + "<p><b>Sobre esta obra</b></p>"
+            + "<p>O PrOP&#8209;11 aparece junto aos destro\u00e7os do m\u00f3dulo de pouso em um cen\u00e1rio de rochas e poeira avermelhada. "
+            + "O \"rob\u00f4 fantasma\" simboliza tentativas corajosas que n\u00e3o deram certo, mas abriram caminho para miss\u00f5es "
+            + "futuras aprenderem com os erros e aperfei\u00e7oarem t\u00e9cnicas de pouso.</p>",
 
             // Obra 2 — A Tempestade da Mars 3
             "<b>[ Miss\u00e3o: Mars 3 | Pa\u00eds: URSS | Ano: 1971 ]</b>"
@@ -122,7 +125,11 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>Apesar de ser vista como fracasso, a Mars 3 realizou o primeiro pouso suave bem-sucedido em Marte.</li>"
             + "<li>A tempestade de poeira serve at\u00e9 hoje como exemplo dos riscos ambientais do planeta para naves.</li>"
             + "<li>O PrOP&#8209;11 da Mars 3 \u00e9 s\u00edmbolo de tecnologia pronta, impedida pelos extremos do clima marciano.</li>"
-            + "</ul>",
+            + "</ul>"
+            + "<p><b>Sobre esta obra</b></p>"
+            + "<p>A obra mostra o PrOP&#8209;11 ainda sobre a plataforma da Mars 3, enquanto o c\u00e9u ao redor escurece sob uma "
+            + "gigantesca tempestade de poeira. A imagem fala sobre a fragilidade humana diante de um planeta duro, "
+            + "mas tamb\u00e9m sobre a coragem de tentar inovar mesmo sabendo dos riscos.</p>",
 
             // Obra 3 — Sojourner
             "<b>[ Miss\u00e3o: Mars Pathfinder | Pa\u00eds: EUA/NASA | Ano: 1997 ]</b>"
@@ -138,7 +145,11 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>O nome \"Sojourner\" homenageia Sojourner Truth, ativista contra a escravid\u00e3o e pelos direitos civis.</li>"
             + "<li>O uso de airbags para amortecer o pouso foi uma inova\u00e7\u00e3o marcante da miss\u00e3o.</li>"
             + "<li>As imagens do pequeno rob\u00f4 andando entre as rochas em Marte tiveram grande impacto na m\u00eddia.</li>"
-            + "</ul>",
+            + "</ul>"
+            + "<p><b>Sobre esta obra</b></p>"
+            + "<p>A obra mostra o Sojourner como um pequeno explorador diante de um grande campo de rochas. Essa composi\u00e7\u00e3o "
+            + "convida o visitante a pensar em como grandes avan\u00e7os cient\u00edficos podem come\u00e7ar com experimentos "
+            + "modestos, mas bem planejados.</p>",
 
             // Obra 4 — Spirit
             "<b>[ Miss\u00e3o: MER-A | Pa\u00eds: EUA/NASA | Ano: 2004 ]</b>"
@@ -155,7 +166,11 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A Spirit sobreviveu a tempestades de poeira e invernos marcianos durante anos.</li>"
             + "<li>O atolamento em Troy virou um caso cl\u00e1ssico de limite operacional de um rover em terreno desconhecido.</li>"
             + "<li>As Columbia Hills revelaram camadas de rochas formadas em diferentes ambientes ao longo da hist\u00f3ria de Marte.</li>"
-            + "</ul>",
+            + "</ul>"
+            + "<p><b>Sobre esta obra</b></p>"
+            + "<p>Na obra, a Spirit aparece inclinada e presa em uma \u00e1rea de areia clara. A cena resume a trajet\u00f3ria da "
+            + "miss\u00e3o: um rob\u00f4 que superou em muito o tempo previsto e, no fim, foi detido pelo pr\u00f3prio terreno "
+            + "que tentava estudar.</p>",
 
             // Obra 5 — Opportunity
             "<b>[ Miss\u00e3o: MER-B | Pa\u00eds: EUA/NASA | Ano: 2004 ]</b>"
@@ -171,7 +186,11 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>A Opportunity operou cerca de 57 vezes mais tempo do que o planejado originalmente.</li>"
             + "<li>A frase \"my battery is low and it's getting dark\" ficou famosa como met\u00e1fora do fim da miss\u00e3o.</li>"
             + "<li>A dist\u00e2ncia percorrida fez dela um dos ve\u00eddculos com maior quilometragem em outro corpo celeste.</li>"
-            + "</ul>",
+            + "</ul>"
+            + "<p><b>Sobre esta obra</b></p>"
+            + "<p>Na obra, a Opportunity aparece na borda de uma grande cratera com o c\u00e9u escurecido por poeira. "
+            + "A pe\u00e7a transmite a ideia de persist\u00eancia e resist\u00eancia, lembrando que at\u00e9 as miss\u00f5es mais "
+            + "bem-sucedidas t\u00eam um ponto final.</p>",
 
             // Obra 6 — Curiosity
             "<b>[ Miss\u00e3o: Mars Science Laboratory | Pa\u00eds: EUA/NASA | Ano: 2012 ]</b>"
@@ -187,179 +206,7 @@ public abstract class absPropriedades implements intMetodos {
             + "<li>O pouso com sky crane foi t\u00e3o complexo que os engenheiros chamaram o momento de \"sete minutos de terror\".</li>"
             + "<li>O Curiosity ainda est\u00e1 ativo, subindo o Monte Sharp e estudando novas camadas de rocha.</li>"
             + "<li>Suas imagens s\u00e3o amplamente usadas em materiais educativos e document\u00e1rios sobre Marte.</li>"
-            + "</ul>",
-
-            // Obra 7 — Perseverance
-            "<b>[ Miss\u00e3o: Mars 2020 | Pa\u00eds: EUA/NASA | Ano: 2021 ]</b>"
-            + "<p>O Perseverance \u00e9 o rover mais avan\u00e7ado enviado pela NASA a Marte at\u00e9 hoje. Lan\u00e7ado em julho de 2020, "
-            + "pousou na cratera Jezero em fevereiro de 2021 usando o mesmo sistema sky crane do Curiosity, por\u00e9m com "
-            + "sensores e c\u00e2meras de navega\u00e7\u00e3o ainda mais sofisticados. A cratera Jezero foi escolhida por ser o local "
-            + "de um antigo delta de rio, considerado um ambiente prop\u00edcio para preservar sinais de vida passada.</p>"
-            + "<p>O Perseverance carrega 7 instrumentos cient\u00edficos, incluindo o MOXIE, que realiza experi\u00eancias de "
-            + "convers\u00e3o do CO\u2082 marciano em oxig\u00eanio, e tubos de tit\u00e2nio para coletar e selar amostras de rocha que "
-            + "poder\u00e3o ser trazidas \u00e0 Terra em miss\u00f5es futuras.</p>"
-            + "<p><b>Curiosidades</b></p>"
-            + "<ul>"
-            + "<li>O Perseverance carrega uma plaquinha com o nome de 10,9 milh\u00f5es de pessoas que participaram de uma campanha da NASA.</li>"
-            + "<li>O MOXIE produziu oxig\u00eanio suficiente para um astronauta respirar por cerca de 10 minutos.</li>"
-            + "<li>O rover tamb\u00e9m carregou o helic\u00f3ptero Ingenuity, que realizou o primeiro voo motorizado em outro planeta.</li>"
-            + "</ul>",
-
-            // Obra 8 — Ingenuity
-            "<b>[ Miss\u00e3o: Mars 2020 | Pa\u00eds: EUA/NASA | Ano: 2021 ]</b>"
-            + "<p>O Ingenuity \u00e9 um helic\u00f3ptero rob\u00f3tico que viajou preso \u00e0 barriga do Perseverance e pousou em Marte "
-            + "junto com ele em fevereiro de 2021. Em abril de 2021, realizou o primeiro voo motorizado e controlado "
-            + "em outro planeta, pairando por cerca de 39 segundos a poucos metros do solo.</p>"
-            + "<p>Voar em Marte \u00e9 extremamente desafiador: a atmosfera tem apenas 1% da densidade da terrestre, o que "
-            + "obriga as p\u00e1s a girarem muito mais r\u00e1pido do que em qualquer helic\u00f3ptero na Terra. O Ingenuity foi "
-            + "projetado como uma demonstra\u00e7\u00e3o tecnol\u00f3gica e superou todas as expectativas, completando mais de 70 voos "
-            + "antes de encerrar opera\u00e7\u00f5es em janeiro de 2024.</p>"
-            + "<p><b>Curiosidades</b></p>"
-            + "<ul>"
-            + "<li>O Ingenuity carregava um pequeno peda\u00e7o do tecido da asa do Flyer, o avi\u00e3o dos Irm\u00e3os Wright.</li>"
-            + "<li>A NASA o chamou de \"momento Kitty Hawk em Marte\", em refer\u00eancia ao primeiro voo motorizado da hist\u00f3ria.</li>"
-            + "<li>Ele funcionou muito al\u00e9m do planejado: a miss\u00e3o original previa apenas 5 voos de demonstra\u00e7\u00e3o.</li>"
-            + "</ul>",
-
-            // Obra 9 — Zhurong
-            "<b>[ Miss\u00e3o: Tianwen-1 | Pa\u00eds: China/CNSA | Ano: 2021 ]</b>"
-            + "<p>O Zhurong \u00e9 o primeiro rover marciano da China, parte da miss\u00e3o Tianwen-1 lan\u00e7ada em julho de 2020. "
-            + "Em maio de 2021, o m\u00f3dulo de pouso aterrissou com sucesso em Utopia Planitia, uma grande plan\u00edcie no "
-            + "hemisf\u00e9rio norte de Marte, tornando a China o segundo pa\u00eds a operar um rover funcional no planeta.</p>"
-            + "<p>Com cerca de 240 kg, o Zhurong carregava 6 instrumentos cient\u00edficos, incluindo c\u00e2mera multispectral, "
-            + "radar de penetra\u00e7\u00e3o de subsolo, detector de campo magn\u00e9tico e um sensor meteorol\u00f3gico. O rover operou "
-            + "por cerca de um ano marciano antes de entrar em modo de hiberna\u00e7\u00e3o em maio de 2022.</p>"
-            + "<p><b>Curiosidades</b></p>"
-            + "<ul>"
-            + "<li>\"Zhurong\" \u00e9 o nome do deus do fogo na mitologia chinesa.</li>"
-            + "<li>A Tianwen-1 foi a primeira miss\u00e3o chinesa a alcan\u00e7ar com sucesso a superf\u00edcie de Marte.</li>"
-            + "<li>O radar de subsolo do Zhurong encontrou ind\u00edcios de camadas de gelo enterradas em Utopia Planitia.</li>"
-            + "</ul>",
-
-            // Obra 10 — Rosalind Franklin
-            "<b>[ Miss\u00e3o: ExoMars | Pa\u00eds: ESA/NASA | Ano: 2028 (previsto) ]</b>"
-            + "<p>O rover Rosalind Franklin \u00e9 o projeto mais ambicioso da Ag\u00eancia Espacial Europeia (ESA) para Marte. "
-            + "Nomeado em homenagem \u00e0 cient\u00edsta brit\u00e2nica Rosalind Franklin, cujas pesquisas foram fundamentais para a "
-            + "descoberta da estrutura do DNA, o rover foi projetado para perfurar at\u00e9 2 metros de profundidade no solo "
-            + "marciano em busca de biomarcadores \u2014 sinais qu\u00edmicos que possam indicar vida passada ou presente.</p>"
-            + "<p>Originalmente planejado para 2022 em parceria com a R\u00fassia, o projeto foi suspenso ap\u00f3s a invas\u00e3o da "
-            + "Ucr\u00e2nia e a ESA reconfigurou a miss\u00e3o com novos parceiros. O lan\u00e7amento est\u00e1 previsto para 2028, com pouso "
-            + "em 2030 na regi\u00e3o de Oxia Planum.</p>"
-            + "<p><b>Curiosidades</b></p>"
-            + "<ul>"
-            + "<li>Rosalind Franklin nunca recebeu o cr\u00e9dito que merecia em vida; o rover \u00e9 uma homenagem tardia \u00e0 sua contribui\u00e7\u00e3o.</li>"
-            + "<li>A broca do rover pode coletar amostras em camadas abaixo do alcance da radia\u00e7\u00e3o UV que esteriliza a superf\u00edcie.</li>"
-            + "<li>\u00c9 a \u00fanica miss\u00e3o planejada especificamente para buscar sinais diretos de vida em Marte.</li>"
             + "</ul>"
-        };
-
-        // ── Explicacao da obra (exibida no card da imagem, abaixo da foto) ────────────
-        explicacoesObras = new String[]{
-
-            // Obra 1
-            "Nesta obra, o PrOP\u2011M aparece junto aos destro\u00e7os do m\u00f3dulo de pouso da Mars 2 em um cen\u00e1rio de rochas "
-            + "e poeira avermelhada. A composi\u00e7\u00e3o destaca a sensa\u00e7\u00e3o de uma tecnologia pioneira que chegou at\u00e9 Marte, "
-            + "mas que foi calada por um acidente no \u00faltimo momento. O \u201crob\u00f4 fantasma\u201d simboliza tentativas corajosas "
-            + "que n\u00e3o deram certo, mas abriram caminho para miss\u00f5es futuras aprenderem com os erros e aperfei\u00e7oarem "
-            + "t\u00e9cnicas de pouso e explora\u00e7\u00e3o.",
-
-            // Obra 2
-            "A obra mostra o PrOP\u2011M ainda sobre a plataforma da Mars 3, enquanto o c\u00e9u ao redor escurece sob uma "
-            + "gigantesca tempestade de poeira. A imagem refor\u00e7a a ideia de que, mesmo quando a engenharia funciona "
-            + "e o pouso \u00e9 bem\u2011sucedido, Marte tem for\u00e7as naturais capazes de interromper uma miss\u00e3o em segundos. "
-            + "Ao colocar o pequeno rover frente a um horizonte tomado pela poeira, a obra fala sobre a fragilidade "
-            + "humana diante de um planeta duro, mas tamb\u00e9m sobre a coragem de tentar inovar, mesmo sabendo dos riscos.",
-
-            // Obra 3
-            "A obra mostra o Sojourner como um pequeno explorador diante de um grande campo de rochas, com a base "
-            + "Mars Pathfinder ao fundo. Essa composi\u00e7\u00e3o evidencia a coragem de dar o primeiro passo na explora\u00e7\u00e3o "
-            + "m\u00f3vel de Marte: um rob\u00f4 pequeno, mas capaz de abrir espa\u00e7o para miss\u00f5es muito mais ambiciosas. Ao "
-            + "mostrar a escala reduzida do rover em compara\u00e7\u00e3o com o ambiente, a obra convida o visitante a pensar "
-            + "em como grandes avan\u00e7os cient\u00edficos podem come\u00e7ar com experimentos modestos, mas bem planejados.",
-
-            // Obra 4
-            "Na obra, a Spirit aparece inclinada e presa em uma \u00e1rea de areia clara, com marcas de rodas e colinas "
-            + "ao fundo. Essa cena resume a trajet\u00f3ria da miss\u00e3o: um rob\u00f4 que superou em muito o tempo previsto, "
-            + "explorou ambientes variados e, no fim, foi detido pelo pr\u00f3prio terreno que tentava estudar. A obra "
-            + "destaca a ideia de ousadia e limite, mostrando que a explora\u00e7\u00e3o cient\u00edfica envolve tanto grandes "
-            + "descobertas quanto situa\u00e7\u00f5es em que a natureza vence a tecnologia.",
-
-            // Obra 5
-            "Na obra, a Opportunity aparece na borda de uma grande cratera, com o c\u00e9u escurecido por poeira. "
-            + "O contraste entre o pequeno rob\u00f4 e o horizonte amplo, tomado pela tempestade, refor\u00e7a a sensa\u00e7\u00e3o "
-            + "de uma longa viagem chegando ao fim. A pe\u00e7a transmite a ideia de persist\u00eancia e resist\u00eancia, mas "
-            + "tamb\u00e9m lembra que at\u00e9 as miss\u00f5es mais bem\u2011sucedidas t\u00eam um ponto final.",
-
-            // Obra 6
-            "A obra mostra o Curiosity em meio a rochas perfuradas, com o Monte Sharp ao fundo exibindo suas "
-            + "camadas bem definidas. Essa imagem refor\u00e7a a ideia do rover como um ge\u00f3logo rob\u00f3tico, que l\u00ea a "
-            + "hist\u00f3ria do planeta nas rochas, camada por camada. Ao destacar o contraste entre a m\u00e1quina complexa "
-            + "e a paisagem antiga de Marte, a obra convida o visitante a imaginar como seria caminhar por ali "
-            + "e enxergar, naquelas mesmas rochas, marcas de um passado mais \u00famido e possivelmente habit\u00e1vel.",
-
-            // Obra 7
-            "A obra apresenta o Perseverance trabalhando no delta de Jezero, cercado por rochas estratificadas "
-            + "e tubos de amostra. Essa representa\u00e7\u00e3o destaca a fun\u00e7\u00e3o do rover como um colecionador de pistas, "
-            + "enchendo cada tubo como se fosse uma garrafa com mensagem para o futuro: amostras que ainda n\u00e3o "
-            + "podem ser completamente interpretadas em Marte, mas que um dia chegar\u00e3o a laborat\u00f3rios aqui na Terra.",
-
-            // Obra 8
-            "Na obra, Ingenuity aparece em voo, com sua sombra projetada no solo marciano e o Perseverance ao "
-            + "fundo. Essa imagem registra o momento em que a explora\u00e7\u00e3o de Marte deixou de ser apenas sobre rodas "
-            + "e passou a ter tamb\u00e9m uma dimens\u00e3o a\u00e9rea. A pe\u00e7a transmite a sensa\u00e7\u00e3o de leveza e inova\u00e7\u00e3o, "
-            + "convidando o visitante a perceber que, na ci\u00eancia, novas ideias podem literalmente tirar um projeto "
-            + "do ch\u00e3o e abrir possibilidades que antes pareciam imposs\u00edveis.",
-
-            // Obra 9
-            "Na obra, o Zhurong segue em frente, afastando\u2011se da plataforma de pouso que exibe a bandeira da China. "
-            + "Essa composi\u00e7\u00e3o simboliza o primeiro passo do pa\u00eds sobre o solo marciano, mostrando ao visitante "
-            + "que a explora\u00e7\u00e3o de Marte se tornou um esfor\u00e7o verdadeiramente internacional. A pe\u00e7a refor\u00e7a a ideia "
-            + "de que a ci\u00eancia e a tecnologia ultrapassam fronteiras pol\u00edticas e que diferentes na\u00e7\u00f5es podem "
-            + "contribuir com pontos de vista e instrumentos distintos para desvendar o mesmo planeta.",
-
-            // Obra 10
-            "Na obra, o Rover Rosalind Franklin aparece perfurando o solo de Oxia Planum, enquanto a ideia "
-            + "central \u00e9 mostrar que a busca por vida em Marte n\u00e3o se limita \u00e0 superf\u00edcie. A pe\u00e7a transmite a "
-            + "imagem de um detetive do subsolo, que procura pistas quase invis\u00edveis, escondidas em camadas profundas "
-            + "e antigas. Para o visitante, a obra representa o pr\u00f3ximo cap\u00edtulo da explora\u00e7\u00e3o de Marte: depois de "
-            + "descobrir \u00e1gua passada e ambientes habit\u00e1veis, a humanidade se prepara para investigar se algum dia "
-            + "houve vida de fato naquele planeta."
-        };
-
-        codigosObras = new String[]{"PM-02", "PM-03", "PM-97", "PM-04A", "PM-04B", "PM-12", "PM-21A", "PM-21B", "PM-21C", "PM-28"};
-        anosObras    = new String[]{"1971", "1971", "1997", "2004", "2004", "2012", "2021", "2021", "2021", "2028"};
-
-        imagensObras = new String[]{
-                "/assets/obras/obra1-prop-m-mars2.jpeg",
-                "/assets/obras/obra2-prop-m-mars3.jpeg",
-                "/assets/obras/obra3-sojourner.jpeg",
-                "/assets/obras/obra4-spirit.jpeg",
-                "/assets/obras/obra5-opportunity.jpeg",
-                "/assets/obras/obra6-curiosity.jpeg",
-                "/assets/obras/obra7-perseverance.jpeg",
-                "/assets/obras/obra8-ingenuity.jpeg",
-                "/assets/obras/obra9-zhurong.jpeg",
-                "/assets/obras/obra10-rosalind-franklin.jpeg"
-        };
-    }
-
-    private void inicializarQuestionario() {
-        perguntas = new String[]{
-                "Qual foi a primeira sonda a pousar (mesmo que com impacto) na superf\u00edcie de Marte?",
-                "Qual rover foi o primeiro a se deslocar com sucesso pela superf\u00edcie marciana?",
-                "Qual miss\u00e3o utilizou a t\u00e9cnica de pouso com airbags em Marte?",
-                "Qual rover encerrou sua miss\u00e3o ap\u00f3s uma grande tempestade de poeira em 2018?",
-                "Qual foi o primeiro helic\u00f3ptero a voar em outro planeta?"
-        };
-
-        opcoes = new String[][]{
-                {"Mars 2", "Mars 3", "Viking 1", "Pathfinder"},
-                {"Sojourner", "Spirit", "Opportunity", "Curiosity"},
-                {"Mars 2", "Mars Pathfinder", "MER", "Mars 2020"},
-                {"Spirit", "Opportunity", "Curiosity", "Perseverance"},
-                {"Ingenuity", "Dragonfly", "Zhurong", "Rosalind Franklin"}
-        };
-
-        gabaritos = new int[]{0, 0, 1, 1, 0};
-    }
-}
+            + "<p><b>Sobre esta obra</b></p>"
+            + "<p>A obra mostra o Curiosity em meio a rochas perfuradas, com o Monte Sharp ao fundo exibindo suas "
+            + "camadas sedimentares. A cena convida o visitante a pensar em como cada furo na roc
