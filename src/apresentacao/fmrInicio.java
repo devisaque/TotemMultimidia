@@ -38,25 +38,27 @@ public class fmrInicio extends JDialog {
         int textoW = colunaEsquerda - margem - EstiloBase.escalar(140, tela);
         int botoesY = tela.height - EstiloBase.escalar(202, tela);
 
-        JLabel lblTag = EstiloBase.criarTag("Museu multimidia");
-        lblTag.setFont(EstiloBase.fonteResponsiva(13f, tela));
-        lblTag.setBounds(margem, EstiloBase.escalar(54, tela), EstiloBase.escalar(186, tela), EstiloBase.escalar(34, tela));
-        painel.add(lblTag);
-
-        JLabel lblTitulo = new JLabel("Robos Exploradores");
-        lblTitulo.setFont(EstiloBase.fontePoppins((tela.width >= 1700 ? 84f : 72f) * escala));
+        JLabel lblTitulo = new JLabel("Operação Solo Vermelho");
+        lblTitulo.setFont(EstiloBase.fontePoppins((tela.width >= 1700 ? 72f : 64f) * escala));
         lblTitulo.setForeground(EstiloBase.COR_TEXTO_PRIMARIO);
         lblTitulo.setBounds(margem, EstiloBase.escalar(118, tela), colunaEsquerda - margem - 12, EstiloBase.escalar(112, tela));
         painel.add(lblTitulo);
 
         JTextArea lblSub = EstiloBase.criarTextoQuebravel(
-                "Uma experiencia imersiva sobre as missoes que transformaram nossa visao de Marte. "
-                        + "Toque para iniciar a jornada, conhecer as obras e interagir com o acervo digital.",
-                EstiloBase.fonteResponsiva(25f, tela),
-                EstiloBase.COR_TEXTO_SECUNDARIO
+                "A história das missões que plantaram nossa curiosidade em Marte.  ",
+                EstiloBase.fontePoppins(22f),
+                EstiloBase.COR_TEXTO_PRIMARIO
         );
         lblSub.setBounds(margem, EstiloBase.escalar(246, tela), textoW, EstiloBase.escalar(226, tela));
         painel.add(lblSub);
+
+        JTextArea lblText = EstiloBase.criarTextoQuebravel(
+                "Toque para iniciar a jornada, conhecer as obras e interagir com o acervo digital.",
+                EstiloBase.fonteResponsiva(19f, tela),
+                EstiloBase.COR_TEXTO_SECUNDARIO
+        );
+        lblText.setBounds(margem, EstiloBase.escalar(540, tela), textoW, EstiloBase.escalar(226, tela));
+        painel.add(lblText);
 
         JButton btnIniciar = EstiloBase.criarBotaoPrimario("Iniciar experiencia");
         btnIniciar.setFont(EstiloBase.fonteResponsiva(20f, tela));
@@ -134,11 +136,6 @@ public class fmrInicio extends JDialog {
         int posterH = Math.max(EstiloBase.escalar(250, tela), cardResumoH - (posterX * 2));
         poster.setBounds(posterX, posterX, cardDireitaW - (posterX * 2), posterH);
         cardResumo.add(poster);
-
-        JLabel lblResumoTag = EstiloBase.criarTag("Exposicao em destaque");
-        lblResumoTag.setFont(EstiloBase.fonteResponsiva(13f, tela));
-        lblResumoTag.setBounds(EstiloBase.escalar(34, tela), EstiloBase.escalar(34, tela), EstiloBase.escalar(170, tela), EstiloBase.escalar(32, tela));
-        poster.add(lblResumoTag);
 
         int resumoTituloY = poster.getHeight() - EstiloBase.escalar(150, tela);
         int resumoTextoY = resumoTituloY + EstiloBase.escalar(58, tela);

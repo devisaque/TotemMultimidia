@@ -20,7 +20,7 @@ public class fmrSatisfacao extends JDialog {
     private JButton btnEnviar;
 
     private static final String[] MENSAGENS = {
-            "Sem avaliacao registrada.",
+            "",
             "Que pena. Seu retorno ajuda a melhorar o percurso.",
             "Obrigado pelo retorno. Vamos evoluir a experiencia.",
             "Boa avaliacao. Estamos no caminho certo.",
@@ -53,7 +53,7 @@ public class fmrSatisfacao extends JDialog {
         int tituloY = tagY + tagH + EstiloBase.escalar(28, tela);
         int tituloH = Math.max(130, EstiloBase.escalar(150, tela));
         JTextArea lblTitulo = EstiloBase.criarTextoQuebravel(
-                "Como foi a sua experiencia no totem?",
+                "Como foi a sua experiencia na exposição?",
                 EstiloBase.fonteResponsiva(54f, tela),
                 EstiloBase.COR_TEXTO_PRIMARIO
         );
@@ -70,7 +70,7 @@ public class fmrSatisfacao extends JDialog {
         card.setBounds(cx - cardW / 2, cardY, cardW, cardH);
         fundo.add(card);
 
-        JLabel lblCardTag = EstiloBase.criarTag("Avalie de 0 a 5");
+        JLabel lblCardTag = EstiloBase.criarTag("Avalie de 1 a 5");
         lblCardTag.setFont(EstiloBase.fonteResponsiva(13f, tela));
         lblCardTag.setBounds(EstiloBase.escalar(30, tela), EstiloBase.escalar(28, tela),
                 EstiloBase.escalar(132, tela), EstiloBase.escalar(32, tela));
@@ -82,15 +82,15 @@ public class fmrSatisfacao extends JDialog {
                 cardW - EstiloBase.escalar(88, tela), EstiloBase.escalar(96, tela));
         card.add(painelEstrelas);
 
-        estrelas = new JLabel[6];
-        for (int i = 0; i <= 5; i++) {
-            final int nota = i;
-            JLabel estrela = i == 0 ? new JLabel("0", SwingConstants.CENTER) : new EstrelaAvaliacao();
-            estrela.setFont(i == 0 ? EstiloBase.fonteResponsiva(36f, tela) : EstiloBase.fonteResponsiva(58f, tela));
+        estrelas = new JLabel[5];
+        for (int i = 0; i < 5; i++) {
+            final int nota = i+1;
+            JLabel estrela = new EstrelaAvaliacao();
+            estrela.setFont(EstiloBase.fonteResponsiva(58f, tela));
             estrela.setForeground(EstiloBase.COR_TEXTO_FRACO);
             estrela.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             estrela.setPreferredSize(new Dimension(EstiloBase.escalar(92, tela), EstiloBase.escalar(92, tela)));
-            estrela.setToolTipText(i == 0 ? "Sem nota" : nota + " estrela(s)");
+            estrela.setToolTipText(nota + " estrela(s)");
 
             estrela.addMouseListener(new MouseAdapter() {
                 @Override
@@ -165,10 +165,8 @@ public class fmrSatisfacao extends JDialog {
     }
 
     private void destacarAte(int nota) {
-        for (int i = 0; i <= 5; i++) {
-            estrelas[i].setForeground(i <= nota && nota > 0
-                    ? EstiloBase.COR_DESTAQUE
-                    : i == 0 && nota == 0
+        for (int i = 0; i < 5; i++) {
+            estrelas[i].setForeground(i < nota
                     ? EstiloBase.COR_DESTAQUE
                     : EstiloBase.COR_TEXTO_FRACO);
             estrelas[i].repaint();
@@ -176,13 +174,14 @@ public class fmrSatisfacao extends JDialog {
     }
 
     private void atualizarEstrelas(int nota) {
-        for (int i = 0; i <= 5; i++) {
-            boolean ativo = nota >= 0 && i <= nota;
-            if (i == 0 && nota == 0) {
-                estrelas[i].setForeground(EstiloBase.COR_DESTAQUE);
-            } else {
-                estrelas[i].setForeground(ativo && nota > 0 ? EstiloBase.COR_DESTAQUE : EstiloBase.COR_TEXTO_FRACO);
-            }
+        for (int i = 0; i < 5; i++) {
+            boolean ativo = i < nota;
+            estrelas[i].setForeground(
+                    ativo
+                    ?EstiloBase.COR_DESTAQUE
+                    :EstiloBase.COR_TEXTO_FRACO
+            );
+
             estrelas[i].repaint();
         }
     }
